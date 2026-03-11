@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>鳶報羈絆助手</title>
+    <style>
+        :root {
+            --bg: #F4EBE2;
+            --card: #FFFDF8;
+            --primary: #5A4A42;
+            --highlight: #A8655E;
+            --success: #6B8E23;
+            --border: #DCD3C6;
+            --button-bg: #EED7B8;
+            --disabled: #e0dcd3;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: var(--bg); color: var(--primary); margin: 0; padding: 0 15px 40px 15px; display: flex; flex-direction: column; align-items: center; }
+        .wrapper { width: 100%; max-width: 800px; position: relative; }
+
+        /* 固定頂部 */
+        .sticky-header { position: sticky; top: 0; z-index: 200; background: var(--bg); padding: 15px 0 10px 0; }
+        .top-nav { background: var(--card); border: 1px solid var(--border); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 10px; }
+        .logo-area { font-size: 1.2rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 5px; }
+        .account-area { display: flex; align-items: center; gap: 6px; background: #FAF4EB; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); }
+        .account-select { border: 1px solid var(--border); padding: 4px; border-radius: 4px; outline: none; background: #fff; font-weight: bold; color: var(--primary); cursor: pointer; font-size: 0.85rem; }
+        .btn-small { background: var(--button-bg); color: var(--primary); border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; transition: 0.2s; }
+        .btn-small:hover { background: var(--highlight); color: #fff; border-color: var(--highlight); }
+        .btn-icon { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 2px 4px; color: var(--primary); opacity: 0.5; transition: 0.2s; }
+        .btn-icon:hover { opacity: 1; color: var(--highlight); }
+
+        /* 成就進度 - sticky header 內 */
+        .progress-container { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
+        .progress-header { display: flex; align-items: center; gap: 8px; }
+        .progress-title { font-size: 0.88rem; font-weight: bold; color: var(--primary); cursor: pointer; user-select: none; flex: 1; }
+        .progress-title:hover { color: var(--highlight); }
+        .ms-arrow { font-size: 0.7rem; color: #999; margin-left: 4px; }
+        .progress-count { font-size: 1rem; font-weight: bold; color: var(--highlight); }
+        .progress-bar { width: 100%; height: 8px; background: var(--disabled); border-radius: 6px; overflow: hidden; margin-top: 7px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--highlight), #c4877e); width: 0%; transition: width 0.4s ease; border-radius: 6px; }
+        .progress-msg { font-size: 0.78rem; color: #999; margin-top: 5px; text-align: right; min-height: 1em; }
+
+        /* 成就格子 - 可折疊 */
+        .milestone-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+        .milestone-row.collapsed { display: none; }
+        .milestone-badge { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 6px; border-radius: 6px; border: 1px solid var(--border); background: #f5f0ea; opacity: 0.35; transition: 0.3s; flex: 1; min-width: 42px; }
+        .milestone-badge.achieved { opacity: 1; background: linear-gradient(135deg, #f5e8d0, #fdf6ec); border-color: var(--highlight); box-shadow: 0 1px 4px rgba(168,101,94,0.2); }
+        .milestone-badge .m-name { font-size: 0.7rem; font-weight: bold; color: var(--primary); white-space: nowrap; }
+        .milestone-badge .m-num { font-size: 0.62rem; color: #aaa; }
+        .milestone-badge.achieved .m-name { color: var(--highlight); }
+        .milestone-badge.achieved .m-num { color: var(--highlight); opacity: 0.7; }
+
+        /* 分頁 */
+        .tabs { display: flex; background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .tab { flex: 1; text-align: center; padding: 14px 5px; cursor: pointer; font-weight: bold; color: #888; font-size: 1rem; border-bottom: 3px solid transparent; }
+        .tab.active { color: var(--highlight); border-bottom: 3px solid var(--highlight); background: #FAF4EB; }
+
+        .container { padding: 10px 0 20px 0; }
+        .intro-box { background: var(--card); border: 1px dashed var(--highlight); border-radius: 8px; padding: 15px; font-size: 0.85rem; line-height: 1.6; color: var(--primary); margin-bottom: 20px; }
+
+        /* 篩選面板 */
+        .filter-panel { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        .filter-row { display: flex; align-items: flex-start; border-bottom: 1px dashed var(--border); padding: 10px 0; }
+        .filter-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .filter-label { font-weight: bold; width: 45px; color: var(--primary); flex-shrink: 0; margin-top: 5px; font-size: 0.9rem; }
+        .filter-options { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+        .f-btn { background: var(--button-bg); color: var(--primary); border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+        .f-btn.active { background: var(--highlight); color: #fff; border-color: var(--highlight); font-weight: bold; }
+        .f-btn.danger { border-color: var(--highlight); color: var(--highlight); }
+        .f-btn.danger.active { background: var(--highlight); color: #fff; }
+
+        /* 密探摺疊面板 */
+        details { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; transition: 0.3s; }
+        summary { padding: 14px 15px; cursor: pointer; background: #FAF4EB; display: flex; align-items: center; justify-content: space-between; user-select: none; border-radius: 8px; }
+        summary::marker, summary::-webkit-details-marker { display: none; }
+        details.agent-completed { opacity: 0.6; filter: grayscale(30%); border-color: #ccc; }
+        details.agent-completed summary { background: #EFEBE5; }
+        .agent-title-left { display: flex; align-items: center; font-weight: bold; font-size: 1.1rem; }
+        .summary-arrow { color: var(--primary); font-size: 0.8rem; margin-left: 5px; transition: 0.2s; }
+        details[open] .summary-arrow { transform: rotate(180deg); }
+        details[open] summary { border-radius: 8px 8px 0 0; border-bottom: 1px dashed var(--border); }
+        .agent-tag { font-size: 0.75rem; background: var(--border); padding: 2px 6px; border-radius: 4px; margin-left: 10px; color: var(--primary); }
+        .comp-tag { font-size: 0.9rem; font-weight: bold; color: var(--primary); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; }
+
+        /* 部門分組 */
+        .dept-section { background: transparent; border: none !important; box-shadow: none; margin-bottom: 20px; }
+        .dept-section > summary { background: var(--button-bg); border: 1px solid var(--border); border-radius: 8px; font-weight: bold; font-size: 1rem; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: var(--primary); }
+        .dept-section[open] > summary { border-radius: 8px; border-bottom: 1px solid var(--border); }
+        .dept-body { padding: 0; }
+
+        /* 面板內容 */
+        .bond-content { padding: 15px; }
+        .bond-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .bond-title { font-weight: bold; color: var(--highlight); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-check-all { background: transparent; color: var(--highlight); border: 1px solid var(--highlight); border-radius: 15px; padding: 4px 12px; font-size: 0.8rem; cursor: pointer; font-weight: bold; white-space: nowrap; flex-shrink: 0; }
+        .btn-check-all:hover { background: var(--highlight); color: #fff; }
+
+        /* 天氣格子 - 仿遊戲排版：每格 = 天氣圖示 + 情報名稱 */
+        .weather-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+        .weather-item { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; padding: 10px 4px; border: 1px solid var(--border); border-radius: 6px; background: #fff; cursor: pointer; transition: 0.2s; overflow: hidden; }
+        .weather-item img { width: 22px; height: 22px; }
+        .weather-item span { font-size: 0.78rem; font-weight: bold; color: var(--primary); text-align: center; }
+        .weather-item.unlocked { background: #f0f0f0; border-color: #ccc; opacity: 0.65; }
+        .weather-item.unlocked img { filter: grayscale(100%); opacity: 0.5; }
+        .weather-item.unlocked span { color: #888; }
+        .weather-item.unlocked::after { content: '✔'; position: absolute; top: 3px; right: 3px; background: var(--success); color: white; border-radius: 50%; width: 13px; height: 13px; font-size: 8px; display: flex; align-items: center; justify-content: center; }
+
+        /* 查配對 - 自定義選擇器 */
+        .match-panel { background: var(--card); padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .selector-label { font-size: 0.8rem; font-weight: bold; color: #999; margin-bottom: 6px; letter-spacing: 1px; }
+        /* 情報按鈕組 */
+        .action-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+        .action-btn { padding: 7px 13px; border: 1px solid var(--border); border-radius: 20px; background: var(--button-bg); color: var(--primary); font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .action-btn.selected { background: var(--highlight); color: #fff; border-color: var(--highlight); }
+        /* 天氣格子選擇器 */
+        .weather-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 6px; }
+        .weather-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 4px; border: 1.5px solid var(--border); border-radius: 8px; background: #fff; cursor: pointer; transition: 0.2s; }
+        .weather-btn img { width: 26px; height: 26px; }
+        .weather-btn span { font-size: 0.72rem; color: var(--primary); font-weight: bold; }
+        .weather-btn.selected { border-color: var(--highlight); background: #fdf0ef; box-shadow: 0 0 0 2px rgba(168,101,94,0.25); }
+        .weather-btn.selected span { color: var(--highlight); }
+        /* 結果 */
+        .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        @media (max-width: 500px) { .results-grid { grid-template-columns: 1fr; } .weather-btns { grid-template-columns: repeat(4, 1fr); } }
+        .result-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: #fff; gap: 8px; }
+        .result-info { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: bold; flex: 1; min-width: 0; flex-wrap: wrap; }
+        .result-info img { width: 22px; height: 22px; flex-shrink: 0; }
+        .result-info .member-name { word-break: keep-all; }
+        .toggle-btn { padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; border: none; font-size: 0.88rem; white-space: nowrap; flex-shrink: 0; min-width: 56px; }
+        .btn-unlock { background: var(--highlight); color: #fff; }
+        .btn-revert { background: var(--border); color: var(--primary); }
+        .result-group-title { font-weight: bold; color: var(--success); margin-bottom: 8px; font-size: 0.9rem; }
+        .done-group { margin-top: 16px; background: transparent !important; border: none !important; box-shadow: none !important; }
+        .done-group > summary { background: transparent; border: 1px dashed var(--border); color: #888; border-radius: 6px; padding: 10px 15px; }
+        .done-group[open] > summary { border-radius: 6px; border-bottom: 1px dashed var(--border); }
+        .done-group .results-grid { margin-top: 8px; }
+        .done-group .result-item { opacity: 0.45; }
+
+        /* 引導卡片 */
+        .onboarding-card { background: var(--card); border: 2px dashed var(--highlight); border-radius: 12px; padding: 30px 20px; text-align: center; margin: 30px 0; }
+        .onboarding-card h2 { font-size: 1.3rem; color: var(--highlight); margin: 0 0 10px; }
+        .onboarding-card p { font-size: 0.9rem; color: #888; margin: 0 0 20px; line-height: 1.6; }
+        .btn-onboard { background: var(--highlight); color: #fff; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; letter-spacing: 1px; }
+        .btn-onboard:hover { opacity: 0.85; }
+
+        /* 迷你進度條 */
+        .mini-bar-wrap { width: 60px; height: 5px; background: var(--disabled); border-radius: 3px; overflow: hidden; margin-left: 8px; }
+        .mini-bar-fill { height: 100%; background: var(--highlight); border-radius: 3px; transition: width 0.3s; }
+        .agent-title-right { display: flex; align-items: center; gap: 6px; }
+        .remain-badge { font-size: 0.75rem; color: var(--highlight); font-weight: bold; white-space: nowrap; }
+
+        #file-upload { display: none; }
+        /* 顯示模式切換 */
+        .view-toggle { display: flex; gap: 4px; }
+        .vtog-btn { background: var(--button-bg); color: #999; border: 1px solid var(--border); padding: 4px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .vtog-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+        /* 回報問題頁 */
+        .feedback-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+        .fb-row { margin-bottom: 14px; }
+        .fb-label { display: block; font-size: 0.82rem; font-weight: bold; color: #999; letter-spacing: 1px; margin-bottom: 7px; }
+        .fb-input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; background: #FAF4EB; color: var(--primary); outline: none; font-family: inherit; }
+        .fb-input:focus { border-color: var(--highlight); }
+        .fb-textarea { min-height: 90px; resize: vertical; }
+        .fb-preview { background: #f9f4ed; border: 1px dashed var(--highlight); border-radius: 6px; padding: 12px 14px; font-size: 0.88rem; line-height: 1.7; color: var(--primary); margin-bottom: 12px; white-space: pre-wrap; font-family: monospace; }
+        .fb-btn-preview { background: var(--button-bg); color: var(--primary); border: 1px solid var(--border); padding: 9px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .fb-btn-copy { background: var(--highlight); color: #fff; border: none; padding: 9px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .fb-hint { font-size: 0.82rem; color: #aaa; line-height: 1.7; text-align: center; padding: 10px; }
+        .btype { font-size: 0.7rem; font-weight: bold; padding: 1px 5px; border-radius: 3px; margin-left: 5px; vertical-align: middle; white-space: nowrap; }
+        .btype-pos { color: #2a6e2a; background: #d4edda; }
+        .btype-neg { color: #a61c1c; background: #fde0e0; }
+        @media (max-width: 500px) { .top-nav { flex-direction: column; align-items: stretch; } }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="sticky-header">
+        <!-- 帳號列 -->
+        <div class="top-nav">
+            <div class="logo-area">🦅 鳶報羈絆助手</div>
+            <div class="account-area">
+                <span>📂 帳號：</span>
+                <select id="account-select" class="account-select" onchange="switchAccount()"></select>
+                <button class="btn-icon" title="改名" onclick="renameAccount()">✏️</button>
+                <button class="btn-icon" title="刪除" onclick="deleteAccount()">🗑️</button>
+                <button class="btn-small" onclick="addAccount()">+ 新增</button>
+                <button class="btn-small" onclick="exportData()">匯出</button>
+                <button class="btn-small" onclick="document.getElementById('file-upload').click()">匯入</button>
+            </div>
+            <input type="file" id="file-upload" accept=".json" onchange="importData(event)">
+        </div>
+
+        <!-- 成就進度（固定在 header，可折疊） -->
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-title" onclick="toggleMilestones()">
+                    🏆 成就收集進度 <span class="ms-arrow" id="ms-arrow">▸</span>
+                </span>
+                <span class="progress-count" id="global-progress-text">0 / 0</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="global-progress-fill"></div></div>
+            <div class="progress-msg" id="global-progress-msg"></div>
+            <div class="milestone-row collapsed" id="milestone-row">
+                <div class="milestone-badge" id="ms-0"><div class="m-name">羈緣・一</div><div class="m-num">1 種</div></div>
+                <div class="milestone-badge" id="ms-1"><div class="m-name">羈緣・二</div><div class="m-num">3 種</div></div>
+                <div class="milestone-badge" id="ms-2"><div class="m-name">羈緣・三</div><div class="m-num">10 種</div></div>
+                <div class="milestone-badge" id="ms-3"><div class="m-name">羈緣・四</div><div class="m-num">20 種</div></div>
+                <div class="milestone-badge" id="ms-4"><div class="m-name">羈緣・五</div><div class="m-num">50 種</div></div>
+                <div class="milestone-badge" id="ms-5"><div class="m-name">羈緣・六</div><div class="m-num">100 種</div></div>
+                <div class="milestone-badge" id="ms-6"><div class="m-name">羈緣・七</div><div class="m-num">200 種</div></div>
+            </div>
+        </div>
+
+        <!-- 分頁 -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('pokedex', this)">🔍 開圖鑑</div>
+            <div class="tab" onclick="switchTab('dispatch', this)">🎯 查配對</div>
+            <div class="tab" onclick="switchTab('feedback', this)">📮 回報問題</div>
+        </div>
+    </div>
+
+    <!-- 圖鑑頁 -->
+    <div class="container" id="pokedex-view">
+        <div class="intro-box">
+            <p>📖 <strong>這個工具是做什麼的？</strong><br>
+            遊戲中密探配對執行情報時，會依天氣獲得羈絆經驗值。這裡讓你記錄哪些「密探組合 × 情報 × 天氣」已經完成過，方便追蹤進度。</p>
+            <p>🖱️ <strong>怎麼用？</strong><br>
+            展開密探卡片 → 找到對應的配對對象 → 對照遊戲畫面，點擊「天氣圖示＋情報」格子打勾 → 格子變暗代表已記錄。</p>
+        </div>
+        <div class="filter-panel">
+            <div class="filter-row">
+                <div class="filter-label">屬性</div>
+                <div class="filter-options" id="filter-attr">
+                    <div class="f-btn active" onclick="setFilter('attr','全部')">全部</div>
+                    <div class="f-btn" onclick="setFilter('attr','水')">水</div>
+                    <div class="f-btn" onclick="setFilter('attr','火')">火</div>
+                    <div class="f-btn" onclick="setFilter('attr','風')">風</div>
+                    <div class="f-btn" onclick="setFilter('attr','地')">地</div>
+                    <div class="f-btn" onclick="setFilter('attr','陰')">陰</div>
+                    <div class="f-btn" onclick="setFilter('attr','陽')">陽</div>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-label">部門</div>
+                <div class="filter-options" id="filter-dept">
+                    <div class="f-btn active" onclick="setFilter('dept','全部')">全部</div>
+                    <div class="f-btn" onclick="setFilter('dept','蛾部')">蛾部</div>
+                    <div class="f-btn" onclick="setFilter('dept','雀部')">雀部</div>
+                    <div class="f-btn" onclick="setFilter('dept','鳶部')">鳶部</div>
+                    <div class="f-btn" onclick="setFilter('dept','蜂部')">蜂部</div>
+                    <div class="f-btn" onclick="setFilter('dept','閒人')">閒人</div>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-label">狀態</div>
+                <div class="filter-options" id="filter-status">
+                    <div class="f-btn active" onclick="setStatusFilter('全部')">全部</div>
+                    <div class="f-btn danger" onclick="setStatusFilter('未完成')">⚡ 未完成</div>
+                    <div class="f-btn" onclick="setStatusFilter('已完成')">✅ 已完成</div>
+                </div>
+            </div>
+        </div>
+        <div id="pokedex-content">
+            <div id="onboarding-card" class="onboarding-card" style="display:none;">
+                <h2>👋 歡迎使用鳶報羈絆助手</h2>
+                <p>建立一個帳號來開始記錄你的羈絆收集進度<br>每個帳號獨立儲存，可以切換不同角色使用</p>
+                <button class="btn-onboard" onclick="addAccount()">＋ 建立第一個帳號</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 查配對頁 -->
+    <div class="container" id="dispatch-view" style="display:none;">
+        <div class="match-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <div class="selector-label" style="margin:0;">情報</div>
+                <div class="view-toggle">
+                    <button class="vtog-btn active" id="vtog-card" onclick="setViewMode('card',this)" title="圖示選擇">☁️ 圖示</button>
+                    <button class="vtog-btn" id="vtog-list" onclick="setViewMode('list',this)" title="清單選擇">☰ 清單</button>
+                </div>
+            </div>
+            <!-- 圖示模式 -->
+            <div id="view-card">
+                <div class="action-btns" id="action-btns">
+                    <div class="action-btn selected" onclick="selectAction('縱火',this)">縱火</div>
+                    <div class="action-btn" onclick="selectAction('傳謠',this)">傳謠</div>
+                    <div class="action-btn" onclick="selectAction('下毒',this)">下毒</div>
+                    <div class="action-btn" onclick="selectAction('臥底',this)">臥底</div>
+                    <div class="action-btn" onclick="selectAction('搜集',this)">搜集</div>
+                    <div class="action-btn" onclick="selectAction('滅火',this)">滅火</div>
+                    <div class="action-btn" onclick="selectAction('淨水',this)">淨水</div>
+                    <div class="action-btn" onclick="selectAction('營救',this)">營救</div>
+                </div>
+                <div class="selector-label">天氣</div>
+                <div class="weather-btns" id="weather-btns">
+                    <div class="weather-btn selected" onclick="selectWeather('晴天',this)"><img src="35px-晴天.png"><span>晴天</span></div>
+                    <div class="weather-btn" onclick="selectWeather('雨天',this)"><img src="35px-雨天.png"><span>雨天</span></div>
+                    <div class="weather-btn" onclick="selectWeather('大霧',this)"><img src="35px-大雾.png"><span>大霧</span></div>
+                    <div class="weather-btn" onclick="selectWeather('狂風',this)"><img src="35px-狂风.png"><span>狂風</span></div>
+                    <div class="weather-btn" onclick="selectWeather('小雪',this)"><img src="35px-小雪.png"><span>小雪</span></div>
+                    <div class="weather-btn" onclick="selectWeather('大雪',this)"><img src="35px-大雪.png"><span>大雪</span></div>
+                    <div class="weather-btn" onclick="selectWeather('颶風',this)"><img src="35px-飓风.png"><span>颶風</span></div>
+                    <div class="weather-btn" onclick="selectWeather('雷鳴',this)"><img src="35px-雷鸣.png"><span>雷鳴</span></div>
+                </div>
+            </div>
+            <!-- 清單模式 -->
+            <div id="view-list" style="display:none;">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                    <select id="action-select-list" onchange="curAction=this.value;findMatches()" style="flex:1;min-width:100px;padding:10px;border:1px solid var(--border);border-radius:6px;font-size:1rem;background:#FAF4EB;font-weight:bold;outline:none;">
+                        <option>縱火</option><option>傳謠</option><option>下毒</option><option>臥底</option>
+                        <option>搜集</option><option>滅火</option><option>淨水</option><option>營救</option>
+                    </select>
+                    <select id="weather-select-list" onchange="curWeather=this.value;findMatches()" style="flex:1;min-width:100px;padding:10px;border:1px solid var(--border);border-radius:6px;font-size:1rem;background:#FAF4EB;font-weight:bold;outline:none;">
+                        <option>晴天</option><option>雨天</option><option>大霧</option><option>狂風</option>
+                        <option>小雪</option><option>大雪</option><option>颶風</option><option>雷鳴</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div id="match-results"></div>
+    </div>
+
+    <!-- 回報問題頁 -->
+    <div class="container" id="feedback-view" style="display:none;">
+        <div class="intro-box">📮 <strong>回報資料問題</strong><br>發現羈絆資料有誤？填寫以下資訊，複製後傳給作者修正。</div>
+        <div class="feedback-card">
+            <div class="fb-row">
+                <label class="fb-label">問題類型</label>
+                <div class="action-btns" style="margin:0;" id="fb-type-btns">
+                    <div class="action-btn selected" onclick="fbSelectType(this)">資料有誤</div>
+                    <div class="action-btn" onclick="fbSelectType(this)">缺少組合</div>
+                    <div class="action-btn" onclick="fbSelectType(this)">一拍/貌合標錯</div>
+                    <div class="action-btn" onclick="fbSelectType(this)">其他問題</div>
+                </div>
+            </div>
+            <div class="fb-row">
+                <label class="fb-label">涉及組合</label>
+                <input id="fb-combo" type="text" placeholder="例：張闓 × 甘寧（縱火）" class="fb-input">
+            </div>
+            <div class="fb-row">
+                <label class="fb-label">說明</label>
+                <textarea id="fb-desc" placeholder="請描述問題，例如：實際應為貌合神離，或缺少某個天氣…" class="fb-input fb-textarea"></textarea>
+            </div>
+            <div id="fb-preview" class="fb-preview" style="display:none;"></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="fb-btn-preview" onclick="fbPreview()">👁️ 預覽回報內容</button>
+                <button class="fb-btn-copy" onclick="fbCopy()" id="fb-copy-btn" style="display:none;">📋 複製回報內容</button>
+            </div>
+            <div id="fb-success" style="display:none;color:var(--success);font-weight:bold;margin-top:10px;font-size:0.9rem;">✅ 已複製！請貼給作者 🙏</div>
+        </div>
+        <div class="fb-hint">
+            💡 複製後可貼到遊戲群組、Discord、或私訊給作者。<br>
+            感謝每一位願意回報問題的玩家！🐦
+        </div>
+    </div>
+</div>
+
+<script>
+    const weathers = {'晴天':'35px-晴天.png','雨天':'35px-雨天.png','大霧':'35px-大雾.png','狂風':'35px-狂风.png','小雪':'35px-小雪.png','大雪':'35px-大雪.png','颶風':'35px-飓风.png','雷鳴':'35px-雷鸣.png'};
+    const allW = Object.keys(weathers);
+    const agentsData = {"伍丹":{"dept":"蛾部","attr":"地"},"呂蒙":{"dept":"蛾部","attr":"火"},"嚴白虎":{"dept":"鳶部","attr":"陰"},"夏侯惇":{"dept":"鳶部","attr":"地"},"太史慈":{"dept":"閒人","attr":"風"},"孔融":{"dept":"雀部","attr":"水"},"孫尚香":{"dept":"鳶部","attr":"火"},"孫權":{"dept":"鳶部","attr":"火"},"小喬":{"dept":"雀部","attr":"水"},"干吉":{"dept":"閒人","attr":"火"},"張仲景":{"dept":"鳶部","attr":"地"},"張修":{"dept":"蛾部","attr":"火"},"張角":{"dept":"蛾部","attr":"陰"},"張遼":{"dept":"蛾部","attr":"地"},"張郃":{"dept":"鳶部","attr":"火"},"張闓":{"dept":"蛾部","attr":"陰"},"張飛":{"dept":"蛾部","attr":"風"},"張魯":{"dept":"閒人","attr":"陰"},"徐庶":{"dept":"鳶部","attr":"陽"},"文丑":{"dept":"蛾部","attr":"火"},"李真":{"dept":"蜂部","attr":"水"},"李脫":{"dept":"蜂部","attr":"地"},"王異":{"dept":"鳶部","attr":"水"},"甘寧":{"dept":"蛾部","attr":"水"},"程昱":{"dept":"閒人","attr":"火"},"繡球":{"dept":"蜂部","attr":"水"},"荀彧":{"dept":"閒人","attr":"風"},"華佗":{"dept":"閒人","attr":"陽"},"葛洪":{"dept":"閒人","attr":"陰"},"蔡琰":{"dept":"雀部","attr":"水"},"蛾使":{"dept":"蛾部","attr":"水"},"賈詡":{"dept":"蛾部","attr":"陰"},"郭嘉":{"dept":"閒人","attr":"風"},"郭解":{"dept":"鳶部","attr":"火"},"阿蟬":{"dept":"鳶部","attr":"地"},"陸遜":{"dept":"雀部","attr":"火"},"雀使":{"dept":"雀部","attr":"水"},"顏良":{"dept":"蛾部","attr":"水"},"飛雲":{"dept":"蜂部","attr":"水"},"馬超":{"dept":"蛾部","attr":"地"},"魯肅":{"dept":"雀部","attr":"水"}};
+
+    // 格式：「成員|情報|天氣(空=全8種)|類型(+一拍即合 / -貌合神離)」
+    // 縱火正負已依截圖校正；其餘情報待補全（暫標+）
+    const rawData = [
+        // ── 縱火（Image1 截圖：太史慈×甘寧、孫權×孫尚香 為 -70% 貌合神離）──
+        "張闓,甘寧|縱火||+",
+        "荀彧,程昱|縱火||+",
+        "太史慈,甘寧|縱火||-",          // -70% 貌合神離
+        "飛雲,繡球|縱火||+",
+        "孫權,孫尚香|縱火||-",          // -70% 貌合神離
+        "陸遜,呂蒙|縱火|晴天,大霧,狂風,小雪,大雪,颶風,雷鳴|+",
+        "陸遜,呂蒙|縱火|雨天|-",        // -70% 雨天特例
+        "陸遜,呂蒙,魯肅|縱火||+",
+        "顏良,文丑|縱火|晴天|+",
+        "李脫,李真|縱火|大霧|+",
+        "張遼,阿蟬|縱火|大霧|+",
+        "張仲景,郭解,孫尚香|縱火|晴天|+",
+        // ── 傳謠（待補正負）──
+        "孔融,郭嘉|傳謠||+",
+        "張修,張魯|傳謠||+",
+        "飛雲,繡球|傳謠||+",
+        "郭嘉,賈詡|傳謠||+",
+        "顏良,文丑|傳謠||+",
+        "蛾使,雀使|傳謠||+",
+        "張仲景,華佗|傳謠||+",
+        "李脫,李真|傳謠|大霧|+",
+        "張遼,阿蟬|傳謠|大霧|+",
+        "張仲景,郭解,孫尚香|傳謠|晴天|+",
+        // ── 下毒（張闓×甘寧 = 貌合神離，from Image2）──
+        "夏侯惇,張郃|下毒||+",
+        "張飛,張郃|下毒||+",
+        "孔融,張闓|下毒||+",
+        "孔融,郭嘉|下毒||+",
+        "張角,干吉|下毒||+",
+        "太史慈,張闓|下毒||+",          // 一拍即合（Image2）
+        "蔡琰,王異|下毒||+",
+        "張闓,甘寧|下毒||-",            // 貌合神離（Image2）
+        "飛雲,繡球|下毒||+",
+        "孫權,孫尚香|下毒||+",
+        "郭嘉,賈詡|下毒||+",
+        "華佗,呂蒙|下毒||+",
+        "張仲景,華佗|下毒||+",
+        "李脫,李真|下毒|大霧|+",
+        "張遼,阿蟬|下毒|大霧|+",
+        "張仲景,郭解,孫尚香|下毒|晴天|+",
+        // ── 臥底（待補正負）──
+        "嚴白虎,小喬,張飛|臥底||+",
+        "張飛,張郃|臥底||+",
+        "夏侯惇,張郃|臥底||+",
+        "陸遜,夏侯惇,孔融|臥底||+",
+        "太史慈,甘寧|臥底||+",
+        "張遼,馬超|臥底||+",
+        "馬超,阿蟬|臥底||+",
+        "張修,張魯|臥底||+",
+        "張角,干吉|臥底||+",
+        "蔡琰,王異|臥底||+",
+        "飛雲,繡球|臥底||+",
+        "陸遜,呂蒙,魯肅|臥底||+",
+        "華佗,呂蒙|臥底||+",
+        "阿蟬,伍丹|臥底||+",
+        "張遼,阿蟬|臥底||+",
+        "嚴白虎,小喬|臥底||+",
+        "李脫,李真|臥底|大霧|+",
+        "張仲景,郭解,孫尚香|臥底|晴天|+",
+        // ── 搜集（待補正負）──
+        "荀彧,程昱|搜集||+",
+        "張角,干吉|搜集||+",
+        "張遼,馬超|搜集||+",
+        "張飛,張郃|搜集||+",
+        "太史慈,甘寧|搜集||+",
+        "飛雲,繡球|搜集||+",
+        "李脫,李真|搜集|大霧|+",
+        "張遼,阿蟬|搜集|大霧|+",
+        "張仲景,郭解,孫尚香|搜集|晴天|+",
+        // ── 滅火（待補正負）──
+        "馬超,阿蟬|滅火||+",
+        "葛洪,徐庶|滅火||+",
+        "飛雲,繡球|滅火||+",
+        "李脫,李真|滅火|大霧|+",
+        "張遼,阿蟬|滅火|大霧|+",
+        "張仲景,郭解,孫尚香|滅火|晴天|+",
+        // ── 淨水（待補正負）──
+        "葛洪,徐庶|淨水||+",
+        "陸遜,夏侯惇,孔融|淨水||+",
+        "嚴白虎,小喬,張飛|淨水||+",
+        "飛雲,繡球|淨水||+",
+        "李脫,李真|淨水|大霧|+",
+        "張遼,阿蟬|淨水|大霧|+",
+        "張仲景,郭解,孫尚香|淨水|晴天|+",
+        // ── 營救（待補正負）──
+        "孔融,張闓|營救||+",
+        "太史慈,張闓|營救||+",
+        "張遼,馬超|營救||+",
+        "荀彧,程昱|營救||+",
+        "張飛,張郃|營救||+",
+        "夏侯惇,張郃|營救||+",
+        "飛雲,繡球|營救||+",
+        "李脫,李真|營救|大霧|+",
+        "張遼,阿蟬|營救|大霧|+",
+        "張仲景,郭解,孫尚香|營救|晴天|+"
+    ];
+
+    let agentTree = {}, bondsList = [], globalTotalBonds = 0;
+    let allAccounts = JSON.parse(localStorage.getItem('yuan_all_accounts')) || {};
+    let currentAccount = localStorage.getItem('yuan_current_account');
+
+    function toggleMilestones() {
+        const row = document.getElementById('milestone-row');
+        const arrow = document.getElementById('ms-arrow');
+        row.classList.toggle('collapsed');
+        arrow.textContent = row.classList.contains('collapsed') ? '▸' : '▾';
+    }
+
+    function updateAccountUI() {
+        const sel = document.getElementById('account-select');
+        const ob = document.getElementById('onboarding-card');
+        if (Object.keys(allAccounts).length === 0) {
+            sel.innerHTML = '<option value="">(尚無帳號)</option>';
+            currentAccount = null;
+            if (ob) ob.style.display = 'block';
+        } else {
+            if (!currentAccount || !allAccounts[currentAccount]) currentAccount = Object.keys(allAccounts)[0];
+            sel.innerHTML = Object.keys(allAccounts).map(n => `<option value="${n}"${n===currentAccount?' selected':''}>${n}</option>`).join('');
+            if (ob) ob.style.display = 'none';
+        }
+    }
+
+    function checkAcc() { if (!currentAccount) { alert("請先新增帳號！"); return false; } return true; }
+
+    function addAccount() {
+        const type = prompt("選擇版本：\n1. 如鳶\n2. 代號鳶","1");
+        if (!type) return;
+        const prefix = type.trim()==="2" ? "代號鳶" : "如鳶";
+        const name = prompt("輸入角色名字：");
+        if (!name||!name.trim()) return;
+        const fullName = `${prefix} - ${name.trim()}`;
+        if (allAccounts[fullName]) { alert("已有同名帳號！"); return; }
+        allAccounts[fullName] = {};
+        localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+        currentAccount = fullName;
+        localStorage.setItem('yuan_current_account', currentAccount);
+        updateAccountUI(); renderPokedex();
+    }
+
+    function renameAccount() {
+        if (!checkAcc()) return;
+        const newName = prompt("輸入新名字：", currentAccount);
+        if (!newName||newName.trim()===currentAccount) return;
+        if (allAccounts[newName.trim()]) { alert("已有同名帳號！"); return; }
+        allAccounts[newName.trim()] = allAccounts[currentAccount];
+        delete allAccounts[currentAccount];
+        currentAccount = newName.trim();
+        localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+        localStorage.setItem('yuan_current_account', currentAccount);
+        updateAccountUI(); renderPokedex();
+    }
+
+    function deleteAccount() {
+        if (!checkAcc()) return;
+        if (!confirm(`確定刪除「${currentAccount}」的所有進度？此操作無法復原。`)) return;
+        delete allAccounts[currentAccount];
+        localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+        currentAccount = Object.keys(allAccounts)[0] || null;
+        localStorage.setItem('yuan_current_account', currentAccount||'');
+        updateAccountUI(); renderPokedex();
+    }
+
+    function switchAccount() {
+        currentAccount = document.getElementById('account-select').value;
+        localStorage.setItem('yuan_current_account', currentAccount);
+        renderPokedex();
+        if (document.getElementById('dispatch-view').style.display==='block') findMatches();
+    }
+
+    function buildData() {
+        globalTotalBonds = 0; agentTree = {}; bondsList = [];
+        rawData.forEach(row => {
+            const parts = row.split('|');
+            const members = parts[0].split(',');
+            const act = parts[1];
+            const validW = (parts[2] && parts[2].trim()) ? parts[2].split(',') : allW;
+            const bondType = (parts[3] && parts[3].trim() === '-') ? '-' : '+'; // + 一拍即合 / - 貌合神離
+            bondsList.push({members, action:act, validWeathers:validW, bondType});
+            globalTotalBonds += validW.length;
+            members.forEach(m => {
+                if (!agentTree[m]) agentTree[m] = {dept:agentsData[m]?.dept||"閒人", attr:agentsData[m]?.attr||"水", bonds:[], totalTasks:0};
+                const ts = members.filter(x=>x!==m).join(' * ');
+                // 同一 target+action+bondType 才算同一組
+                if (!agentTree[m].bonds.find(b=>b.target===ts&&b.action===act&&b.bondType===bondType)) {
+                    agentTree[m].bonds.push({target:ts, action:act, validWeathers:validW, bondType});
+                    agentTree[m].totalTasks += validW.length;
+                }
+            });
+        });
+    }
+
+    let curFilter = {dept:'全部', attr:'全部', status:'全部'};
+    function getSKey(arr, act, w) { return `${[...arr].sort().join('_')}_${act}_${w}`; }
+
+    function switchTab(t, el) {
+        document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('pokedex-view').style.display = t==='pokedex'?'block':'none';
+        document.getElementById('dispatch-view').style.display = t==='dispatch'?'block':'none';
+        document.getElementById('feedback-view').style.display = t==='feedback'?'block':'none';
+        if (t==='dispatch') findMatches();
+    }
+
+    function setFilter(t, v) {
+        curFilter[t] = v;
+        document.querySelectorAll(`#filter-${t} .f-btn`).forEach(x=>x.classList.toggle('active', x.innerText===v));
+        renderPokedex();
+    }
+
+    function setStatusFilter(v) {
+        curFilter.status = v;
+        document.querySelectorAll('#filter-status .f-btn').forEach(x => {
+            const l = x.innerText;
+            x.classList.toggle('active', (v==='全部'&&l==='全部')||(v==='未完成'&&l.includes('未完成'))||(v==='已完成'&&l.includes('已完成')));
+        });
+        renderPokedex();
+    }
+
+    function getAgentCount(name) {
+        const prog = currentAccount ? allAccounts[currentAccount] : {};
+        let c = 0;
+        agentTree[name].bonds.forEach(b=>b.validWeathers.forEach(w=>{ if(prog[getSKey([name,...b.target.split(' * ')],b.action,w)]) c++; }));
+        return c;
+    }
+
+    const deptOrder = ['蛾部','雀部','鳶部','蜂部','閒人'];
+
+    function buildAgentCard(name, prog) {
+        const agent = agentTree[name];
+        const det = document.createElement('details'); det.id = `agent-${name}`;
+        const sumEl = document.createElement('summary');
+        sumEl.innerHTML = `
+            <div class="agent-title-left">${name}<span class="agent-tag">${agent.dept}</span><span class="agent-tag">${agent.attr}</span></div>
+            <div class="agent-title-right">
+                <span class="remain-badge" id="remain-${name}"></span>
+                <div class="mini-bar-wrap"><div class="mini-bar-fill" id="minibar-${name}" style="width:0%"></div></div>
+                <span class="comp-tag" id="comp-${name}">0/${agent.totalTasks}</span>
+                <span class="summary-arrow">▼</span>
+            </div>`;
+        det.appendChild(sumEl);
+        const body = document.createElement('div'); body.className = 'bond-content';
+
+        // 按配對對象分組，每格 = 天氣圖示 + 情報名稱（仿遊戲排版）
+        const byTarget = {};
+        agent.bonds.forEach(b => {
+            const gk = `${b.target}__${b.bondType}`; // 同一對象但不同類型分開顯示
+            if(!byTarget[gk]) byTarget[gk]=[];
+            byTarget[gk].push(b);
+        });
+
+        Object.entries(byTarget).forEach(([gk, bonds]) => {
+            const [target, bType] = gk.split('__');
+            const header = document.createElement('div'); header.className = 'bond-header';
+            const titleDiv = document.createElement('div'); titleDiv.className = 'bond-title';
+            const typeLabel = bType==='-'
+                ? `<span class="btype btype-neg">貌合神離</span>`
+                : `<span class="btype btype-pos">一拍即合</span>`;
+            titleDiv.innerHTML = `與 ${target} ${typeLabel}`;
+            const btnAll = document.createElement('button'); btnAll.className = 'btn-check-all';
+            btnAll.textContent = '全選 / 取消';
+            header.appendChild(titleDiv); header.appendChild(btnAll);
+            body.appendChild(header);
+
+            const grid = document.createElement('div'); grid.className = 'weather-grid';
+            const cells = [];
+            allW.forEach(w => {
+                bonds.forEach(b => {
+                    if (b.validWeathers.includes(w)) {
+                        const k = getSKey([name,...target.split(' * ')], b.action, w);
+                        cells.push({w, action:b.action, key:k});
+                    }
+                });
+            });
+
+            btnAll.onclick = e => {
+                e.preventDefault(); e.stopPropagation(); if(!checkAcc()) return;
+                const doneCount = cells.filter(c=>allAccounts[currentAccount][c.key]).length;
+                const state = doneCount < cells.length;
+                cells.forEach(c=>allAccounts[currentAccount][c.key]=state);
+                localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+                grid.querySelectorAll('.weather-item').forEach(item=>{
+                    item.className = `weather-item${allAccounts[currentAccount][item.dataset.key]?' unlocked':''}`;
+                });
+                updateUI();
+            };
+
+            cells.forEach(({w, action, key}) => {
+                const item = document.createElement('div');
+                item.className = `weather-item${prog[key]?' unlocked':''}`;
+                item.dataset.key = key;
+                const img = document.createElement('img'); img.src = weathers[w];
+                const span = document.createElement('span'); span.textContent = action;
+                item.appendChild(img); item.appendChild(span);
+                item.onclick = () => {
+                    if(!checkAcc()) return;
+                    allAccounts[currentAccount][key] = !allAccounts[currentAccount][key];
+                    localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+                    item.className = `weather-item${allAccounts[currentAccount][key]?' unlocked':''}`;
+                    updateUI();
+                };
+                grid.appendChild(item);
+            });
+            body.appendChild(grid);
+        });
+        det.appendChild(body);
+        return det;
+    }
+
+    function renderPokedex() {
+        const cnt = document.getElementById('pokedex-content'); cnt.innerHTML = '';
+        const prog = currentAccount ? allAccounts[currentAccount] : {};
+        if (!currentAccount) {
+            const ob = document.createElement('div'); ob.id='onboarding-card'; ob.className='onboarding-card';
+            ob.innerHTML = `<h2>👋 歡迎使用鳶報羈絆助手</h2><p>建立一個帳號來開始記錄你的羈絆收集進度<br>每個帳號獨立儲存，可以切換不同角色使用</p><button class="btn-onboard" onclick="addAccount()">＋ 建立第一個帳號</button>`;
+            cnt.appendChild(ob); return;
+        }
+        const {dept:fDept, attr:fAttr, status:fStatus} = curFilter;
+        const matchAgent = name => {
+            const a = agentTree[name];
+            if (fDept!=='全部'&&a.dept!==fDept) return false;
+            if (fAttr!=='全部'&&a.attr!==fAttr) return false;
+            if (fStatus==='未完成') { const c=getAgentCount(name); if(c===a.totalTasks&&c>0) return false; }
+            if (fStatus==='已完成') { const c=getAgentCount(name); if(c!==a.totalTasks||c===0) return false; }
+            return true;
+        };
+        if (fDept!=='全部') {
+            const list = Object.keys(agentTree).filter(matchAgent).sort();
+            if (!list.length) cnt.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">沒有符合條件的密探</div>';
+            else list.forEach(name=>cnt.appendChild(buildAgentCard(name,prog)));
+        } else {
+            let anyRendered = false;
+            deptOrder.forEach((dept,i) => {
+                const agents = Object.keys(agentTree).filter(n=>agentTree[n].dept===dept&&matchAgent(n)).sort();
+                if (!agents.length) return;
+                anyRendered = true;
+                const section = document.createElement('details'); section.className='dept-section';
+                if (i===0||fStatus==='未完成'||fStatus==='已完成') section.open=true;
+                const sSum = document.createElement('summary');
+                sSum.innerHTML = `<span>${dept}（${agents.length} 人）</span><span class="summary-arrow">▼</span>`;
+                section.appendChild(sSum);
+                const sBody = document.createElement('div'); sBody.className='dept-body';
+                agents.forEach(name=>sBody.appendChild(buildAgentCard(name,prog)));
+                section.appendChild(sBody);
+                cnt.appendChild(section);
+            });
+            if (!anyRendered) cnt.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">沒有符合條件的密探</div>';
+        }
+        updateUI();
+    }
+
+    function updateUI() {
+        const prog = currentAccount ? allAccounts[currentAccount] : {};
+        Object.keys(agentTree).forEach(name => {
+            let count=0; const agent=agentTree[name];
+            agent.bonds.forEach(b=>b.validWeathers.forEach(w=>{ if(prog[getSKey([name,...b.target.split(' * ')],b.action,w)]) count++; }));
+            const el=document.getElementById(`comp-${name}`);
+            const det=document.getElementById(`agent-${name}`);
+            const mini=document.getElementById(`minibar-${name}`);
+            const remain=document.getElementById(`remain-${name}`);
+            if (el) el.innerText=`${count}/${agent.totalTasks}`;
+            if (mini) mini.style.width=agent.totalTasks?`${(count/agent.totalTasks)*100}%`:'0%';
+            if (remain) remain.textContent=(agent.totalTasks-count)>0?`剩 ${agent.totalTasks-count}`:'';
+            if (det) det.className=(count===agent.totalTasks&&count>0)?'agent-completed':'';
+        });
+        const u = new Set();
+        bondsList.forEach(b=>b.validWeathers.forEach(w=>{ const k=getSKey(b.members,b.action,w); if(prog[k]) u.add(k); }));
+        const done=u.size, total=globalTotalBonds;
+        document.getElementById('global-progress-text').innerText=`${done} / ${total}`;
+        document.getElementById('global-progress-fill').style.width=total?`${(done/total)*100}%`:'0%';
+        [1,3,10,20,50,100,200].forEach((t,i)=>{ const el=document.getElementById(`ms-${i}`); if(el) el.classList.toggle('achieved',done>=t); });
+        const msgEl=document.getElementById('global-progress-msg');
+        if (msgEl) {
+            const pct=total?done/total:0;
+            msgEl.textContent = done===0?'還沒開始收集，今天就出發吧！🎯'
+                :pct<0.25?'加油！才剛起步，繼續累積吧 💪'
+                :pct<0.5?`不錯！已完成 ${Math.round(pct*100)}%，繼續衝！🔥`
+                :pct<0.75?`太強了！已過一半，只剩 ${total-done} 格！⚡`
+                :pct<1?`快收集完啦！只剩 ${total-done} 格，加把勁！🏃`
+                :'🎉 全部收集完成！你是羈絆收藏大師！';
+        }
+    }
+
+    let curAction = '縱火', curWeather = '晴天', curViewMode = 'card';
+    let fbType = '資料有誤';
+
+    function setViewMode(mode, el) {
+        curViewMode = mode;
+        document.querySelectorAll('.vtog-btn').forEach(b=>b.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('view-card').style.display = mode==='card'?'block':'none';
+        document.getElementById('view-list').style.display = mode==='list'?'block':'none';
+        findMatches();
+    }
+
+    function fbSelectType(el) {
+        fbType = el.textContent;
+        document.querySelectorAll('#fb-type-btns .action-btn').forEach(b=>b.classList.remove('selected'));
+        el.classList.add('selected');
+    }
+
+    function fbPreview() {
+        const combo = document.getElementById('fb-combo').value.trim() || '（未填）';
+        const desc = document.getElementById('fb-desc').value.trim() || '（未填）';
+        const text = `【鳶報羈絆助手 - 資料回報】\n問題類型：${fbType}\n涉及組合：${combo}\n說明：${desc}\n回報時間：${new Date().toLocaleString('zh-TW')}`;
+        const el = document.getElementById('fb-preview');
+        el.textContent = text; el.style.display = 'block';
+        document.getElementById('fb-copy-btn').style.display = 'inline-block';
+        document.getElementById('fb-success').style.display = 'none';
+    }
+
+    function fbCopy() {
+        const text = document.getElementById('fb-preview').textContent;
+        navigator.clipboard.writeText(text).then(()=>{
+            document.getElementById('fb-success').style.display = 'block';
+        }).catch(()=>{
+            const ta = document.createElement('textarea');
+            ta.value = text; document.body.appendChild(ta);
+            ta.select(); document.execCommand('copy');
+            document.body.removeChild(ta);
+            document.getElementById('fb-success').style.display = 'block';
+        });
+    }
+
+    function selectAction(act, el) {
+        curAction = act;
+        document.querySelectorAll('#action-btns .action-btn').forEach(b=>b.classList.remove('selected'));
+        el.classList.add('selected');
+        findMatches();
+    }
+    function selectWeather(w, el) {
+        curWeather = w;
+        document.querySelectorAll('.weather-btn').forEach(b=>b.classList.remove('selected'));
+        el.classList.add('selected');
+        findMatches();
+    }
+
+    function findMatches() {
+        if (!currentAccount) { document.getElementById('match-results').innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">請先建立帳號</div>'; return; }
+        const act=curAction, w=curWeather;
+        const prog=allAccounts[currentAccount];
+        let hUnlock='', hDone='', dCount=0;
+        bondsList.filter(b=>b.action===act&&b.validWeathers.includes(w)).forEach(b=>{
+            const k=getSKey(b.members,act,w), isU=prog[k];
+            const typeTag = b.bondType==='-'
+                ? `<span class="btype btype-neg">貌合神離</span>`
+                : `<span class="btype btype-pos">一拍即合</span>`;
+            const html=`<div class="result-item"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}</div><button class="toggle-btn ${isU?'btn-revert':'btn-unlock'}" onclick="tglM('${k}')">${isU?'取消':'解鎖'}</button></div>`;
+            if(isU){hDone+=html;dCount++;}else{hUnlock+=html;}
+        });
+        document.getElementById('match-results').innerHTML =
+            (hUnlock?`<div class="result-group-title">✅ 目前可解鎖</div><div class="results-grid">${hUnlock}</div>`
+                :`<div style="text-align:center;padding:20px;color:var(--success);font-weight:bold;">🎉 此情報所有組合今日已解鎖！</div>`)
+            +(hDone?`<details class="done-group"><summary>📁 已解鎖 (${dCount}) <span style="margin-left:auto;">▼</span></summary><div class="results-grid">${hDone}</div></details>`:'');
+    }
+
+    function tglM(k) {
+        allAccounts[currentAccount][k]=!allAccounts[currentAccount][k];
+        localStorage.setItem('yuan_all_accounts',JSON.stringify(allAccounts));
+        findMatches(); updateUI();
+    }
+
+    function exportData() {
+        if(!checkAcc()) return;
+        const a=document.createElement('a');
+        a.href="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allAccounts));
+        a.download="鳶報備份.json"; a.click();
+    }
+
+    function importData(event) {
+        const file=event.target.files[0]; if(!file) return;
+        const reader=new FileReader();
+        reader.onload=e=>{
+            try {
+                const imported=JSON.parse(e.target.result);
+                if(typeof imported!=='object'||imported===null) throw new Error();
+                Object.assign(allAccounts,imported);
+                localStorage.setItem('yuan_all_accounts',JSON.stringify(allAccounts));
+                if(!currentAccount||!allAccounts[currentAccount]) currentAccount=Object.keys(allAccounts)[0];
+                updateAccountUI(); renderPokedex();
+                alert('匯入成功！');
+            } catch { alert('匯入失敗：檔案格式不正確。'); }
+        };
+        reader.readAsText(file);
+        event.target.value='';
+    }
+
+    buildData(); updateAccountUI(); renderPokedex();
+</script>
+</body>
+</html>
