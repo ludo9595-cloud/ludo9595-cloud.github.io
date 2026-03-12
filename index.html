@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>鳶報羈絆助手</title>
+    <title>鸢报羁绊助手</title>
     <style>
         :root {
             --bg: #F4EBE2;
@@ -20,17 +20,21 @@
         .wrapper { width: 100%; max-width: 800px; position: relative; }
 
         /* 固定頂部 */
-        .sticky-header { position: sticky; top: 0; z-index: 200; background: var(--bg); padding: 15px 0 10px 0; }
-        .top-nav { background: var(--card); border: 1px solid var(--border); padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 10px; }
-        .logo-area { font-size: 1.2rem; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 5px; }
-        .account-area { display: flex; align-items: center; gap: 6px; background: #FAF4EB; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); }
-        .account-select { border: 1px solid var(--border); padding: 4px; border-radius: 4px; outline: none; background: #fff; font-weight: bold; color: var(--primary); cursor: pointer; font-size: 0.85rem; }
-        .btn-small { background: var(--button-bg); color: var(--primary); border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; transition: 0.2s; }
-        .btn-small:hover { background: var(--highlight); color: #fff; border-color: var(--highlight); }
-        .btn-icon { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 2px 4px; color: var(--primary); opacity: 0.5; transition: 0.2s; }
+        .sticky-header { position: sticky; top: 0; z-index: 200; background: var(--bg); padding: 10px 0 8px 0; }
+        .top-nav { background: var(--card); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 10px; padding: 8px 12px 8px 12px; display: flex; flex-direction: column; gap: 7px; }
+        /* 行1：Logo */
+        .nav-logo-row { display: flex; align-items: center; }
+        .logo-area { font-size: 1.2rem; font-weight: bold; color: var(--primary); flex: 1; white-space: nowrap; }
+        /* 行2：账号控制 */
+        .nav-ctrl-row { display: flex; align-items: center; gap: 4px; }
+        .account-select { flex: 1; min-width: 0; border: 1px solid var(--border); padding: 6px 6px; border-radius: 5px; outline: none; background: #fff; font-weight: bold; color: var(--primary); cursor: pointer; font-size: 0.85rem; }
+        .btn-icon { background: none; border: none; cursor: pointer; font-size: 1rem; padding: 4px; color: var(--primary); opacity: 0.45; transition: 0.2s; flex-shrink: 0; line-height: 1; }
         .btn-icon:hover { opacity: 1; color: var(--highlight); }
+        .nav-divider { width: 1px; height: 18px; background: var(--border); flex-shrink: 0; margin: 0 2px; }
+        .btn-small { background: var(--button-bg); color: var(--primary); border: 1px solid var(--border); padding: 6px 10px; border-radius: 5px; cursor: pointer; font-size: 0.82rem; font-weight: bold; transition: 0.2s; white-space: nowrap; flex-shrink: 0; }
+        .btn-small:hover { background: var(--highlight); color: #fff; border-color: var(--highlight); }
 
-        /* 成就進度 - sticky header 內 */
+        /* 成就进度 - sticky header 內 */
         .progress-container { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; }
         .progress-header { display: flex; align-items: center; gap: 8px; }
         .progress-title { font-size: 0.88rem; font-weight: bold; color: var(--primary); cursor: pointer; user-select: none; flex: 1; }
@@ -44,14 +48,14 @@
         /* 成就格子 - 可折疊 */
         .milestone-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
         .milestone-row.collapsed { display: none; }
-        .milestone-badge { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 6px; border-radius: 6px; border: 1px solid var(--border); background: #f5f0ea; opacity: 0.35; transition: 0.3s; flex: 1; min-width: 42px; }
+        .milestone-badge { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 6px; border-radius: 6px; border: 1px solid var(--border); background: #f5f0ea; opacity: 0.35; transition: 0.3s; flex: 1; min-width: 44px; }
         .milestone-badge.achieved { opacity: 1; background: linear-gradient(135deg, #f5e8d0, #fdf6ec); border-color: var(--highlight); box-shadow: 0 1px 4px rgba(168,101,94,0.2); }
-        .milestone-badge .m-name { font-size: 0.7rem; font-weight: bold; color: var(--primary); white-space: nowrap; }
-        .milestone-badge .m-num { font-size: 0.62rem; color: #aaa; }
+        .milestone-badge .m-name { font-size: 0.72rem; font-weight: bold; color: var(--primary); white-space: nowrap; }
+        .milestone-badge .m-num { font-size: 0.64rem; color: #aaa; }
         .milestone-badge.achieved .m-name { color: var(--highlight); }
         .milestone-badge.achieved .m-num { color: var(--highlight); opacity: 0.7; }
 
-        /* 分頁 */
+        /* 分页 */
         .tabs { display: flex; background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
         .tab { flex: 1; text-align: center; padding: 14px 5px; cursor: pointer; font-weight: bold; color: #888; font-size: 1rem; border-bottom: 3px solid transparent; }
         .tab.active { color: var(--highlight); border-bottom: 3px solid var(--highlight); background: #FAF4EB; }
@@ -59,13 +63,15 @@
         .container { padding: 10px 0 20px 0; }
         .intro-box { background: var(--card); border: 1px dashed var(--highlight); border-radius: 8px; padding: 15px; font-size: 0.85rem; line-height: 1.6; color: var(--primary); margin-bottom: 20px; }
 
-        /* 篩選面板 */
+        /* 篩选面板 */
         .filter-panel { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; }
         .filter-row { display: flex; align-items: flex-start; border-bottom: 1px dashed var(--border); padding: 10px 0; }
         .filter-row:last-child { border-bottom: none; padding-bottom: 0; }
         .filter-label { font-weight: bold; width: 45px; color: var(--primary); flex-shrink: 0; margin-top: 5px; font-size: 0.9rem; }
-        .filter-options { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
-        .f-btn { background: var(--button-bg); color: var(--primary); border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
+        .filter-options { display: flex; gap: 6px; flex-wrap: nowrap; flex: 1; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+        .filter-options::-webkit-scrollbar { height: 3px; }
+        .filter-options::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        .f-btn { background: var(--button-bg); color: var(--primary); border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; white-space: nowrap; flex-shrink: 0; }
         .f-btn.active { background: var(--highlight); color: #fff; border-color: var(--highlight); font-weight: bold; }
         .f-btn.danger { border-color: var(--highlight); color: var(--highlight); }
         .f-btn.danger.active { background: var(--highlight); color: #fff; }
@@ -83,7 +89,7 @@
         .agent-tag { font-size: 0.75rem; background: var(--border); padding: 2px 6px; border-radius: 4px; margin-left: 10px; color: var(--primary); }
         .comp-tag { font-size: 0.9rem; font-weight: bold; color: var(--primary); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; }
 
-        /* 部門分組 */
+        /* 部門分组 */
         .dept-section { background: transparent; border: none !important; box-shadow: none; margin-bottom: 20px; }
         .dept-section > summary { background: var(--button-bg); border: 1px solid var(--border); border-radius: 8px; font-weight: bold; font-size: 1rem; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: var(--primary); }
         .dept-section[open] > summary { border-radius: 8px; border-bottom: 1px solid var(--border); }
@@ -96,7 +102,7 @@
         .btn-check-all { background: transparent; color: var(--highlight); border: 1px solid var(--highlight); border-radius: 15px; padding: 4px 12px; font-size: 0.8rem; cursor: pointer; font-weight: bold; white-space: nowrap; flex-shrink: 0; }
         .btn-check-all:hover { background: var(--highlight); color: #fff; }
 
-        /* 天氣格子 - 仿遊戲排版：每格 = 天氣圖示 + 情報名稱 */
+        /* 天氣格子 - 仿游戲排版：每格 = 天氣图示 + 情报名稱 */
         .weather-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
         .weather-item { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; padding: 10px 4px; border: 1px solid var(--border); border-radius: 6px; background: #fff; cursor: pointer; transition: 0.2s; overflow: hidden; }
         .weather-item img { width: 22px; height: 22px; }
@@ -106,21 +112,22 @@
         .weather-item.unlocked span { color: #888; }
         .weather-item.unlocked::after { content: '✔'; position: absolute; top: 3px; right: 3px; background: var(--success); color: white; border-radius: 50%; width: 13px; height: 13px; font-size: 8px; display: flex; align-items: center; justify-content: center; }
 
-        /* 查配對 - 自定義選擇器 */
+        /* 查配对 - 自定義选擇器 */
         .match-panel { background: var(--card); padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .section-label { font-size: 0.95rem; font-weight: bold; color: var(--primary); margin-bottom: 10px; letter-spacing: 0.5px; }
         .selector-label { font-size: 0.8rem; font-weight: bold; color: #999; margin-bottom: 6px; letter-spacing: 1px; }
-        /* 情報按鈕組 */
+        /* 情报按鈕组 */
         .action-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
         .action-btn { padding: 7px 13px; border: 1px solid var(--border); border-radius: 20px; background: var(--button-bg); color: var(--primary); font-size: 0.9rem; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .action-btn.selected { background: var(--highlight); color: #fff; border-color: var(--highlight); }
-        /* 天氣格子選擇器 */
+        /* 天氣格子选擇器 */
         .weather-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 6px; }
         .weather-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 8px 4px; border: 1.5px solid var(--border); border-radius: 8px; background: #fff; cursor: pointer; transition: 0.2s; }
         .weather-btn img { width: 26px; height: 26px; }
         .weather-btn span { font-size: 0.72rem; color: var(--primary); font-weight: bold; }
         .weather-btn.selected { border-color: var(--highlight); background: #fdf0ef; box-shadow: 0 0 0 2px rgba(168,101,94,0.25); }
         .weather-btn.selected span { color: var(--highlight); }
-        /* 結果 */
+        /* 结果 */
         .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
         @media (max-width: 500px) { .results-grid { grid-template-columns: 1fr; } .weather-btns { grid-template-columns: repeat(4, 1fr); } }
         .result-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: #fff; gap: 8px; }
@@ -137,107 +144,156 @@
         .done-group .results-grid { margin-top: 8px; }
         .done-group .result-item { opacity: 0.45; }
 
-        /* 引導卡片 */
+        /* 引导卡片 */
         .onboarding-card { background: var(--card); border: 2px dashed var(--highlight); border-radius: 12px; padding: 30px 20px; text-align: center; margin: 30px 0; }
         .onboarding-card h2 { font-size: 1.3rem; color: var(--highlight); margin: 0 0 10px; }
         .onboarding-card p { font-size: 0.9rem; color: #888; margin: 0 0 20px; line-height: 1.6; }
         .btn-onboard { background: var(--highlight); color: #fff; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; letter-spacing: 1px; }
         .btn-onboard:hover { opacity: 0.85; }
 
-        /* 迷你進度條 */
+        /* 迷你进度條 */
         .mini-bar-wrap { width: 60px; height: 5px; background: var(--disabled); border-radius: 3px; overflow: hidden; margin-left: 8px; }
         .mini-bar-fill { height: 100%; background: var(--highlight); border-radius: 3px; transition: width 0.3s; }
         .agent-title-right { display: flex; align-items: center; gap: 6px; }
         .remain-badge { font-size: 0.75rem; color: var(--highlight); font-weight: bold; white-space: nowrap; }
 
         #file-upload { display: none; }
-        /* 顯示模式切換 */
-        .view-toggle { display: flex; gap: 4px; }
-        .vtog-btn { background: var(--button-bg); color: #999; border: 1px solid var(--border); padding: 4px 10px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .vtog-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-        /* 回報問題頁 */
-        .feedback-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
-        .fb-row { margin-bottom: 14px; }
-        .fb-label { display: block; font-size: 0.82rem; font-weight: bold; color: #999; letter-spacing: 1px; margin-bottom: 7px; }
-        .fb-input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; background: #FAF4EB; color: var(--primary); outline: none; font-family: inherit; }
-        .fb-input:focus { border-color: var(--highlight); }
-        .fb-textarea { min-height: 90px; resize: vertical; }
-        .fb-preview { background: #f9f4ed; border: 1px dashed var(--highlight); border-radius: 6px; padding: 12px 14px; font-size: 0.88rem; line-height: 1.7; color: var(--primary); margin-bottom: 12px; white-space: pre-wrap; font-family: monospace; }
-        .fb-btn-preview { background: var(--button-bg); color: var(--primary); border: 1px solid var(--border); padding: 9px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
-        .fb-btn-copy { background: var(--highlight); color: #fff; border: none; padding: 9px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
-        .fb-hint { font-size: 0.82rem; color: #aaa; line-height: 1.7; text-align: center; padding: 10px; }
+        /* 显示模式切換 */
+        .view-toggle { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; flex-shrink: 0; }
+        .vtog-btn { padding: 5px 11px; font-size: 0.82rem; font-weight: bold; background: var(--card); color: #888; border: none; border-right: 1px solid var(--border); cursor: pointer; transition: 0.15s; white-space: nowrap; }
+        .vtog-btn:last-child { border-right: none; }
+        .vtog-btn.active { background: var(--primary); color: #fff; }
+        /* 录入资料页 */
+        .entry-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+        .entry-section-label { font-size: 0.78rem; font-weight: bold; color: #999; letter-spacing: 1.5px; margin-bottom: 10px; }
+        .et-filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+        .et-ftag { padding: 6px 14px; border: 1.5px solid var(--border); border-radius: 18px; font-size: 0.95rem; font-weight: bold; cursor: pointer; background: var(--button-bg); color: var(--primary); transition: 0.12s; user-select: none; }
+        .et-ftag.on { background: var(--highlight); color: #fff; border-color: var(--highlight); }
+        .et-agent-sel { flex: 1; min-width: 120px; padding: 11px 10px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; font-weight: bold; background: #FAF4EB; color: var(--primary); outline: none; cursor: pointer; }
+        .et-agent-sel:focus { border-color: var(--highlight); }
+        .et-times { font-size: 1.2rem; color: #aaa; flex-shrink: 0; }
+        .et-btn-3rd { background: none; border: 2px dashed var(--border); border-radius: 8px; padding: 11px 12px; font-size: 0.9rem; color: #aaa; cursor: pointer; white-space: nowrap; }
+        .et-btn-3rd:hover { border-color: var(--highlight); color: var(--highlight); }
+        .et-btn-rm { background: none; border: none; cursor: pointer; font-size: 1.1rem; opacity: 0.35; padding: 4px 6px; color: var(--primary); }
+        .et-btn-rm:hover { opacity: 1; color: #a03030; }
+        .entry-btn-hi { width: 100%; padding: 13px; background: var(--highlight); color: #fff; border: none; border-radius: 9px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        .entry-btn-hi:disabled { opacity: 0.35; cursor: not-allowed; }
+        .et-pair-tag { background: #fdf0ef; border: 1.5px solid var(--highlight); border-radius: 8px; padding: 6px 14px; font-weight: bold; font-size: 1rem; color: var(--highlight); }
+        .entry-btn-sm { padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 0.88rem; font-weight: bold; cursor: pointer; background: var(--button-bg); color: var(--primary); white-space: nowrap; }
+        .entry-btn-sm:hover { background: var(--primary); color: #fff; }
+        .entry-btn-danger:hover { background: #a03030; color: #fff; border-color: #a03030; }
+        .et-legbox { display: inline-block; width: 20px; height: 20px; border-radius: 4px; border: 2px solid; flex-shrink: 0; vertical-align: middle; }
+        /* Entry grid cells — bigger and clearer */
+        .et-cell { width: 56px; height: 56px; border: 2px solid var(--border); border-radius: 9px; cursor: pointer; background: #fff; text-align: center; vertical-align: middle; font-size: 0.8rem; font-weight: bold; color: #ccc; user-select: none; padding: 0; transition: background 0.1s, border-color 0.1s; }
+        .et-cell:active { transform: scale(0.87); transition: none; }
+        .et-cell.pos { background: #d4edda; border-color: #2a6e2a; color: #2a6e2a; }
+        .et-cell.neg { background: #fde0e0; border-color: #a03030; color: #a03030; }
+        .et-th-act { font-size: 1rem; font-weight: bold; color: var(--primary); padding: 0 10px 0 2px; white-space: nowrap; vertical-align: middle; text-align: left; min-width: 44px; }
+        .et-th-w { text-align: center; vertical-align: bottom; padding: 0 2px 6px; }
+        .et-th-w img { width: 28px; height: 28px; display: block; margin: 0 auto 3px; }
+        .et-th-w span { font-size: 0.8rem; font-weight: bold; color: #777; display: block; white-space: nowrap; }
+        .entry-btn-save { width: 100%; padding: 13px; background: #2a6e2a; color: #fff; border: none; border-radius: 9px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        .entry-btn-save:hover { opacity: 0.88; }
+        .et-chip { display: inline-flex; align-items: center; gap: 3px; padding: 4px 10px; border-radius: 14px; font-size: 0.82rem; font-weight: bold; }
+        .et-chip.pos { background: #d4edda; color: #2a6e2a; }
+        .et-chip.neg { background: #fde0e0; color: #a03030; }
         .btype { font-size: 0.7rem; font-weight: bold; padding: 1px 5px; border-radius: 3px; margin-left: 5px; vertical-align: middle; white-space: nowrap; }
         .btype-pos { color: #2a6e2a; background: #d4edda; }
         .btype-neg { color: #a61c1c; background: #fde0e0; }
-        @media (max-width: 500px) { .top-nav { flex-direction: column; align-items: stretch; } }
+
+        /* 简/繁切换按钮 (unused, kept for compat) */
+        .btn-lang { display: none; }
+
+        /* 自定义弹窗 */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 9999; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.open { display: flex; }
+        .modal-box { background: var(--card); border-radius: 14px; padding: 24px 20px; width: 100%; max-width: 300px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+        .modal-title { font-size: 1.05rem; font-weight: bold; color: var(--primary); margin-bottom: 16px; text-align: center; }
+        .modal-input { width: 100%; padding: 11px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem; background: #FAF4EB; color: var(--primary); outline: none; font-family: inherit; margin-bottom: 16px; box-sizing: border-box; }
+        .modal-input:focus { border-color: var(--highlight); }
+        /* 版本选择 - 简洁文字pill */
+        .modal-subtitle { font-size: 0.78rem; font-weight: bold; color: #999; letter-spacing: 1px; margin-bottom: 8px; }
+        .modal-version-row { display: flex; gap: 8px; margin-bottom: 16px; }
+        .modal-ver-btn { flex: 1; border: 1.5px solid var(--border); border-radius: 8px; background: #FAF4EB; color: var(--primary); font-size: 0.95rem; font-weight: bold; cursor: pointer; transition: 0.2s; text-align: center; padding: 10px 8px; }
+        .modal-ver-btn.selected { border-color: var(--highlight); background: #fdf0ef; color: var(--highlight); }
+        /* 等宽操作按钮 */
+        .modal-btns { display: flex; gap: 8px; }
+        .modal-btn-cancel { flex: 1; padding: 11px; background: var(--button-bg); color: var(--primary); border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
+        .modal-btn-ok { flex: 1; padding: 11px; background: var(--highlight); color: #fff; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: bold; cursor: pointer; }
+        .modal-btn-ok:hover { opacity: 0.88; }
+        .modal-btn-cancel:hover { background: #e0d9d0; }
     </style>
 </head>
 <body>
 <div class="wrapper">
     <div class="sticky-header">
-        <!-- 帳號列 -->
+        <!-- 顶部导航 -->
         <div class="top-nav">
-            <div class="logo-area">🦅 鳶報羈絆助手</div>
-            <div class="account-area">
-                <span>📂 帳號：</span>
+            <!-- 行1: Logo -->
+            <div class="nav-logo-row">
+                <div class="logo-area">🦅 鸢报羁绊助手</div>
+            </div>
+            <!-- 行2: 账号控制 + 操作按钮 -->
+            <div class="nav-ctrl-row">
                 <select id="account-select" class="account-select" onchange="switchAccount()"></select>
                 <button class="btn-icon" title="改名" onclick="renameAccount()">✏️</button>
-                <button class="btn-icon" title="刪除" onclick="deleteAccount()">🗑️</button>
-                <button class="btn-small" onclick="addAccount()">+ 新增</button>
-                <button class="btn-small" onclick="exportData()">匯出</button>
-                <button class="btn-small" onclick="document.getElementById('file-upload').click()">匯入</button>
+                <button class="btn-icon" title="删除" onclick="deleteAccount()">🗑️</button>
+                <div class="nav-divider"></div>
+                <button class="btn-small" onclick="openAddModal()">＋ 新增</button>
+                <button class="btn-small" onclick="exportData()">导出</button>
+                <button class="btn-small" onclick="document.getElementById('file-upload').click()">导入</button>
             </div>
             <input type="file" id="file-upload" accept=".json" onchange="importData(event)">
         </div>
 
-        <!-- 成就進度（固定在 header，可折疊） -->
+        <!-- 成就进度（固定在 header，可折疊） -->
         <div class="progress-container">
             <div class="progress-header">
                 <span class="progress-title" onclick="toggleMilestones()">
-                    🏆 成就收集進度 <span class="ms-arrow" id="ms-arrow">▸</span>
+                    🏆 成就收集进度 <span class="ms-arrow" id="ms-arrow">▸</span>
                 </span>
                 <span class="progress-count" id="global-progress-text">0 / 0</span>
             </div>
             <div class="progress-bar"><div class="progress-fill" id="global-progress-fill"></div></div>
             <div class="progress-msg" id="global-progress-msg"></div>
             <div class="milestone-row collapsed" id="milestone-row">
-                <div class="milestone-badge" id="ms-0"><div class="m-name">羈緣・一</div><div class="m-num">1 種</div></div>
-                <div class="milestone-badge" id="ms-1"><div class="m-name">羈緣・二</div><div class="m-num">3 種</div></div>
-                <div class="milestone-badge" id="ms-2"><div class="m-name">羈緣・三</div><div class="m-num">10 種</div></div>
-                <div class="milestone-badge" id="ms-3"><div class="m-name">羈緣・四</div><div class="m-num">20 種</div></div>
-                <div class="milestone-badge" id="ms-4"><div class="m-name">羈緣・五</div><div class="m-num">50 種</div></div>
-                <div class="milestone-badge" id="ms-5"><div class="m-name">羈緣・六</div><div class="m-num">100 種</div></div>
-                <div class="milestone-badge" id="ms-6"><div class="m-name">羈緣・七</div><div class="m-num">200 種</div></div>
+                <div class="milestone-badge" id="ms-0"><div class="m-name">羁缘・一</div><div class="m-num">1 种</div></div>
+                <div class="milestone-badge" id="ms-1"><div class="m-name">羁缘・二</div><div class="m-num">3 种</div></div>
+                <div class="milestone-badge" id="ms-2"><div class="m-name">羁缘・三</div><div class="m-num">10 种</div></div>
+                <div class="milestone-badge" id="ms-3"><div class="m-name">羁缘・四</div><div class="m-num">20 种</div></div>
+                <div class="milestone-badge" id="ms-4"><div class="m-name">羁缘・五</div><div class="m-num">50 种</div></div>
+                <div class="milestone-badge" id="ms-5"><div class="m-name">羁缘・六</div><div class="m-num">100 种</div></div>
+                <div class="milestone-badge" id="ms-6"><div class="m-name">羁缘・七</div><div class="m-num">200 种</div></div>
             </div>
         </div>
 
-        <!-- 分頁 -->
+        <!-- 分页 -->
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('pokedex', this)">🔍 開圖鑑</div>
-            <div class="tab" onclick="switchTab('dispatch', this)">🎯 查配對</div>
-            <div class="tab" onclick="switchTab('feedback', this)">📮 回報問題</div>
+            <div class="tab active" onclick="switchTab('pokedex', this)">🔍 开图鉴</div>
+            <div class="tab" onclick="switchTab('dispatch', this)">🎯 查配对</div>
+            <div class="tab" onclick="switchTab('feedback', this)">📝 录入资料</div>
         </div>
     </div>
 
-    <!-- 圖鑑頁 -->
+    <!-- 图鉴页 -->
     <div class="container" id="pokedex-view">
         <div class="intro-box">
-            <p>📖 <strong>這個工具是做什麼的？</strong><br>
-            遊戲中密探配對執行情報時，會依天氣獲得羈絆經驗值。這裡讓你記錄哪些「密探組合 × 情報 × 天氣」已經完成過，方便追蹤進度。</p>
-            <p>🖱️ <strong>怎麼用？</strong><br>
-            展開密探卡片 → 找到對應的配對對象 → 對照遊戲畫面，點擊「天氣圖示＋情報」格子打勾 → 格子變暗代表已記錄。</p>
+            <p>📖 <strong>这个工具是做什么的？</strong><br>
+            游戏中密探配对执行情报时，不同密探一起行动能获得羁绊。这个小工具让你可以记录哪些「密探羁伴」已经完成过，方便追踪进度。</p>
+            <p>🖱️ <strong>怎么用？</strong><br>
+            在「开图鉴」页：展开密探卡片 → 找到对应的密探 → 对照游戏画面，点击「天气图示＋情报」格子打勾 → 格子变暗代表已记录。</p>
         </div>
         <div class="filter-panel">
             <div class="filter-row">
-                <div class="filter-label">屬性</div>
+                <div class="filter-label">属性</div>
                 <div class="filter-options" id="filter-attr">
                     <div class="f-btn active" onclick="setFilter('attr','全部')">全部</div>
                     <div class="f-btn" onclick="setFilter('attr','水')">水</div>
                     <div class="f-btn" onclick="setFilter('attr','火')">火</div>
-                    <div class="f-btn" onclick="setFilter('attr','風')">風</div>
+                    <div class="f-btn" onclick="setFilter('attr','风')">风</div>
                     <div class="f-btn" onclick="setFilter('attr','地')">地</div>
-                    <div class="f-btn" onclick="setFilter('attr','陰')">陰</div>
-                    <div class="f-btn" onclick="setFilter('attr','陽')">陽</div>
+                    <div class="f-btn" onclick="setFilter('attr','阴')">阴</div>
+                    <div class="f-btn" onclick="setFilter('attr','阳')">阳</div>
                 </div>
             </div>
             <div class="filter-row">
@@ -246,13 +302,13 @@
                     <div class="f-btn active" onclick="setFilter('dept','全部')">全部</div>
                     <div class="f-btn" onclick="setFilter('dept','蛾部')">蛾部</div>
                     <div class="f-btn" onclick="setFilter('dept','雀部')">雀部</div>
-                    <div class="f-btn" onclick="setFilter('dept','鳶部')">鳶部</div>
+                    <div class="f-btn" onclick="setFilter('dept','鸢部')">鸢部</div>
                     <div class="f-btn" onclick="setFilter('dept','蜂部')">蜂部</div>
-                    <div class="f-btn" onclick="setFilter('dept','閒人')">閒人</div>
+                    <div class="f-btn" onclick="setFilter('dept','闲人')">闲人</div>
                 </div>
             </div>
             <div class="filter-row">
-                <div class="filter-label">狀態</div>
+                <div class="filter-label">状态</div>
                 <div class="filter-options" id="filter-status">
                     <div class="f-btn active" onclick="setStatusFilter('全部')">全部</div>
                     <div class="f-btn danger" onclick="setStatusFilter('未完成')">⚡ 未完成</div>
@@ -262,57 +318,61 @@
         </div>
         <div id="pokedex-content">
             <div id="onboarding-card" class="onboarding-card" style="display:none;">
-                <h2>👋 歡迎使用鳶報羈絆助手</h2>
-                <p>建立一個帳號來開始記錄你的羈絆收集進度<br>每個帳號獨立儲存，可以切換不同角色使用</p>
-                <button class="btn-onboard" onclick="addAccount()">＋ 建立第一個帳號</button>
+                <h2>👋 欢迎使用鸢报羁绊助手</h2>
+                <p>建立一个账号来开始记錄你的羁绊收集进度<br>每个账号独立儲存，可以切換不同角色使用</p>
+                <button class="btn-onboard" onclick="addAccount()">＋ 建立第一个账号</button>
             </div>
         </div>
     </div>
 
-    <!-- 查配對頁 -->
+    <!-- 查配对页 -->
     <div class="container" id="dispatch-view" style="display:none;">
+        <div class="intro-box" style="margin-bottom:15px;">
+            <p>🎯 <strong>怎么用「查配对」？</strong><br>
+            选择今天要执行的<strong>情报</strong>和当前<strong>天气</strong>，下方会列出此条件下所有可解锁的羁绊组合。点击「解锁」按钮即可记录。</p>
+        </div>
         <div class="match-panel">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                <div class="selector-label" style="margin:0;">情報</div>
+                <div class="section-label" style="margin:0;" id="dispatch-label">情报</div>
                 <div class="view-toggle">
-                    <button class="vtog-btn active" id="vtog-card" onclick="setViewMode('card',this)" title="圖示選擇">☁️ 圖示</button>
-                    <button class="vtog-btn" id="vtog-list" onclick="setViewMode('list',this)" title="清單選擇">☰ 清單</button>
+                    <button class="vtog-btn active" id="vtog-card" onclick="setViewMode('card',this)">🃏 图示</button>
+                    <button class="vtog-btn" id="vtog-list" onclick="setViewMode('list',this)">≡ 列表</button>
                 </div>
             </div>
-            <!-- 圖示模式 -->
+            <!-- 图示模式 -->
             <div id="view-card">
                 <div class="action-btns" id="action-btns">
-                    <div class="action-btn selected" onclick="selectAction('縱火',this)">縱火</div>
-                    <div class="action-btn" onclick="selectAction('傳謠',this)">傳謠</div>
+                    <div class="action-btn selected" onclick="selectAction('纵火',this)">纵火</div>
+                    <div class="action-btn" onclick="selectAction('传谣',this)">传谣</div>
                     <div class="action-btn" onclick="selectAction('下毒',this)">下毒</div>
-                    <div class="action-btn" onclick="selectAction('臥底',this)">臥底</div>
+                    <div class="action-btn" onclick="selectAction('卧底',this)">卧底</div>
                     <div class="action-btn" onclick="selectAction('搜集',this)">搜集</div>
-                    <div class="action-btn" onclick="selectAction('滅火',this)">滅火</div>
-                    <div class="action-btn" onclick="selectAction('淨水',this)">淨水</div>
-                    <div class="action-btn" onclick="selectAction('營救',this)">營救</div>
+                    <div class="action-btn" onclick="selectAction('灭火',this)">灭火</div>
+                    <div class="action-btn" onclick="selectAction('净水',this)">净水</div>
+                    <div class="action-btn" onclick="selectAction('营救',this)">营救</div>
                 </div>
-                <div class="selector-label">天氣</div>
+                <div class="section-label">天气</div>
                 <div class="weather-btns" id="weather-btns">
-                    <div class="weather-btn selected" onclick="selectWeather('晴天',this)"><img src="35px-晴天.png"><span>晴天</span></div>
-                    <div class="weather-btn" onclick="selectWeather('雨天',this)"><img src="35px-雨天.png"><span>雨天</span></div>
-                    <div class="weather-btn" onclick="selectWeather('大霧',this)"><img src="35px-大雾.png"><span>大霧</span></div>
-                    <div class="weather-btn" onclick="selectWeather('狂風',this)"><img src="35px-狂风.png"><span>狂風</span></div>
-                    <div class="weather-btn" onclick="selectWeather('小雪',this)"><img src="35px-小雪.png"><span>小雪</span></div>
-                    <div class="weather-btn" onclick="selectWeather('大雪',this)"><img src="35px-大雪.png"><span>大雪</span></div>
-                    <div class="weather-btn" onclick="selectWeather('颶風',this)"><img src="35px-飓风.png"><span>颶風</span></div>
-                    <div class="weather-btn" onclick="selectWeather('雷鳴',this)"><img src="35px-雷鸣.png"><span>雷鳴</span></div>
+                    <div class="weather-btn selected" onclick="selectWeather('晴天',this)" data-wkey="晴天"><img src="35px-晴天.png"><span>晴天</span></div>
+                    <div class="weather-btn" onclick="selectWeather('雨天',this)" data-wkey="雨天"><img src="35px-雨天.png"><span>雨天</span></div>
+                    <div class="weather-btn" onclick="selectWeather('大雾',this)" data-wkey="大雾"><img src="35px-大雾.png"><span>大雾</span></div>
+                    <div class="weather-btn" onclick="selectWeather('狂风',this)" data-wkey="狂风"><img src="35px-狂风.png"><span>狂风</span></div>
+                    <div class="weather-btn" onclick="selectWeather('小雪',this)" data-wkey="小雪"><img src="35px-小雪.png"><span>小雪</span></div>
+                    <div class="weather-btn" onclick="selectWeather('大雪',this)" data-wkey="大雪"><img src="35px-大雪.png"><span>大雪</span></div>
+                    <div class="weather-btn" onclick="selectWeather('飓风',this)" data-wkey="飓风"><img src="35px-飓风.png"><span>飓风</span></div>
+                    <div class="weather-btn" onclick="selectWeather('雷鸣',this)" data-wkey="雷鸣"><img src="35px-雷鸣.png"><span>雷鸣</span></div>
                 </div>
             </div>
-            <!-- 清單模式 -->
+            <!-- 列表模式 -->
             <div id="view-list" style="display:none;">
                 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
                     <select id="action-select-list" onchange="curAction=this.value;findMatches()" style="flex:1;min-width:100px;padding:10px;border:1px solid var(--border);border-radius:6px;font-size:1rem;background:#FAF4EB;font-weight:bold;outline:none;">
-                        <option>縱火</option><option>傳謠</option><option>下毒</option><option>臥底</option>
-                        <option>搜集</option><option>滅火</option><option>淨水</option><option>營救</option>
+                        <option value="纵火">纵火</option><option value="传谣">传谣</option><option value="下毒">下毒</option><option value="卧底">卧底</option>
+                        <option value="搜集">搜集</option><option value="灭火">灭火</option><option value="净水">净水</option><option value="营救">营救</option>
                     </select>
                     <select id="weather-select-list" onchange="curWeather=this.value;findMatches()" style="flex:1;min-width:100px;padding:10px;border:1px solid var(--border);border-radius:6px;font-size:1rem;background:#FAF4EB;font-weight:bold;outline:none;">
-                        <option>晴天</option><option>雨天</option><option>大霧</option><option>狂風</option>
-                        <option>小雪</option><option>大雪</option><option>颶風</option><option>雷鳴</option>
+                        <option value="晴天">晴天</option><option value="雨天">雨天</option><option value="大雾">大雾</option><option value="狂风">狂风</option>
+                        <option value="小雪">小雪</option><option value="大雪">大雪</option><option value="飓风">飓风</option><option value="雷鸣">雷鸣</option>
                     </select>
                 </div>
             </div>
@@ -320,145 +380,283 @@
         <div id="match-results"></div>
     </div>
 
-    <!-- 回報問題頁 -->
+    <!-- 录入资料页 (内嵌录入工具) -->
     <div class="container" id="feedback-view" style="display:none;">
-        <div class="intro-box">📮 <strong>回報資料問題</strong><br>發現羈絆資料有誤？填寫以下資訊，複製後傳給作者修正。</div>
-        <div class="feedback-card">
-            <div class="fb-row">
-                <label class="fb-label">問題類型</label>
-                <div class="action-btns" style="margin:0;" id="fb-type-btns">
-                    <div class="action-btn selected" onclick="fbSelectType(this)">資料有誤</div>
-                    <div class="action-btn" onclick="fbSelectType(this)">缺少組合</div>
-                    <div class="action-btn" onclick="fbSelectType(this)">一拍/貌合標錯</div>
-                    <div class="action-btn" onclick="fbSelectType(this)">其他問題</div>
+
+        <!-- Step 1: 选密探 -->
+        <div class="entry-step" id="et-step1">
+            <div class="entry-card">
+                <div class="entry-section-label">按属性筛选</div>
+                <div class="et-filters" id="et-filters">
+                    <span class="et-ftag on" onclick="etSetFilter('全部',this)">全部</span>
+                    <span class="et-ftag" onclick="etSetFilter('水',this)">水</span>
+                    <span class="et-ftag" onclick="etSetFilter('火',this)">火</span>
+                    <span class="et-ftag" onclick="etSetFilter('风',this)">风</span>
+                    <span class="et-ftag" onclick="etSetFilter('地',this)">地</span>
+                    <span class="et-ftag" onclick="etSetFilter('阴',this)">阴</span>
+                    <span class="et-ftag" onclick="etSetFilter('阳',this)">阳</span>
                 </div>
             </div>
-            <div class="fb-row">
-                <label class="fb-label">涉及組合</label>
-                <input id="fb-combo" type="text" placeholder="例：張闓 × 甘寧（縱火）" class="fb-input">
+            <div class="entry-card">
+                <div class="entry-section-label">密探组合（2～3人）</div>
+                <div id="et-agent-row" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;"></div>
+                <button class="entry-btn-hi" id="et-btn-go" onclick="etEnterGrid()" disabled>开始填写羁绊表格 →</button>
             </div>
-            <div class="fb-row">
-                <label class="fb-label">說明</label>
-                <textarea id="fb-desc" placeholder="請描述問題，例如：實際應為貌合神離，或缺少某個天氣…" class="fb-input fb-textarea"></textarea>
-            </div>
-            <div id="fb-preview" class="fb-preview" style="display:none;"></div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="fb-btn-preview" onclick="fbPreview()">👁️ 預覽回報內容</button>
-                <button class="fb-btn-copy" onclick="fbCopy()" id="fb-copy-btn" style="display:none;">📋 複製回報內容</button>
-            </div>
-            <div id="fb-success" style="display:none;color:var(--success);font-weight:bold;margin-top:10px;font-size:0.9rem;">✅ 已複製！請貼給作者 🙏</div>
         </div>
-        <div class="fb-hint">
-            💡 複製後可貼到遊戲群組、Discord、或私訊給作者。<br>
-            感謝每一位願意回報問題的玩家！🐦
+
+        <!-- Step 2: 填格子 -->
+        <div class="entry-step" id="et-step2" style="display:none;">
+            <div class="entry-card" style="border-color:var(--highlight);">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+                    <div class="et-pair-tag" id="et-pair-tag">—</div>
+                    <button class="entry-btn-sm" onclick="etBack()">← 换密探</button>
+                    <button class="entry-btn-sm" style="margin-left:auto;" onclick="etFillAll('+')">全部一拍</button>
+                    <button class="entry-btn-sm" onclick="etFillAll('-')">全部貌合</button>
+                    <button class="entry-btn-sm entry-btn-danger" onclick="etClearGrid()">清空</button>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;font-size:0.85rem;margin-bottom:12px;flex-wrap:wrap;">
+                    <span style="display:flex;align-items:center;gap:4px;"><span class="et-legbox" style="background:#fff;border-color:var(--border);"></span>未填</span>
+                    <span style="display:flex;align-items:center;gap:4px;"><span class="et-legbox" style="background:#d4edda;border-color:#2a6e2a;"></span><strong style="color:#2a6e2a;">一拍即合</strong></span>
+                    <span style="display:flex;align-items:center;gap:4px;"><span class="et-legbox" style="background:#fde0e0;border-color:#a03030;"></span><strong style="color:#a03030;">貌合神离</strong></span>
+                    <span style="color:#aaa;font-size:0.75rem;">点格子循环切换</span>
+                </div>
+                <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:14px;">
+                    <table id="et-table" style="border-collapse:separate;border-spacing:3px;"></table>
+                </div>
+                <button class="entry-btn-save" onclick="etSave()">✅ 保存，继续填下一对</button>
+            </div>
+        </div>
+
+        <!-- 已录入 -->
+        <div class="entry-card">
+            <div style="display:flex;align-items:center;margin-bottom:10px;">
+                <div class="entry-section-label" style="margin:0;flex:1;">已录入 <span id="et-rec-cnt" style="color:var(--highlight);">0</span> 组</div>
+                <span id="et-total-cnt" style="font-size:0.82rem;color:#aaa;">0 条</span>
+            </div>
+            <div id="et-rec-list"><div style="text-align:center;color:#ccc;padding:16px 0;font-size:0.88rem;">还没有记录</div></div>
+        </div>
+
+        <!-- 导出 -->
+        <div class="entry-card">
+            <div class="entry-section-label">导出（复制后发给作者整合）</div>
+            <div id="et-exp-box" style="background:#f5f0e8;border:1px solid var(--border);border-radius:7px;padding:11px;font-size:0.8rem;font-family:monospace;white-space:pre-wrap;word-break:break-all;max-height:180px;overflow-y:auto;color:var(--primary);line-height:1.7;margin-bottom:10px;">（暂无内容）</div>
+            <button class="entry-btn-hi" onclick="etCopy()">📋 复制全部内容</button>
+            <div id="et-copy-ok" style="display:none;text-align:center;color:#2a6e2a;font-weight:bold;font-size:0.88rem;margin-top:6px;">✅ 已复制！</div>
+        </div>
+    </div>
+</div>
+
+<!-- 新增账号 Modal -->
+<div class="modal-overlay" id="add-modal">
+    <div class="modal-box">
+        <div class="modal-title">新建账号</div>
+        <div class="modal-subtitle">选择游戏版本</div>
+        <div class="modal-version-row">
+            <div class="modal-ver-btn selected" id="ver-btn-1" onclick="selectVer(1)">🐦 如鸢</div>
+            <div class="modal-ver-btn" id="ver-btn-2" onclick="selectVer(2)">🦅 代号鸢</div>
+        </div>
+        <div class="modal-subtitle">角色名字</div>
+        <input class="modal-input" id="modal-name-input" type="text" placeholder="输入角色名字…" maxlength="20" onkeydown="if(event.key==='Enter')confirmAddAccount()">
+        <div class="modal-btns">
+            <button class="modal-btn-cancel" onclick="closeAddModal()">取消</button>
+            <button class="modal-btn-ok" onclick="confirmAddAccount()">确定建立</button>
         </div>
     </div>
 </div>
 
 <script>
-    const weathers = {'晴天':'35px-晴天.png','雨天':'35px-雨天.png','大霧':'35px-大雾.png','狂風':'35px-狂风.png','小雪':'35px-小雪.png','大雪':'35px-大雪.png','颶風':'35px-飓风.png','雷鳴':'35px-雷鸣.png'};
-    const allW = Object.keys(weathers);
-    const agentsData = {"伍丹":{"dept":"蛾部","attr":"地"},"呂蒙":{"dept":"蛾部","attr":"火"},"嚴白虎":{"dept":"鳶部","attr":"陰"},"夏侯惇":{"dept":"鳶部","attr":"地"},"太史慈":{"dept":"閒人","attr":"風"},"孔融":{"dept":"雀部","attr":"水"},"孫尚香":{"dept":"鳶部","attr":"火"},"孫權":{"dept":"鳶部","attr":"火"},"小喬":{"dept":"雀部","attr":"水"},"干吉":{"dept":"閒人","attr":"火"},"張仲景":{"dept":"鳶部","attr":"地"},"張修":{"dept":"蛾部","attr":"火"},"張角":{"dept":"蛾部","attr":"陰"},"張遼":{"dept":"蛾部","attr":"地"},"張郃":{"dept":"鳶部","attr":"火"},"張闓":{"dept":"蛾部","attr":"陰"},"張飛":{"dept":"蛾部","attr":"風"},"張魯":{"dept":"閒人","attr":"陰"},"徐庶":{"dept":"鳶部","attr":"陽"},"文丑":{"dept":"蛾部","attr":"火"},"李真":{"dept":"蜂部","attr":"水"},"李脫":{"dept":"蜂部","attr":"地"},"王異":{"dept":"鳶部","attr":"水"},"甘寧":{"dept":"蛾部","attr":"水"},"程昱":{"dept":"閒人","attr":"火"},"繡球":{"dept":"蜂部","attr":"水"},"荀彧":{"dept":"閒人","attr":"風"},"華佗":{"dept":"閒人","attr":"陽"},"葛洪":{"dept":"閒人","attr":"陰"},"蔡琰":{"dept":"雀部","attr":"水"},"蛾使":{"dept":"蛾部","attr":"水"},"賈詡":{"dept":"蛾部","attr":"陰"},"郭嘉":{"dept":"閒人","attr":"風"},"郭解":{"dept":"鳶部","attr":"火"},"阿蟬":{"dept":"鳶部","attr":"地"},"陸遜":{"dept":"雀部","attr":"火"},"雀使":{"dept":"雀部","attr":"水"},"顏良":{"dept":"蛾部","attr":"水"},"飛雲":{"dept":"蜂部","attr":"水"},"馬超":{"dept":"蛾部","attr":"地"},"魯肅":{"dept":"雀部","attr":"水"}};
+    // ── 常量 (简体中文) ──────────────────────────────────────────
+    const STRINGS = {
+        no_account:'尚无账号',
+        alert_dup:'已有同名账号！', alert_no_acc:'请先新增账号！',
+        del_confirm:'确定删除「{name}」的所有进度？此操作无法复原。',
+        import_ok:'导入成功！', import_fail:'导入失败：文件格式不正确。',
+        select_all_cancel:'全选 / 取消', remain:'剩 {n}',
+        msg_0:'还没开始收集，今天就出发吧！🎯',
+        msg_25:'加油！才刚起步，继续累积吧 💪',
+        msg_50:'不错！已完成 {pct}%，继续冲！🔥',
+        msg_75:'太强了！已过一半，只剩 {left} 格！⚡',
+        msg_99:'快收集完啦！只剩 {left} 格，加把劲！🏃',
+        msg_100:'🎉 全部收集完成！你是羁绊收藏大师！',
+        bond_pos:'一拍即合', bond_neg:'貌合神离',
+        unlock:'解锁', cancel_unlock:'取消',
+        can_unlock:'✅ 目前可解锁',
+        all_unlocked:'🎉 此情报所有组合今日已解锁！',
+        done_group:'📁 已解锁', no_acc_hint:'请先建立账号',
+        welcome:'欢迎使用鸢报羁绊助手',
+        welcome_desc:'建立一个账号来开始记录你的羁绊收集进度<br>每个账号独立储存，可以切换不同角色使用',
+        create_first:'＋ 建立第一个账号',
+    };
+    function T(k) { return STRINGS[k] || k; }
+    // 直接返回原文（简体中文模式无需翻译）
+    function Td(d) { return d; }
+    function Tat(a) { return a; }
+    function Ta(a) { return a; }
 
-    // 格式：「成員|情報|天氣(空=全8種)|類型(+一拍即合 / -貌合神離)」
-    // 縱火正負已依截圖校正；其餘情報待補全（暫標+）
+    // Toast notification (replaces alert)
+    function showToast(msg, isError) {
+        let t = document.getElementById('toast-msg');
+        if (!t) {
+            t = document.createElement('div');
+            t.id = 'toast-msg';
+            t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:20px;font-size:0.9rem;z-index:10000;max-width:85vw;text-align:center;transition:opacity 0.3s;pointer-events:none;';
+            document.body.appendChild(t);
+        }
+        if (isError) t.style.background = '#b94040';
+        else t.style.background = '#333';
+        t.textContent = msg;
+        t.style.opacity = '1';
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => t.style.opacity = '0', 2200);
+    }
+
+    // Custom confirm modal
+    function showConfirm(msg, onYes) {
+        const id = 'confirm-modal';
+        let m = document.getElementById(id);
+        if (!m) {
+            m = document.createElement('div');
+            m.id = id;
+            m.className = 'modal-overlay';
+            m.innerHTML = `<div class="modal-box"><div class="modal-msg" id="confirm-msg" style="font-size:0.95rem;color:var(--primary);margin-bottom:20px;text-align:left;line-height:1.6;"></div><div class="modal-btns"><button class="modal-btn-cancel" id="confirm-no">取消</button><button class="modal-btn-confirm" id="confirm-yes" style="background:#c0504d;">确认</button></div></div>`;
+            document.body.appendChild(m);
+            m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
+        }
+        document.getElementById('confirm-msg').textContent = msg;
+        m.classList.add('open');
+        document.getElementById('confirm-no').onclick = () => m.classList.remove('open');
+        document.getElementById('confirm-yes').onclick = () => { m.classList.remove('open'); onYes(); };
+    }
+
+    // Custom rename modal
+    function showRenameModal(current, onConfirm) {
+        const id = 'rename-modal';
+        let m = document.getElementById(id);
+        if (!m) {
+            m = document.createElement('div');
+            m.id = id;
+            m.className = 'modal-overlay';
+            m.innerHTML = `<div class="modal-box"><div class="modal-title">账号改名</div><input class="modal-input" id="rename-input" type="text" maxlength="30" onkeydown="if(event.key==='Enter')document.getElementById('rename-ok').click()"><div class="modal-btns"><button class="modal-btn-cancel" id="rename-cancel">取消</button><button class="modal-btn-ok" id="rename-ok">确认</button></div></div>`;
+            document.body.appendChild(m);
+            m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
+        }
+        const inp = document.getElementById('rename-input');
+        inp.value = current;
+        m.classList.add('open');
+        setTimeout(() => { inp.focus(); inp.select(); }, 150);
+        document.getElementById('rename-cancel').onclick = () => m.classList.remove('open');
+        document.getElementById('rename-ok').onclick = () => {
+            const v = inp.value.trim();
+            m.classList.remove('open');
+            onConfirm(v);
+        };
+    }
+
+    // (account modal functions defined after variable declarations below)
+
+    const weathers = {'晴天':'35px-晴天.png','雨天':'35px-雨天.png','大雾':'35px-大雾.png','狂风':'35px-狂风.png','小雪':'35px-小雪.png','大雪':'35px-大雪.png','飓风':'35px-飓风.png','雷鸣':'35px-雷鸣.png'};
+    const allW = Object.keys(weathers);
+    const agentsData = {"伍丹":{"dept":"蛾部","attr":"地"},"吕蒙":{"dept":"蛾部","attr":"火"},"严白虎":{"dept":"鸢部","attr":"阴"},"夏侯惇":{"dept":"鸢部","attr":"地"},"太史慈":{"dept":"闲人","attr":"风"},"孔融":{"dept":"雀部","attr":"水"},"孙尚香":{"dept":"鸢部","attr":"火"},"孙权":{"dept":"鸢部","attr":"火"},"小乔":{"dept":"雀部","attr":"水"},"干吉":{"dept":"闲人","attr":"火"},"张仲景":{"dept":"鸢部","attr":"地"},"张修":{"dept":"蛾部","attr":"火"},"张角":{"dept":"蛾部","attr":"阴"},"张辽":{"dept":"蛾部","attr":"地"},"张郃":{"dept":"鸢部","attr":"火"},"张闿":{"dept":"蛾部","attr":"阴"},"张飞":{"dept":"蛾部","attr":"风"},"张鲁":{"dept":"闲人","attr":"阴"},"徐庶":{"dept":"鸢部","attr":"阳"},"文丑":{"dept":"蛾部","attr":"火"},"李真":{"dept":"蜂部","attr":"水"},"李脱":{"dept":"蜂部","attr":"地"},"王异":{"dept":"鸢部","attr":"水"},"甘宁":{"dept":"蛾部","attr":"水"},"程昱":{"dept":"闲人","attr":"火"},"绣球":{"dept":"蜂部","attr":"水"},"荀彧":{"dept":"闲人","attr":"风"},"华佗":{"dept":"闲人","attr":"阳"},"葛洪":{"dept":"闲人","attr":"阴"},"蔡琰":{"dept":"雀部","attr":"水"},"蛾使":{"dept":"蛾部","attr":"水"},"贾诩":{"dept":"蛾部","attr":"阴"},"郭嘉":{"dept":"闲人","attr":"风"},"郭解":{"dept":"鸢部","attr":"火"},"阿蝉":{"dept":"鸢部","attr":"地"},"陆逊":{"dept":"雀部","attr":"火"},"雀使":{"dept":"雀部","attr":"水"},"颜良":{"dept":"蛾部","attr":"水"},"飞云":{"dept":"蜂部","attr":"水"},"马超":{"dept":"蛾部","attr":"地"},"鲁肃":{"dept":"雀部","attr":"水"}};
+
+    // 格式：「成員|情报|天氣(空=全8种)|类型(+一拍即合 / -貌合神离)」
+    // 纵火正負已依截图校正；其餘情报待補全（暫标+）
     const rawData = [
-        // ── 縱火（Image1 截圖：太史慈×甘寧、孫權×孫尚香 為 -70% 貌合神離）──
-        "張闓,甘寧|縱火||+",
-        "荀彧,程昱|縱火||+",
-        "太史慈,甘寧|縱火||-",          // -70% 貌合神離
-        "飛雲,繡球|縱火||+",
-        "孫權,孫尚香|縱火||-",          // -70% 貌合神離
-        "陸遜,呂蒙|縱火|晴天,大霧,狂風,小雪,大雪,颶風,雷鳴|+",
-        "陸遜,呂蒙|縱火|雨天|-",        // -70% 雨天特例
-        "陸遜,呂蒙,魯肅|縱火||+",
-        "顏良,文丑|縱火|晴天|+",
-        "李脫,李真|縱火|大霧|+",
-        "張遼,阿蟬|縱火|大霧|+",
-        "張仲景,郭解,孫尚香|縱火|晴天|+",
-        // ── 傳謠（待補正負）──
-        "孔融,郭嘉|傳謠||+",
-        "張修,張魯|傳謠||+",
-        "飛雲,繡球|傳謠||+",
-        "郭嘉,賈詡|傳謠||+",
-        "顏良,文丑|傳謠||+",
-        "蛾使,雀使|傳謠||+",
-        "張仲景,華佗|傳謠||+",
-        "李脫,李真|傳謠|大霧|+",
-        "張遼,阿蟬|傳謠|大霧|+",
-        "張仲景,郭解,孫尚香|傳謠|晴天|+",
-        // ── 下毒（張闓×甘寧 = 貌合神離，from Image2）──
-        "夏侯惇,張郃|下毒||+",
-        "張飛,張郃|下毒||+",
-        "孔融,張闓|下毒||+",
+        // ── 纵火（Image1 截图：太史慈×甘宁、孙权×孙尚香 为 -70% 貌合神离）──
+        "张闿,甘宁|纵火||+",
+        "荀彧,程昱|纵火||+",
+        "太史慈,甘宁|纵火||-",          // -70% 貌合神离
+        "飞云,绣球|纵火||+",
+        "孙权,孙尚香|纵火||-",          // -70% 貌合神离
+        "陆逊,吕蒙|纵火|晴天,大雾,狂风,小雪,大雪,飓风,雷鸣|+",
+        "陆逊,吕蒙|纵火|雨天|-",        // -70% 雨天特例
+        "陆逊,吕蒙,鲁肃|纵火||+",
+        "颜良,文丑|纵火|晴天|+",
+        "李脱,李真|纵火|大雾|+",
+        "张辽,阿蝉|纵火|大雾|+",
+        "张仲景,郭解,孙尚香|纵火|晴天|+",
+        // ── 传谣（待補正負）──
+        "孔融,郭嘉|传谣||+",
+        "张修,张鲁|传谣||+",
+        "飞云,绣球|传谣||+",
+        "郭嘉,贾诩|传谣||+",
+        "颜良,文丑|传谣||+",
+        "蛾使,雀使|传谣||+",
+        "张仲景,华佗|传谣||+",
+        "李脱,李真|传谣|大雾|+",
+        "张辽,阿蝉|传谣|大雾|+",
+        "张仲景,郭解,孙尚香|传谣|晴天|+",
+        // ── 下毒（张闿×甘宁 = 貌合神离，from Image2）──
+        "夏侯惇,张郃|下毒||+",
+        "张飞,张郃|下毒||+",
+        "孔融,张闿|下毒||+",
         "孔融,郭嘉|下毒||+",
-        "張角,干吉|下毒||+",
-        "太史慈,張闓|下毒||+",          // 一拍即合（Image2）
-        "蔡琰,王異|下毒||+",
-        "張闓,甘寧|下毒||-",            // 貌合神離（Image2）
-        "飛雲,繡球|下毒||+",
-        "孫權,孫尚香|下毒||+",
-        "郭嘉,賈詡|下毒||+",
-        "華佗,呂蒙|下毒||+",
-        "張仲景,華佗|下毒||+",
-        "李脫,李真|下毒|大霧|+",
-        "張遼,阿蟬|下毒|大霧|+",
-        "張仲景,郭解,孫尚香|下毒|晴天|+",
-        // ── 臥底（待補正負）──
-        "嚴白虎,小喬,張飛|臥底||+",
-        "張飛,張郃|臥底||+",
-        "夏侯惇,張郃|臥底||+",
-        "陸遜,夏侯惇,孔融|臥底||+",
-        "太史慈,甘寧|臥底||+",
-        "張遼,馬超|臥底||+",
-        "馬超,阿蟬|臥底||+",
-        "張修,張魯|臥底||+",
-        "張角,干吉|臥底||+",
-        "蔡琰,王異|臥底||+",
-        "飛雲,繡球|臥底||+",
-        "陸遜,呂蒙,魯肅|臥底||+",
-        "華佗,呂蒙|臥底||+",
-        "阿蟬,伍丹|臥底||+",
-        "張遼,阿蟬|臥底||+",
-        "嚴白虎,小喬|臥底||+",
-        "李脫,李真|臥底|大霧|+",
-        "張仲景,郭解,孫尚香|臥底|晴天|+",
+        "张角,干吉|下毒||+",
+        "太史慈,张闿|下毒||+",          // 一拍即合（Image2）
+        "蔡琰,王异|下毒||+",
+        "张闿,甘宁|下毒||-",            // 貌合神离（Image2）
+        "飞云,绣球|下毒||+",
+        "孙权,孙尚香|下毒||+",
+        "郭嘉,贾诩|下毒||+",
+        "华佗,吕蒙|下毒||+",
+        "张仲景,华佗|下毒||+",
+        "李脱,李真|下毒|大雾|+",
+        "张辽,阿蝉|下毒|大雾|+",
+        "张仲景,郭解,孙尚香|下毒|晴天|+",
+        // ── 卧底（待補正負）──
+        "严白虎,小乔,张飞|卧底||+",
+        "张飞,张郃|卧底||+",
+        "夏侯惇,张郃|卧底||+",
+        "陆逊,夏侯惇,孔融|卧底||+",
+        "太史慈,甘宁|卧底||+",
+        "张辽,马超|卧底||+",
+        "马超,阿蝉|卧底||+",
+        "张修,张鲁|卧底||+",
+        "张角,干吉|卧底||+",
+        "蔡琰,王异|卧底||+",
+        "飞云,绣球|卧底||+",
+        "陆逊,吕蒙,鲁肃|卧底||+",
+        "华佗,吕蒙|卧底||+",
+        "阿蝉,伍丹|卧底||+",
+        "张辽,阿蝉|卧底||+",
+        "严白虎,小乔|卧底||+",
+        "李脱,李真|卧底|大雾|+",
+        "张仲景,郭解,孙尚香|卧底|晴天|+",
         // ── 搜集（待補正負）──
         "荀彧,程昱|搜集||+",
-        "張角,干吉|搜集||+",
-        "張遼,馬超|搜集||+",
-        "張飛,張郃|搜集||+",
-        "太史慈,甘寧|搜集||+",
-        "飛雲,繡球|搜集||+",
-        "李脫,李真|搜集|大霧|+",
-        "張遼,阿蟬|搜集|大霧|+",
-        "張仲景,郭解,孫尚香|搜集|晴天|+",
-        // ── 滅火（待補正負）──
-        "馬超,阿蟬|滅火||+",
-        "葛洪,徐庶|滅火||+",
-        "飛雲,繡球|滅火||+",
-        "李脫,李真|滅火|大霧|+",
-        "張遼,阿蟬|滅火|大霧|+",
-        "張仲景,郭解,孫尚香|滅火|晴天|+",
-        // ── 淨水（待補正負）──
-        "葛洪,徐庶|淨水||+",
-        "陸遜,夏侯惇,孔融|淨水||+",
-        "嚴白虎,小喬,張飛|淨水||+",
-        "飛雲,繡球|淨水||+",
-        "李脫,李真|淨水|大霧|+",
-        "張遼,阿蟬|淨水|大霧|+",
-        "張仲景,郭解,孫尚香|淨水|晴天|+",
-        // ── 營救（待補正負）──
-        "孔融,張闓|營救||+",
-        "太史慈,張闓|營救||+",
-        "張遼,馬超|營救||+",
-        "荀彧,程昱|營救||+",
-        "張飛,張郃|營救||+",
-        "夏侯惇,張郃|營救||+",
-        "飛雲,繡球|營救||+",
-        "李脫,李真|營救|大霧|+",
-        "張遼,阿蟬|營救|大霧|+",
-        "張仲景,郭解,孫尚香|營救|晴天|+"
+        "张角,干吉|搜集||+",
+        "张辽,马超|搜集||+",
+        "张飞,张郃|搜集||+",
+        "太史慈,甘宁|搜集||+",
+        "飞云,绣球|搜集||+",
+        "李脱,李真|搜集|大雾|+",
+        "张辽,阿蝉|搜集|大雾|+",
+        "张仲景,郭解,孙尚香|搜集|晴天|+",
+        // ── 灭火（待補正負）──
+        "马超,阿蝉|灭火||+",
+        "葛洪,徐庶|灭火||+",
+        "飞云,绣球|灭火||+",
+        "李脱,李真|灭火|大雾|+",
+        "张辽,阿蝉|灭火|大雾|+",
+        "张仲景,郭解,孙尚香|灭火|晴天|+",
+        // ── 净水（待補正負）──
+        "葛洪,徐庶|净水||+",
+        "陆逊,夏侯惇,孔融|净水||+",
+        "严白虎,小乔,张飞|净水||+",
+        "飞云,绣球|净水||+",
+        "李脱,李真|净水|大雾|+",
+        "张辽,阿蝉|净水|大雾|+",
+        "张仲景,郭解,孙尚香|净水|晴天|+",
+        // ── 营救（待補正負）──
+        "孔融,张闿|营救||+",
+        "太史慈,张闿|营救||+",
+        "张辽,马超|营救||+",
+        "荀彧,程昱|营救||+",
+        "张飞,张郃|营救||+",
+        "夏侯惇,张郃|营救||+",
+        "飞云,绣球|营救||+",
+        "李脱,李真|营救|大雾|+",
+        "张辽,阿蝉|营救|大雾|+",
+        "张仲景,郭解,孙尚香|营救|晴天|+"
     ];
 
     let agentTree = {}, bondsList = [], globalTotalBonds = 0;
@@ -472,11 +670,47 @@
         arrow.textContent = row.classList.contains('collapsed') ? '▸' : '▾';
     }
 
+    // ── 账号 Modal 系統（放在變量聲明之後以避免作用域問題）────────
+    var selectedVer = 1;
+    function selectVer(v) {
+        selectedVer = v;
+        document.getElementById('ver-btn-1').classList.toggle('selected', v===1);
+        document.getElementById('ver-btn-2').classList.toggle('selected', v===2);
+    }
+    function openAddModal() {
+        selectedVer = 1;
+        document.getElementById('ver-btn-1').classList.add('selected');
+        document.getElementById('ver-btn-2').classList.remove('selected');
+        document.getElementById('modal-name-input').value = '';
+        document.getElementById('add-modal').classList.add('open');
+        setTimeout(function(){ document.getElementById('modal-name-input').focus(); }, 150);
+    }
+    function closeAddModal() {
+        document.getElementById('add-modal').classList.remove('open');
+    }
+    function confirmAddAccount() {
+        var nameInput = document.getElementById('modal-name-input');
+        if (!nameInput) return;
+        var name = nameInput.value.trim();
+        if (!name) { nameInput.focus(); return; }
+        var prefix = selectedVer === 2 ? '代号鸢' : '如鸢';
+        var fullName = prefix + ' - ' + name;
+        if (allAccounts[fullName]) { showToast(T('alert_dup'), true); return; }
+        allAccounts[fullName] = {};
+        localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+        currentAccount = fullName;
+        localStorage.setItem('yuan_current_account', currentAccount);
+        closeAddModal();
+        updateAccountUI();
+        renderPokedex();
+    }
+    document.getElementById('add-modal').addEventListener('click', function(e){ if(e.target===this) closeAddModal(); });
+
     function updateAccountUI() {
         const sel = document.getElementById('account-select');
         const ob = document.getElementById('onboarding-card');
         if (Object.keys(allAccounts).length === 0) {
-            sel.innerHTML = '<option value="">(尚無帳號)</option>';
+            sel.innerHTML = `<option value="">(${T('no_account')})</option>`;
             currentAccount = null;
             if (ob) ob.style.display = 'block';
         } else {
@@ -486,44 +720,34 @@
         }
     }
 
-    function checkAcc() { if (!currentAccount) { alert("請先新增帳號！"); return false; } return true; }
+    function checkAcc() { if (!currentAccount) { showToast(T('alert_no_acc'), true); return false; } return true; }
 
-    function addAccount() {
-        const type = prompt("選擇版本：\n1. 如鳶\n2. 代號鳶","1");
-        if (!type) return;
-        const prefix = type.trim()==="2" ? "代號鳶" : "如鳶";
-        const name = prompt("輸入角色名字：");
-        if (!name||!name.trim()) return;
-        const fullName = `${prefix} - ${name.trim()}`;
-        if (allAccounts[fullName]) { alert("已有同名帳號！"); return; }
-        allAccounts[fullName] = {};
-        localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
-        currentAccount = fullName;
-        localStorage.setItem('yuan_current_account', currentAccount);
-        updateAccountUI(); renderPokedex();
-    }
+    function addAccount() { openAddModal(); } // legacy shim
 
     function renameAccount() {
         if (!checkAcc()) return;
-        const newName = prompt("輸入新名字：", currentAccount);
-        if (!newName||newName.trim()===currentAccount) return;
-        if (allAccounts[newName.trim()]) { alert("已有同名帳號！"); return; }
-        allAccounts[newName.trim()] = allAccounts[currentAccount];
-        delete allAccounts[currentAccount];
-        currentAccount = newName.trim();
-        localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
-        localStorage.setItem('yuan_current_account', currentAccount);
-        updateAccountUI(); renderPokedex();
+        showRenameModal(currentAccount, (newName) => {
+            if (!newName || newName.trim() === currentAccount) return;
+            const trimmed = newName.trim();
+            if (allAccounts[trimmed]) { showToast(T('alert_dup'), true); return; }
+            allAccounts[trimmed] = allAccounts[currentAccount];
+            delete allAccounts[currentAccount];
+            currentAccount = trimmed;
+            localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+            localStorage.setItem('yuan_current_account', currentAccount);
+            updateAccountUI(); renderPokedex();
+        });
     }
 
     function deleteAccount() {
         if (!checkAcc()) return;
-        if (!confirm(`確定刪除「${currentAccount}」的所有進度？此操作無法復原。`)) return;
-        delete allAccounts[currentAccount];
-        localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
-        currentAccount = Object.keys(allAccounts)[0] || null;
-        localStorage.setItem('yuan_current_account', currentAccount||'');
-        updateAccountUI(); renderPokedex();
+        showConfirm(T('del_confirm').replace('{name}',currentAccount), () => {
+            delete allAccounts[currentAccount];
+            localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+            currentAccount = Object.keys(allAccounts)[0] || null;
+            localStorage.setItem('yuan_current_account', currentAccount||'');
+            updateAccountUI(); renderPokedex();
+        });
     }
 
     function switchAccount() {
@@ -540,13 +764,13 @@
             const members = parts[0].split(',');
             const act = parts[1];
             const validW = (parts[2] && parts[2].trim()) ? parts[2].split(',') : allW;
-            const bondType = (parts[3] && parts[3].trim() === '-') ? '-' : '+'; // + 一拍即合 / - 貌合神離
+            const bondType = (parts[3] && parts[3].trim() === '-') ? '-' : '+'; // + 一拍即合 / - 貌合神离
             bondsList.push({members, action:act, validWeathers:validW, bondType});
             globalTotalBonds += validW.length;
             members.forEach(m => {
-                if (!agentTree[m]) agentTree[m] = {dept:agentsData[m]?.dept||"閒人", attr:agentsData[m]?.attr||"水", bonds:[], totalTasks:0};
+                if (!agentTree[m]) agentTree[m] = {dept:agentsData[m]?.dept||"闲人", attr:agentsData[m]?.attr||"水", bonds:[], totalTasks:0};
                 const ts = members.filter(x=>x!==m).join(' * ');
-                // 同一 target+action+bondType 才算同一組
+                // 同一 target+action+bondType 才算同一组
                 if (!agentTree[m].bonds.find(b=>b.target===ts&&b.action===act&&b.bondType===bondType)) {
                     agentTree[m].bonds.push({target:ts, action:act, validWeathers:validW, bondType});
                     agentTree[m].totalTasks += validW.length;
@@ -565,6 +789,7 @@
         document.getElementById('dispatch-view').style.display = t==='dispatch'?'block':'none';
         document.getElementById('feedback-view').style.display = t==='feedback'?'block':'none';
         if (t==='dispatch') findMatches();
+        if (t==='feedback') { etBuildAgentRow(); etCheckGo(); }
     }
 
     function setFilter(t, v) {
@@ -589,14 +814,14 @@
         return c;
     }
 
-    const deptOrder = ['蛾部','雀部','鳶部','蜂部','閒人'];
+    const deptOrder = ['蛾部','雀部','鸢部','蜂部','闲人'];
 
     function buildAgentCard(name, prog) {
         const agent = agentTree[name];
         const det = document.createElement('details'); det.id = `agent-${name}`;
         const sumEl = document.createElement('summary');
         sumEl.innerHTML = `
-            <div class="agent-title-left">${name}<span class="agent-tag">${agent.dept}</span><span class="agent-tag">${agent.attr}</span></div>
+            <div class="agent-title-left">${name}<span class="agent-tag">${Td(agent.dept)}</span><span class="agent-tag">${Tat(agent.attr)}</span></div>
             <div class="agent-title-right">
                 <span class="remain-badge" id="remain-${name}"></span>
                 <div class="mini-bar-wrap"><div class="mini-bar-fill" id="minibar-${name}" style="width:0%"></div></div>
@@ -606,10 +831,10 @@
         det.appendChild(sumEl);
         const body = document.createElement('div'); body.className = 'bond-content';
 
-        // 按配對對象分組，每格 = 天氣圖示 + 情報名稱（仿遊戲排版）
+        // 按配对对象分组，每格 = 天氣图示 + 情报名稱（仿游戲排版）
         const byTarget = {};
         agent.bonds.forEach(b => {
-            const gk = `${b.target}__${b.bondType}`; // 同一對象但不同類型分開顯示
+            const gk = `${b.target}__${b.bondType}`; // 同一对象但不同类型分开显示
             if(!byTarget[gk]) byTarget[gk]=[];
             byTarget[gk].push(b);
         });
@@ -619,11 +844,11 @@
             const header = document.createElement('div'); header.className = 'bond-header';
             const titleDiv = document.createElement('div'); titleDiv.className = 'bond-title';
             const typeLabel = bType==='-'
-                ? `<span class="btype btype-neg">貌合神離</span>`
-                : `<span class="btype btype-pos">一拍即合</span>`;
-            titleDiv.innerHTML = `與 ${target} ${typeLabel}`;
+                ? `<span class="btype btype-neg">${T('bond_neg')}</span>`
+                : `<span class="btype btype-pos">${T('bond_pos')}</span>`;
+            titleDiv.innerHTML = `与 ${target} ${typeLabel}`;
             const btnAll = document.createElement('button'); btnAll.className = 'btn-check-all';
-            btnAll.textContent = '全選 / 取消';
+            btnAll.textContent = T('select_all_cancel');
             header.appendChild(titleDiv); header.appendChild(btnAll);
             body.appendChild(header);
 
@@ -655,7 +880,7 @@
                 item.className = `weather-item${prog[key]?' unlocked':''}`;
                 item.dataset.key = key;
                 const img = document.createElement('img'); img.src = weathers[w];
-                const span = document.createElement('span'); span.textContent = action;
+                const span = document.createElement('span'); span.textContent = Ta(action);
                 item.appendChild(img); item.appendChild(span);
                 item.onclick = () => {
                     if(!checkAcc()) return;
@@ -677,7 +902,7 @@
         const prog = currentAccount ? allAccounts[currentAccount] : {};
         if (!currentAccount) {
             const ob = document.createElement('div'); ob.id='onboarding-card'; ob.className='onboarding-card';
-            ob.innerHTML = `<h2>👋 歡迎使用鳶報羈絆助手</h2><p>建立一個帳號來開始記錄你的羈絆收集進度<br>每個帳號獨立儲存，可以切換不同角色使用</p><button class="btn-onboard" onclick="addAccount()">＋ 建立第一個帳號</button>`;
+            ob.innerHTML = `<h2>👋 ${T('welcome')}</h2><p>${T('welcome_desc')}</p><button class="btn-onboard" onclick="openAddModal()">${T('create_first')}</button>`;
             cnt.appendChild(ob); return;
         }
         const {dept:fDept, attr:fAttr, status:fStatus} = curFilter;
@@ -691,7 +916,7 @@
         };
         if (fDept!=='全部') {
             const list = Object.keys(agentTree).filter(matchAgent).sort();
-            if (!list.length) cnt.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">沒有符合條件的密探</div>';
+            if (!list.length) cnt.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">没有符合條件的密探</div>';
             else list.forEach(name=>cnt.appendChild(buildAgentCard(name,prog)));
         } else {
             let anyRendered = false;
@@ -709,7 +934,7 @@
                 section.appendChild(sBody);
                 cnt.appendChild(section);
             });
-            if (!anyRendered) cnt.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">沒有符合條件的密探</div>';
+            if (!anyRendered) cnt.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">没有符合條件的密探</div>';
         }
         updateUI();
     }
@@ -725,7 +950,7 @@
             const remain=document.getElementById(`remain-${name}`);
             if (el) el.innerText=`${count}/${agent.totalTasks}`;
             if (mini) mini.style.width=agent.totalTasks?`${(count/agent.totalTasks)*100}%`:'0%';
-            if (remain) remain.textContent=(agent.totalTasks-count)>0?`剩 ${agent.totalTasks-count}`:'';
+            if (remain) remain.textContent=(agent.totalTasks-count)>0?T('remain').replace('{n}',agent.totalTasks-count):'';
             if (det) det.className=(count===agent.totalTasks&&count>0)?'agent-completed':'';
         });
         const u = new Set();
@@ -737,17 +962,188 @@
         const msgEl=document.getElementById('global-progress-msg');
         if (msgEl) {
             const pct=total?done/total:0;
-            msgEl.textContent = done===0?'還沒開始收集，今天就出發吧！🎯'
-                :pct<0.25?'加油！才剛起步，繼續累積吧 💪'
-                :pct<0.5?`不錯！已完成 ${Math.round(pct*100)}%，繼續衝！🔥`
-                :pct<0.75?`太強了！已過一半，只剩 ${total-done} 格！⚡`
-                :pct<1?`快收集完啦！只剩 ${total-done} 格，加把勁！🏃`
-                :'🎉 全部收集完成！你是羈絆收藏大師！';
+            msgEl.textContent = done===0?T('msg_0')
+                :pct<0.25?T('msg_25')
+                :pct<0.5?T('msg_50').replace('{pct}',Math.round(pct*100))
+                :pct<0.75?T('msg_75').replace('{left}',total-done)
+                :pct<1?T('msg_99').replace('{left}',total-done)
+                :T('msg_100');
         }
     }
 
-    let curAction = '縱火', curWeather = '晴天', curViewMode = 'card';
-    let fbType = '資料有誤';
+
+    let curAction = '纵火', curWeather = '晴天', curViewMode = 'card';
+
+    // ── 录入工具 JS ──────────────────────────────────────────
+    let etAttr = '全部', etSlots = [null, null], etHas3 = false, etGrid = {}, etRecords = [];
+    const ET_ACTIONS = ["纵火","传谣","下毒","卧底","搜集","灭火","净水","营救"];
+    const ET_WEATHERS = ["晴天","雨天","大雾","狂风","小雪","大雪","飓风","雷鸣"];
+
+    function etSetFilter(attr, el) {
+        etAttr = attr;
+        document.querySelectorAll('.et-ftag').forEach(t => t.classList.remove('on'));
+        el.classList.add('on');
+        etBuildAgentRow();
+    }
+
+    function etBuildAgentRow() {
+        const el = document.getElementById('et-agent-row');
+        if (!el) return;
+        el.innerHTML = '';
+        const mkSel = (i, ph) => {
+            const s = document.createElement('select');
+            s.className = 'et-agent-sel';
+            s.innerHTML = `<option value="">${ph}</option>` +
+                Object.keys(agentsData).map(a => {
+                    const attr = agentsData[a]?.attr || '';
+                    const hide = etAttr !== '全部' && attr !== etAttr;
+                    return hide ? '' : `<option value="${a}"${a === etSlots[i] ? ' selected' : ''}>${a} [${attr}]</option>`;
+                }).join('');
+            s.onchange = () => { etSlots[i] = s.value || null; etCheckGo(); };
+            return s;
+        };
+        el.appendChild(mkSel(0, '— 密探 A —'));
+        const x1 = document.createElement('span'); x1.className = 'et-times'; x1.textContent = '×'; x1.style.cssText = 'font-size:1.2rem;color:#aaa;flex-shrink:0;'; el.appendChild(x1);
+        el.appendChild(mkSel(1, '— 密探 B —'));
+        if (etHas3) {
+            const x2 = document.createElement('span'); x2.className = 'et-times'; x2.textContent = '×'; x2.style.cssText = 'font-size:1.2rem;color:#aaa;flex-shrink:0;'; el.appendChild(x2);
+            const wrap = document.createElement('div'); wrap.style.cssText = 'display:flex;align-items:center;gap:6px;flex:1;min-width:120px;';
+            const s3 = mkSel(2, '— 密探 C —'); s3.style.flex = '1'; wrap.appendChild(s3);
+            const rm = document.createElement('button'); rm.className = 'et-btn-rm'; rm.textContent = '✕';
+            rm.onclick = () => { etHas3 = false; etSlots[2] = null; etBuildAgentRow(); etCheckGo(); };
+            wrap.appendChild(rm); el.appendChild(wrap);
+        } else {
+            const b = document.createElement('button'); b.className = 'et-btn-3rd'; b.textContent = '＋ 3人组';
+            b.onclick = () => { etHas3 = true; etBuildAgentRow(); etCheckGo(); }; el.appendChild(b);
+        }
+    }
+
+    function etCheckGo() {
+        const filled = etSlots.slice(0, etHas3 ? 3 : 2).filter(Boolean);
+        const btn = document.getElementById('et-btn-go');
+        if (btn) btn.disabled = filled.length < 2 || new Set(filled).size !== filled.length;
+    }
+
+    function etEnterGrid() {
+        const agents = etSlots.slice(0, etHas3 ? 3 : 2).filter(Boolean);
+        const tag = document.getElementById('et-pair-tag');
+        if (tag) tag.textContent = agents.join(' × ');
+        etGrid = {};
+        ET_ACTIONS.forEach(a => { etGrid[a] = {}; ET_WEATHERS.forEach(w => { etGrid[a][w] = ''; }); });
+        const key = [...agents].sort().join(',');
+        const ex = etRecords.find(r => [...r.agents].sort().join(',') === key);
+        if (ex) ex.cells.forEach(c => {
+            if (c.weather) { if (etGrid[c.action]) etGrid[c.action][c.weather] = c.type; }
+            else ET_WEATHERS.forEach(w => { if (etGrid[c.action]) etGrid[c.action][w] = c.type; });
+        });
+        document.getElementById('et-step1').style.display = 'none';
+        document.getElementById('et-step2').style.display = 'block';
+        etBuildTable();
+    }
+
+    function etBack() {
+        document.getElementById('et-step2').style.display = 'none';
+        document.getElementById('et-step1').style.display = 'block';
+    }
+
+    function etBuildTable() {
+        let h = '<thead><tr><th style="min-width:44px;"></th>';
+        ET_WEATHERS.forEach(w => {
+            h += `<th class="et-th-w"><img src="35px-${w}.png" alt="${w}"><span>${w}</span></th>`;
+        });
+        h += '</tr></thead><tbody>';
+        ET_ACTIONS.forEach(act => {
+            h += `<tr><td class="et-th-act">${act}</td>`;
+            ET_WEATHERS.forEach(w => {
+                const v = etGrid[act][w];
+                const cls = v === '+' ? 'pos' : v === '-' ? 'neg' : '';
+                const lbl = v === '+' ? '一拍' : v === '-' ? '貌合' : '';
+                h += `<td class="et-cell${cls ? ' '+cls : ''}" onclick="etCyc(this,'${act}','${w}')">${lbl}</td>`;
+            });
+            h += '</tr>';
+        });
+        h += '</tbody>';
+        document.getElementById('et-table').innerHTML = h;
+    }
+
+    function etCyc(td, act, w) {
+        const cur = etGrid[act][w];
+        const nxt = cur === '' ? '+' : cur === '+' ? '-' : '';
+        etGrid[act][w] = nxt;
+        td.className = 'et-cell' + (nxt ? ' ' + (nxt === '+' ? 'pos' : 'neg') : '');
+        td.textContent = nxt === '+' ? '一拍' : nxt === '-' ? '貌合' : '';
+    }
+
+    function etFillAll(t) { ET_ACTIONS.forEach(a => ET_WEATHERS.forEach(w => { etGrid[a][w] = t; })); etBuildTable(); }
+    function etClearGrid() { ET_ACTIONS.forEach(a => ET_WEATHERS.forEach(w => { etGrid[a][w] = ''; })); etBuildTable(); }
+
+    function etSave() {
+        const agents = etSlots.slice(0, etHas3 ? 3 : 2).filter(Boolean);
+        const raw = [];
+        ET_ACTIONS.forEach(act => {
+            ['+', '-'].forEach(t => {
+                const ws = ET_WEATHERS.filter(w => etGrid[act][w] === t);
+                if (!ws.length) return;
+                if (ws.length === 8) raw.push({ action: act, weather: '', type: t });
+                else ws.forEach(w => raw.push({ action: act, weather: w, type: t }));
+            });
+        });
+        if (!raw.length) { alert('还没填任何格子！'); return; }
+        const key = [...agents].sort().join(',');
+        const idx = etRecords.findIndex(r => [...r.agents].sort().join(',') === key);
+        if (idx >= 0) etRecords[idx] = { agents, cells: raw };
+        else etRecords.push({ agents, cells: raw });
+        etRenderRec(); etRenderExp();
+        etSlots = [null, null]; etHas3 = false;
+        etBuildAgentRow(); etCheckGo(); etBack();
+    }
+
+    function etRenderRec() {
+        const total = etRecords.reduce((s, r) => s + r.cells.length, 0);
+        const cntEl = document.getElementById('et-rec-cnt');
+        const totEl = document.getElementById('et-total-cnt');
+        if (cntEl) cntEl.textContent = etRecords.length;
+        if (totEl) totEl.textContent = total + ' 条';
+        const el = document.getElementById('et-rec-list');
+        if (!el) return;
+        if (!etRecords.length) { el.innerHTML = '<div style="text-align:center;color:#ccc;padding:16px 0;">还没有记录</div>'; return; }
+        el.innerHTML = etRecords.map((r, i) => {
+            const chips = r.cells.map(c => {
+                const cls = c.type === '+' ? 'pos' : 'neg';
+                const ico = c.type === '+' ? '✨' : '💢';
+                return `<span class="et-chip ${cls}">${ico} ${c.action}·${c.weather || '全天气'}</span>`;
+            }).join('');
+            return `<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #f0ece6;">
+                <div style="display:flex;align-items:center;margin-bottom:6px;">
+                    <div style="font-size:0.95rem;font-weight:bold;color:var(--highlight);flex:1;">🔗 ${r.agents.join(' × ')} <span style="font-size:0.78rem;color:#aaa;font-weight:normal;">(${r.cells.length}条)</span></div>
+                    <button style="background:none;border:none;cursor:pointer;color:#ccc;font-size:1rem;padding:3px 7px;" onmouseover="this.style.color='#a03030'" onmouseout="this.style.color='#ccc'" onclick="etDelRec(${i})">🗑</button>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">${chips}</div>
+            </div>`;
+        }).join('');
+    }
+
+    function etDelRec(i) { etRecords.splice(i, 1); etRenderRec(); etRenderExp(); }
+
+    function etRenderExp() {
+        const el = document.getElementById('et-exp-box');
+        if (!el) return;
+        if (!etRecords.length) { el.textContent = '（暂无内容）'; return; }
+        el.textContent = etRecords.flatMap(r =>
+            r.cells.map(c => `"${r.agents.join(',')}|${c.action}|${c.weather}|${c.type}",`)
+        ).join('\n');
+    }
+
+    function etCopy() {
+        const text = document.getElementById('et-exp-box')?.textContent;
+        if (!text || text === '（暂无内容）') return;
+        const ok = () => { const t = document.getElementById('et-copy-ok'); if(t){t.style.display='block';setTimeout(()=>t.style.display='none',2000);} };
+        navigator.clipboard?.writeText(text).then(ok).catch(() => {
+            const ta = document.createElement('textarea'); ta.value = text;
+            document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); ok();
+        });
+    }
+    // ── end 录入工具 ─────────────────────────────────────────
 
     function setViewMode(mode, el) {
         curViewMode = mode;
@@ -758,34 +1154,6 @@
         findMatches();
     }
 
-    function fbSelectType(el) {
-        fbType = el.textContent;
-        document.querySelectorAll('#fb-type-btns .action-btn').forEach(b=>b.classList.remove('selected'));
-        el.classList.add('selected');
-    }
-
-    function fbPreview() {
-        const combo = document.getElementById('fb-combo').value.trim() || '（未填）';
-        const desc = document.getElementById('fb-desc').value.trim() || '（未填）';
-        const text = `【鳶報羈絆助手 - 資料回報】\n問題類型：${fbType}\n涉及組合：${combo}\n說明：${desc}\n回報時間：${new Date().toLocaleString('zh-TW')}`;
-        const el = document.getElementById('fb-preview');
-        el.textContent = text; el.style.display = 'block';
-        document.getElementById('fb-copy-btn').style.display = 'inline-block';
-        document.getElementById('fb-success').style.display = 'none';
-    }
-
-    function fbCopy() {
-        const text = document.getElementById('fb-preview').textContent;
-        navigator.clipboard.writeText(text).then(()=>{
-            document.getElementById('fb-success').style.display = 'block';
-        }).catch(()=>{
-            const ta = document.createElement('textarea');
-            ta.value = text; document.body.appendChild(ta);
-            ta.select(); document.execCommand('copy');
-            document.body.removeChild(ta);
-            document.getElementById('fb-success').style.display = 'block';
-        });
-    }
 
     function selectAction(act, el) {
         curAction = act;
@@ -801,22 +1169,22 @@
     }
 
     function findMatches() {
-        if (!currentAccount) { document.getElementById('match-results').innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">請先建立帳號</div>'; return; }
+        if (!currentAccount) { document.getElementById('match-results').innerHTML=`<div style="text-align:center;padding:30px;color:#aaa;">${T('no_acc_hint')}</div>`; return; }
         const act=curAction, w=curWeather;
         const prog=allAccounts[currentAccount];
         let hUnlock='', hDone='', dCount=0;
         bondsList.filter(b=>b.action===act&&b.validWeathers.includes(w)).forEach(b=>{
             const k=getSKey(b.members,act,w), isU=prog[k];
             const typeTag = b.bondType==='-'
-                ? `<span class="btype btype-neg">貌合神離</span>`
-                : `<span class="btype btype-pos">一拍即合</span>`;
-            const html=`<div class="result-item"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}</div><button class="toggle-btn ${isU?'btn-revert':'btn-unlock'}" onclick="tglM('${k}')">${isU?'取消':'解鎖'}</button></div>`;
+                ? `<span class="btype btype-neg">${T('bond_neg')}</span>`
+                : `<span class="btype btype-pos">${T('bond_pos')}</span>`;
+            const html=`<div class="result-item"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}</div><button class="toggle-btn ${isU?'btn-revert':'btn-unlock'}" onclick="tglM('${k}')">${isU?T('cancel_unlock'):T('unlock')}</button></div>`;
             if(isU){hDone+=html;dCount++;}else{hUnlock+=html;}
         });
         document.getElementById('match-results').innerHTML =
-            (hUnlock?`<div class="result-group-title">✅ 目前可解鎖</div><div class="results-grid">${hUnlock}</div>`
-                :`<div style="text-align:center;padding:20px;color:var(--success);font-weight:bold;">🎉 此情報所有組合今日已解鎖！</div>`)
-            +(hDone?`<details class="done-group"><summary>📁 已解鎖 (${dCount}) <span style="margin-left:auto;">▼</span></summary><div class="results-grid">${hDone}</div></details>`:'');
+            (hUnlock?`<div class="result-group-title">${T('can_unlock')}</div><div class="results-grid">${hUnlock}</div>`
+                :`<div style="text-align:center;padding:20px;color:var(--success);font-weight:bold;">${T('all_unlocked')}</div>`)
+            +(hDone?`<details class="done-group"><summary>${T('done_group')} (${dCount}) <span style="margin-left:auto;">▼</span></summary><div class="results-grid">${hDone}</div></details>`:'');
     }
 
     function tglM(k) {
@@ -829,7 +1197,7 @@
         if(!checkAcc()) return;
         const a=document.createElement('a');
         a.href="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allAccounts));
-        a.download="鳶報備份.json"; a.click();
+        a.download="鸢报备份.json"; a.click();
     }
 
     function importData(event) {
@@ -843,8 +1211,8 @@
                 localStorage.setItem('yuan_all_accounts',JSON.stringify(allAccounts));
                 if(!currentAccount||!allAccounts[currentAccount]) currentAccount=Object.keys(allAccounts)[0];
                 updateAccountUI(); renderPokedex();
-                alert('匯入成功！');
-            } catch { alert('匯入失敗：檔案格式不正確。'); }
+                showToast(T('import_ok'));
+            } catch { showToast(T('import_fail'), true); }
         };
         reader.readAsText(file);
         event.target.value='';
@@ -853,5 +1221,4 @@
     buildData(); updateAccountUI(); renderPokedex();
 </script>
 </body>
-  
 </html>
