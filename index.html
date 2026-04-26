@@ -230,8 +230,8 @@
         details.agent-completed summary { background: #f0ebe4; }
         details[open] summary { border-bottom: 1px solid var(--border); border-radius: var(--r) var(--r) 0 0; }
 
-        .agent-title-left { display: flex; align-items: center; font-weight: 700; font-size: 1.1rem; gap: 1px; }
-        .agent-title-name { font-size: 1.1rem; }
+        .agent-title-left { display: flex; align-items: center; font-weight: 700; font-size: 1.1rem; gap: 6px; }
+        .agent-title-name { font-size: 1.1rem; display: inline-block; min-width: 3em; }
         .summary-arrow { color: var(--primary-soft); font-size: 0.7rem; margin-left: 6px; transition: transform .22s; }
         details[open] .summary-arrow { transform: rotate(180deg); color: var(--highlight); }
 
@@ -353,20 +353,26 @@
 
         /* 引导卡片 */
         .onboarding-card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 14px; padding: 40px 24px; text-align: center; margin: 24px 0;
-            box-shadow: var(--shadow-md);
+            background: linear-gradient(135deg, #FFF8F2, #FDF0E8);
+            border: 2px solid var(--highlight); border-radius: 14px;
+            padding: 40px 24px; text-align: center; margin: 24px 0;
+            box-shadow: 0 4px 20px rgba(168,101,94,0.15);
+            animation: pulse-border 2.5s ease-in-out infinite;
         }
-        .onboarding-card h2 { font-size: 1.2rem; color: var(--highlight); margin: 0 0 10px; font-weight: 700; }
+        @keyframes pulse-border {
+            0%,100% { box-shadow: 0 4px 20px rgba(168,101,94,0.15); }
+            50% { box-shadow: 0 4px 28px rgba(168,101,94,0.35); }
+        }
+        .onboarding-card h2 { font-size: 1.3rem; color: var(--highlight); margin: 0 0 10px; font-weight: 700; }
         .onboarding-card p { font-size: 0.88rem; color: var(--primary-soft); margin: 0 0 22px; line-height: 1.75; }
+        .onboarding-hint { font-size: 0.8rem; color: #aaa; margin-top: 12px; }
         .btn-onboard {
             background: var(--highlight); color: #fff; border: none;
-            padding: 11px 30px; border-radius: 8px; font-size: 0.95rem;
+            padding: 13px 36px; border-radius: 8px; font-size: 1rem;
             font-weight: 700; cursor: pointer; letter-spacing: .3px;
             font-family: inherit; transition: all .18s;
-            
         }
-        .btn-onboard:hover { background: #bc7570; transform: translateY(-1px);  }
+        .btn-onboard:hover { background: #bc7570; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(168,101,94,0.4); }
 
         /* 迷你进度条 */
         .mini-bar-wrap { width: 54px; height: 4px; background: var(--disabled); border-radius: 99px; overflow: hidden; margin-left: 6px; }
@@ -487,7 +493,7 @@
         .ref-agent-btn:hover { background: var(--button-bg); border-color: var(--border-strong); color: var(--primary); }
         .ref-agent-btn.active { background: var(--highlight); color: #fff; border-color: var(--highlight);  }
 
-        /* 稀有度颜色 */
+        /* 品质颜色 */
         .rar-金 .agent-title-name { color: #a07818; }
         .rar-紫 .agent-title-name { color: #7040a8; }
         .rar-蓝 .agent-title-name { color: #3070b8; }
@@ -546,7 +552,22 @@
         }
         .modal-btn-cancel-sm:hover { background: var(--button-bg); }
 
-        /* 列表模式 select */
+        /* Safari 提示横幅 */
+        .safari-warn { background: #fff8e6; border: 1.5px solid #e6b84a; border-radius: 10px; padding: 12px 15px; margin-bottom: 12px; font-size: 0.85rem; color: #7a5800; line-height: 1.6; display: none; }
+        .safari-warn strong { color: #5a3e00; }
+        /* 备份提示横幅 */
+        .backup-nudge { background: #eef7ee; border: 1.5px solid #5a8a5a; border-radius: 10px; padding: 12px 15px; margin-bottom: 12px; font-size: 0.85rem; color: #2a5a2a; line-height: 1.6; display: none; }
+        .backup-nudge strong { color: #1a3a1a; }
+        .new-badge { display: inline-block; background: #e05c2a; color: #fff; font-size: 0.62rem; font-weight: bold; padding: 1px 5px; border-radius: 3px; margin-left: 5px; vertical-align: middle; letter-spacing: 0.5px; }
+        /* 公告横幅 */
+        .announce-banner { background: linear-gradient(135deg, #FAF0E6, #FDF4EC); border: 1.5px solid #d4a96a; border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+        .announce-header { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; cursor: pointer; user-select: none; }
+        .announce-header:hover { background: rgba(212,169,106,0.1); }
+        .announce-title { font-size: 0.92rem; font-weight: bold; color: #8b5a00; }
+        .announce-arrow { font-size: 0.75rem; color: #a07040; transition: transform 0.2s; }
+        .announce-banner.collapsed .announce-arrow { transform: rotate(-90deg); }
+        .announce-body { font-size: 0.85rem; color: var(--primary-soft); line-height: 1.7; padding: 0 14px 12px; }
+        .announce-banner.collapsed .announce-body { display: none; }
         #action-select-list, #weather-select-list {
             flex: 1; min-width: 100px; padding: 9px 10px;
             border: 1.5px solid var(--border); border-radius: 8px;
@@ -606,13 +627,40 @@
         </div>
     </div>
 
+    <!-- Safari 提示 -->
+    <div class="safari-warn" id="safari-warn">
+        <button style="float:right;background:none;border:none;cursor:pointer;font-size:1rem;color:#a07820;opacity:0.7;" onclick="this.parentElement.style.display='none';localStorage.setItem('yuan_safari_warn_dismissed','1')">✕</button>
+        <strong>⚠️ Safari 用户请注意</strong><br>
+        Safari 的隐私保护可能导致每次关闭页面后存档消失。建议改用 <strong>Chrome</strong> 或 <strong>夸克</strong> 浏览器打开，并确保不是无痕模式。<br>
+        <span style="color:#a07820;">也可以将本页加入书签，确保每次从同一入口进入。</span>
+    </div>
+    <!-- 备份提示 -->
+    <div class="backup-nudge" id="backup-nudge">
+        <button style="float:right;background:none;border:none;cursor:pointer;font-size:1rem;color:#3a7a3a;opacity:0.7;" onclick="dismissBackupNudge()">✕</button>
+        <strong>💾 建议备份你的进度！</strong><br>
+        你已解锁超过 50 组羁绊，建议点击右上角「导出」保存备份，避免因浏览器清除数据而丢失进度。
+    </div>
+
+    <!-- 公告横幅 -->
     <!-- 图鉴页 -->
     <div class="container" id="pokedex-view">
+        <!-- 公告横幅（只在开图鉴显示，折叠式） -->
+        <div class="announce-banner collapsed" id="announce-banner">
+            <div class="announce-header" onclick="toggleAnnounce()">
+                <span class="announce-title">🎉 羁绊资料更新</span>
+                <span class="announce-arrow">▼</span>
+            </div>
+            <div class="announce-body">
+                已同步游戏 <strong>3月30日</strong> 与 <strong>4月16日</strong> 两次版本更新的新增羁绊配对，共新增 <strong>41 位</strong>密探（周瑜、诸葛亮、曹丕等）。<br>
+                新增羁绊在开图鉴和资料留存中标注 <span class="new-badge">NEW</span>，状态筛选选「🆕 新羁伴」可快速查看。
+            </div>
+        </div>
         <div class="intro-box">
             <p>📖 <strong>这个工具是做什么的？</strong><br>
             游戏中密探配对执行情报时，不同密探一起行动能获得羁绊。这个小工具让你可以记录哪些「密探羁伴」已经完成过，方便追踪进度。</p>
             <p>🖱️ <strong>怎么用？</strong><br>
             在「开图鉴」页：展开密探卡片 → 找到对应的密探 → 对照游戏画面，点击「天气图示＋情报」格子打勾 → 格子变暗代表已记录。</p>
+            <p>📝 <strong>发现资料错误？</strong><a href="https://docs.qq.com/sheet/DTk5xdGtRcWRUZURs?tab=BB08J2" target="_blank" rel="noopener" style="color:var(--highlight);text-decoration:none;font-weight:bold;">点此回报 →</a></p>
         </div>
         <div class="filter-panel">
             <div class="filter-row">
@@ -634,7 +682,16 @@
                 </div>
             </div>
             <div class="filter-row">
-                <div class="filter-label">部門</div>
+                <div class="filter-label">品质</div>
+                <div class="filter-options" id="filter-rar">
+                    <div class="f-btn active" onclick="setFilter('rar','全部')" data-val="全部">全部</div>
+                    <div class="f-btn" onclick="setFilter('rar','金')" data-val="金">🟡 绝密</div>
+                    <div class="f-btn" onclick="setFilter('rar','紫')" data-val="紫">🟣 机密</div>
+                    <div class="f-btn" onclick="setFilter('rar','蓝')" data-val="蓝">🔵 隐密</div>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-label">部门</div>
                 <div class="filter-options" id="filter-dept">
                     <div class="f-btn active" onclick="setFilter('dept','全部')">全部</div>
                     <div class="f-btn" onclick="setFilter('dept','蛾部')">蛾部</div>
@@ -650,6 +707,7 @@
                     <div class="f-btn active" onclick="setStatusFilter('全部')">全部</div>
                     <div class="f-btn danger" onclick="setStatusFilter('未完成')">⚡ 未完成</div>
                     <div class="f-btn" onclick="setStatusFilter('已完成')">✅ 已完成</div>
+                    <div class="f-btn" onclick="setStatusFilter('新羁伴')">🆕 新羁伴</div>
                 </div>
             </div>
         </div>
@@ -740,6 +798,15 @@
                     <div class="f-btn" onclick="setRefFilter('attr','地',this)">地</div>
                     <div class="f-btn" onclick="setRefFilter('attr','阴',this)">阴</div>
                     <div class="f-btn" onclick="setRefFilter('attr','阳',this)">阳</div>
+                </div>
+            </div>
+            <div class="filter-row">
+                <div class="filter-label">品质</div>
+                <div class="filter-options" id="ref-filter-rar">
+                    <div class="f-btn active" onclick="setRefFilter('rar','全部',this)" data-val="全部">全部</div>
+                    <div class="f-btn" onclick="setRefFilter('rar','金',this)" data-val="金">🟡 绝密</div>
+                    <div class="f-btn" onclick="setRefFilter('rar','紫',this)" data-val="紫">🟣 机密</div>
+                    <div class="f-btn" onclick="setRefFilter('rar','蓝',this)" data-val="蓝">🔵 隐密</div>
                 </div>
             </div>
             <div class="filter-row">
@@ -872,50 +939,91 @@
     const weathers = {'晴天':'35px-晴天.png','雨天':'35px-雨天.png','大雾':'35px-大雾.png','狂风':'35px-狂风.png','小雪':'35px-小雪.png','大雪':'35px-大雪.png','飓风':'35px-飓风.png','雷鸣':'35px-雷鸣.png'};
     const allW = Object.keys(weathers);
     const agentsData = {
-        // 金卡
+        // 绝密・金卡
+        "令狐茂":{"dept":"鸢部","attr":"水","rar":"金"},
+        "凌统":{"dept":"雀部","attr":"火","rar":"金"},
+        "刘璋":{"dept":"闲人","attr":"地","rar":"金"},
+        "刘豹":{"dept":"鸢部","attr":"水","rar":"金"},
+        "华佗":{"dept":"鸢部","attr":"阳","rar":"金"},
+        "卢植":{"dept":"雀部","attr":"地","rar":"金"},
+        "吕布":{"dept":"蛾部","attr":"地","rar":"金"},
         "吕蒙":{"dept":"蛾部","attr":"火","rar":"金"},
+        "周忠":{"dept":"闲人","attr":"阴","rar":"金"},
+        "周瑜":{"dept":"闲人","attr":"水","rar":"金"},
+        "士燮":{"dept":"闲人","attr":"水","rar":"金"},
         "夏侯惇":{"dept":"鸢部","attr":"地","rar":"金"},
         "太史慈":{"dept":"闲人","attr":"风","rar":"金"},
         "孔融":{"dept":"雀部","attr":"水","rar":"金"},
         "孙尚香":{"dept":"鸢部","attr":"火","rar":"金"},
         "孙权":{"dept":"鸢部","attr":"火","rar":"金"},
         "干吉":{"dept":"闲人","attr":"火","rar":"金"},
+        "庞德":{"dept":"鸢部","attr":"地","rar":"金"},
+        "庞羲":{"dept":"鸢部","attr":"风","rar":"金"},
         "张仲景":{"dept":"鸢部","attr":"地","rar":"金"},
         "张修":{"dept":"蛾部","attr":"火","rar":"金"},
+        "张昭":{"dept":"雀部","attr":"风","rar":"金"},
+        "张燕":{"dept":"蛾部","attr":"火","rar":"金"},
+        "张绣":{"dept":"蛾部","attr":"阴","rar":"金"},
         "张角":{"dept":"蛾部","attr":"阴","rar":"金"},
         "张辽":{"dept":"蛾部","attr":"地","rar":"金"},
+        "张邈":{"dept":"蛾部","attr":"风","rar":"金"},
         "张郃":{"dept":"鸢部","attr":"火","rar":"金"},
         "张闿":{"dept":"蛾部","attr":"阴","rar":"金"},
         "张飞":{"dept":"蛾部","attr":"风","rar":"金"},
         "张鲁":{"dept":"闲人","attr":"阴","rar":"金"},
         "徐庶":{"dept":"鸢部","attr":"阳","rar":"金"},
+        "戏学":{"dept":"雀部","attr":"地","rar":"金"},
+        "曹丕":{"dept":"蛾部","attr":"风","rar":"金"},
+        "曹植":{"dept":"雀部","attr":"风","rar":"金"},
+        "朱然":{"dept":"鸢部","attr":"阳","rar":"金"},
+        "法正":{"dept":"闲人","attr":"阴","rar":"金"},
+        "甄宓":{"dept":"蛾部","attr":"火","rar":"金"},
         "甘宁":{"dept":"蛾部","attr":"水","rar":"金"},
+        "祢衡":{"dept":"鸢部","attr":"阳","rar":"金"},
         "程昱":{"dept":"闲人","attr":"火","rar":"金"},
-        "绣球":{"dept":"蜂部","attr":"水","rar":"蓝"},
+        "程普":{"dept":"蛾部","attr":"火","rar":"金"},
+        "简雍":{"dept":"雀部","attr":"水","rar":"金"},
         "荀彧":{"dept":"闲人","attr":"风","rar":"金"},
-        "华佗":{"dept":"闲人","attr":"阳","rar":"金"},
+        "荀攸":{"dept":"雀部","attr":"地","rar":"金"},
         "葛洪":{"dept":"闲人","attr":"阴","rar":"金"},
+        "董奉":{"dept":"雀部","attr":"阳","rar":"金"},
+        "董白":{"dept":"鸢部","attr":"地","rar":"金"},
+        "蒯良":{"dept":"鸢部","attr":"火","rar":"金"},
+        "蒯越":{"dept":"雀部","attr":"火","rar":"金"},
         "蔡琰":{"dept":"雀部","attr":"水","rar":"金"},
+        "虞翻":{"dept":"蛾部","attr":"阴","rar":"金"},
+        "诸葛亮":{"dept":"鸢部","attr":"阳","rar":"金"},
+        "诸葛瑾":{"dept":"雀部","attr":"水","rar":"金"},
+        "诸葛诞":{"dept":"闲人","attr":"火","rar":"金"},
         "贾诩":{"dept":"蛾部","attr":"阴","rar":"金"},
         "郭嘉":{"dept":"闲人","attr":"风","rar":"金"},
+        "郭女王":{"dept":"蛾部","attr":"水","rar":"金"},
         "郭解":{"dept":"鸢部","attr":"火","rar":"金"},
+        "酆公玖":{"dept":"闲人","attr":"阳","rar":"金"},
+        "酆公珠":{"dept":"闲人","attr":"阳","rar":"金"},
+        "钟繇":{"dept":"雀部","attr":"火","rar":"金"},
         "陆逊":{"dept":"雀部","attr":"火","rar":"金"},
+        "马腾":{"dept":"蛾部","attr":"地","rar":"金"},
         "马超":{"dept":"蛾部","attr":"地","rar":"金"},
         "鲁肃":{"dept":"雀部","attr":"水","rar":"金"},
-        // 紫卡
+        "黄盖":{"dept":"蛾部","attr":"阴","rar":"金"},
+        // 机密・紫卡
         "严白虎":{"dept":"鸢部","attr":"阴","rar":"紫"},
         "小乔":{"dept":"雀部","attr":"水","rar":"紫"},
-        "王异":{"dept":"鸢部","attr":"水","rar":"紫"},
-        "阿蝉":{"dept":"鸢部","attr":"地","rar":"紫"},
-        "颜良":{"dept":"蛾部","attr":"水","rar":"紫"},
-        // 蓝卡
-        "伍丹":{"dept":"蛾部","attr":"地","rar":"蓝"},
         "文丑":{"dept":"蛾部","attr":"火","rar":"紫"},
+        "王异":{"dept":"鸢部","attr":"风","rar":"紫"},
+        "许攸":{"dept":"雀部","attr":"地","rar":"紫"},
+        "阿蝉":{"dept":"鸢部","attr":"地","rar":"紫"},
+        "陈登":{"dept":"雀部","attr":"风","rar":"紫"},
+        "颜良":{"dept":"蛾部","attr":"水","rar":"紫"},
+        // 隐密・蓝卡
+        "伍丹":{"dept":"蛾部","attr":"地","rar":"蓝"},
         "李真":{"dept":"蜂部","attr":"水","rar":"蓝"},
         "李脱":{"dept":"蜂部","attr":"地","rar":"蓝"},
+        "绣球":{"dept":"蜂部","attr":"水","rar":"蓝"},
         "蛾使":{"dept":"蛾部","attr":"地","rar":"蓝"},
-        "雀使":{"dept":"雀部","attr":"水","rar":"蓝"},
-        "飞云":{"dept":"蜂部","attr":"水","rar":"蓝"}
+        "雀使":{"dept":"雀部","attr":"风","rar":"蓝"},
+        "飞云":{"dept":"蜂部","attr":"火","rar":"蓝"}
     };
 
     // 格式：「成員|情报|天氣(空=全8种)|类型(+一拍即合 / -貌合神离)」
@@ -976,8 +1084,7 @@
         "飞云,绣球|卧底||+",
         "陆逊,吕蒙,鲁肃|卧底||+",
         "华佗,吕蒙|卧底||-",
-        "阿蝉,伍丹|卧底|晴天,雨天,狂风,小雪,大雪,飓风,雷鸣|+",
-        "阿蝉,伍丹|卧底|大雾|-",
+        "阿蝉,伍丹|卧底||+",
         "张辽,阿蝉|卧底||+",
         "严白虎,小乔|卧底||+",
         "李脱,李真|卧底|大雾|+",
@@ -1018,8 +1125,119 @@
         "飞云,绣球|营救|狂风,飓风|-",
         "李脱,李真|营救|大雾|+",
         "张辽,阿蝉|营救|大雾|+",
-        "张仲景,郭解,孙尚香|营救|晴天|+"
+        "张仲景,郭解,孙尚香|营救|晴天|+",
+        // ── 新增羁绊（游戏版本更新）──
+        "张辽,阿蝉,吕布|纵火||+",
+        "张辽,阿蝉,吕布|下毒||+",
+        "张辽,阿蝉,吕布|卧底||-",
+        "庞羲,刘璋|纵火||-",
+        "庞羲,刘璋|传谣||+",
+        "干吉,张修|纵火|晴天,雨天,大雪|-",
+        "干吉,张修|传谣|晴天|-",
+        "士燮,董奉|纵火||+",
+        "士燮,董奉|下毒||-",
+        "士燮,董奉|卧底||-",
+        "祢衡,凌统|纵火||+",
+        "祢衡,凌统|下毒||+",
+        "马超,董白|纵火||+",
+        "马超,董白|营救||-",
+        "周忠,简雍|纵火||+",
+        "周忠,简雍|搜集||-",
+        "张燕,戏学|纵火||+",
+        "张燕,戏学|卧底||+",
+        "钟繇,程昱|纵火||+",
+        "钟繇,程昱|搜集||+",
+        "黄盖,程普|纵火||-",
+        "庞羲,刘璋,法正|纵火||-",
+        "庞羲,刘璋,法正|搜集||+",
+        "周瑜,小乔|纵火|雨天|-",
+        "周瑜,小乔|传谣|雨天|-",
+        "周瑜,小乔|搜集||+",
+        "诸葛亮,周瑜|纵火||+",
+        "诸葛亮,周瑜|营救||-",
+        "郭女王,曹丕|纵火||+",
+        "郭女王,曹丕|下毒||-",
+        "甄宓,曹丕|纵火||+",
+        "甄宓,曹丕|搜集||-",
+        "诸葛瑾,诸葛诞|传谣||+",
+        "诸葛瑾,诸葛诞|卧底||+",
+        "酆公珠,酆公玖|传谣||+",
+        "酆公珠,酆公玖|营救||-",
+        "郭嘉,贾诩,荀彧|传谣||+",
+        "郭嘉,贾诩,荀彧|卧底|雨天|-",
+        "徐庶,令狐茂|传谣||-",
+        "徐庶,令狐茂|营救||+",
+        "凌统,朱然,虞翻|传谣||-",
+        "凌统,朱然,虞翻|下毒||-",
+        "凌统,朱然,虞翻|卧底||+",
+        "诸葛瑾,诸葛亮,诸葛诞|下毒||-",
+        "诸葛瑾,诸葛亮,诸葛诞|营救||+",
+        "飞云,张绣|下毒||-",
+        "飞云,张绣|搜集||+",
+        "蒯越,蒯良|下毒||+",
+        "蒯越,蒯良|搜集||-",
+        "张绣,贾诩|下毒||+",
+        "张绣,贾诩|净水||-",
+        "葛洪,华佗|下毒||+",
+        "荀彧,荀攸|卧底||+",
+        "荀彧,荀攸|净水||-",
+        "郭女王,甄宓|卧底||-",
+        "郭女王,甄宓|净水||+",
+        "曹丕,曹植|卧底||-",
+        "曹丕,曹植|净水||+",
+        "马超,庞德|卧底||-",
+        "周忠,卢植|卧底||-",
+        "周忠,卢植|搜集||+",
+        "张昭,虞翻|搜集||+",
+        "周瑜,鲁肃,陆逊|灭火||+",
+        "钟繇,荀攸|灭火||-",
+        "钟繇,荀攸|营救||-",
+        "蔡琰,王异,刘豹|灭火||+",
+        "董奉,陈登,张邈|灭火||+",
+        "董奉,陈登,张邈|净水||+",
+        "董奉,陈登,张邈|营救||+",
+        "干吉,许攸|营救||+",
+        "庞德,马腾|营救||+",
+        "小乔,周忠|营救||+"
     ];
+
+    // 新增羁绊配对集合（用于显示 NEW 标记）
+    const newPairKeys = new Set([
+        "张辽,阿蝉,吕布","庞羲,刘璋","干吉,张修","士燮,董奉","祢衡,凌统",
+        "马超,董白","周忠,简雍","张燕,戏学","钟繇,程昱","黄盖,程普",
+        "庞羲,刘璋,法正","周瑜,小乔","诸葛亮,周瑜","郭女王,曹丕","甄宓,曹丕",
+        "诸葛瑾,诸葛诞","酆公珠,酆公玖","郭嘉,贾诩,荀彧","徐庶,令狐茂",
+        "凌统,朱然,虞翻","诸葛瑾,诸葛亮,诸葛诞","飞云,张绣","蒯越,蒯良",
+        "张绣,贾诩","葛洪,华佗","荀彧,荀攸","郭女王,甄宓","曹丕,曹植",
+        "马超,庞德","周忠,卢植","张昭,虞翻","周瑜,鲁肃,陆逊","钟繇,荀攸",
+        "蔡琰,王异,刘豹","董奉,陈登,张邈","干吉,许攸","庞德,马腾","小乔,周忠"
+    ].map(s => s.split(',').sort().join('|||')));
+
+    function isNewPair(members) {
+        return newPairKeys.has([...members].sort().join('|||'));
+    }
+
+    // ── Safari 检测 ──────────────────────────────────────────
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isSafari && localStorage.getItem('yuan_safari_warn_dismissed') !== '1') {
+        document.getElementById('safari-warn').style.display = 'block';
+    }
+
+    // ── 备份提示 ─────────────────────────────────────────────
+    function dismissBackupNudge() {
+        document.getElementById('backup-nudge').style.display = 'none';
+        localStorage.setItem('yuan_backup_nudge_dismissed', '1');
+    }
+    function checkBackupNudge() {
+        if (localStorage.getItem('yuan_backup_nudge_dismissed') === '1') return;
+        const prog = currentAccount ? allAccounts[currentAccount] : {};
+        const done = Object.values(prog).filter(Boolean).length;
+        if (done >= 50) document.getElementById('backup-nudge').style.display = 'block';
+    }
+
+    function toggleAnnounce() {
+        document.getElementById('announce-banner').classList.toggle('collapsed');
+    }
 
     let agentTree = {}, bondsList = [], globalTotalBonds = 0;
     let allAccounts = JSON.parse(localStorage.getItem('yuan_all_accounts')) || {};
@@ -1141,7 +1359,7 @@
         });
     }
 
-    let curFilter = {dept:'全部', attr:'全部', status:'全部', search:''};
+    let curFilter = {rar:'全部', dept:'全部', attr:'全部', status:'全部', search:''};
     function setSearchFilter(v) { curFilter.search = v.trim(); renderPokedex(); }
     function getSKey(arr, act, w) { return `${[...arr].sort().join('_')}_${act}_${w}`; }
 
@@ -1157,7 +1375,7 @@
 
     function setFilter(t, v) {
         curFilter[t] = v;
-        document.querySelectorAll(`#filter-${t} .f-btn`).forEach(x=>x.classList.toggle('active', x.innerText===v));
+        document.querySelectorAll(`#filter-${t} .f-btn`).forEach(x=>x.classList.toggle('active', (x.dataset.val||x.innerText)===v));
         renderPokedex();
     }
 
@@ -1165,7 +1383,7 @@
         curFilter.status = v;
         document.querySelectorAll('#filter-status .f-btn').forEach(x => {
             const l = x.innerText;
-            x.classList.toggle('active', (v==='全部'&&l==='全部')||(v==='未完成'&&l.includes('未完成'))||(v==='已完成'&&l.includes('已完成')));
+            x.classList.toggle('active', (v==='全部'&&l==='全部')||(v==='未完成'&&l.includes('未完成'))||(v==='已完成'&&l.includes('已完成'))||(v==='新羁伴'&&l.includes('新羁伴')));
         });
         renderPokedex();
     }
@@ -1184,9 +1402,10 @@
         const det = document.createElement('details'); det.id = `agent-${name}`;
         const rar = agentsData[name]?.rar || '';
         if (rar) det.classList.add(`rar-${rar}`);
+        const hasNew = agent.bonds.some(b => isNewPair([name, ...b.target.split(' × ')]));
         const sumEl = document.createElement('summary');
         sumEl.innerHTML = `
-            <div class="agent-title-left"><span class="agent-title-name">${name}</span><span class="agent-tag">${Td(agent.dept)}</span><span class="agent-tag">${Tat(agent.attr)}</span></div>
+            <div class="agent-title-left"><span class="agent-title-name">${name}</span><span class="agent-tag">${Td(agent.dept)}</span><span class="agent-tag">${Tat(agent.attr)}</span>${hasNew?'<span class="new-badge">NEW</span>':''}</div>
             <div class="agent-title-right">
                 <span class="remain-badge" id="remain-${name}"></span>
                 <div class="mini-bar-wrap"><div class="mini-bar-fill" id="minibar-${name}" style="width:0%"></div></div>
@@ -1211,7 +1430,9 @@
             const typeLabel = bType==='-'
                 ? `<span class="btype btype-neg">${T('bond_neg')}</span>`
                 : `<span class="btype btype-pos">${T('bond_pos')}</span>`;
-            titleDiv.innerHTML = `与 ${target} ${typeLabel}`;
+            const allMembers = [name, ...target.split(' × ')];
+            const newBadge = isNewPair(allMembers) ? `<span class="new-badge">NEW</span>` : '';
+            titleDiv.innerHTML = `与 ${target} ${typeLabel}${newBadge}`;
             const btnAll = document.createElement('button'); btnAll.className = 'btn-check-all';
             btnAll.textContent = T('select_all_cancel');
             header.appendChild(titleDiv); header.appendChild(btnAll);
@@ -1270,38 +1491,48 @@
         const prog = currentAccount ? allAccounts[currentAccount] : {};
         if (!currentAccount) {
             const ob = document.createElement('div'); ob.id='onboarding-card'; ob.className='onboarding-card';
-            ob.innerHTML = `<h2>👋 ${T('welcome')}</h2><p>${T('welcome_desc')}</p><button class="btn-onboard" onclick="openAddModal()">${T('create_first')}</button>`;
+            ob.innerHTML = `<h2>👋 ${T('welcome')}</h2><p>${T('welcome_desc')}</p><button class="btn-onboard" onclick="openAddModal()">${T('create_first')}</button><p class="onboarding-hint">💡 建议使用 Chrome 或夸克浏览器，避免 Safari 存档消失问题</p>`;
             cnt.appendChild(ob); return;
         }
-        const {dept:fDept, attr:fAttr, status:fStatus, search:fSearch} = curFilter;
+        const {rar:fRar, dept:fDept, attr:fAttr, status:fStatus, search:fSearch} = curFilter;
         const matchAgent = name => {
             const a = agentTree[name];
             if (fSearch && !name.includes(fSearch)) return false;
+            if (fRar!=='全部'&&(agentsData[name]?.rar||'')!==fRar) return false;
             if (fDept!=='全部'&&a.dept!==fDept) return false;
             if (fAttr!=='全部'&&a.attr!==fAttr) return false;
             if (fStatus==='未完成') { const c=getAgentCount(name); if(c===a.totalTasks&&c>0) return false; }
             if (fStatus==='已完成') { const c=getAgentCount(name); if(c!==a.totalTasks||c===0) return false; }
+            if (fStatus==='新羁伴') { if (!a.bonds.some(b=>isNewPair([name,...b.target.split(' × ')]))) return false; }
             return true;
         };
-        if (fDept!=='全部') {
-            const list = Object.keys(agentTree).filter(matchAgent).sort();
+        const anyFilter = fRar!=='全部'||fDept!=='全部'||fAttr!=='全部'||fStatus!=='全部'||!!fSearch;
+        if (anyFilter) {
+            // Filtered: flat list sorted by dept then name
+            const list = Object.keys(agentTree).filter(matchAgent)
+                .sort((a,b) => {
+                    const da = agentTree[a].dept, db = agentTree[b].dept;
+                    return da!==db ? deptOrder.indexOf(da)-deptOrder.indexOf(db) : a.localeCompare(b,'zh');
+                });
             if (!list.length) cnt.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">没有符合條件的密探</div>';
             else list.forEach(name=>cnt.appendChild(buildAgentCard(name,prog)));
         } else {
+            // Default: group by rarity (金→紫→蓝), within each group sort by dept then name
             let anyRendered = false;
-            deptOrder.forEach((dept,i) => {
-                const rarOrder = {'金':0,'紫':1,'蓝':2};
-                const agents = Object.keys(agentTree).filter(n=>agentTree[n].dept===dept&&matchAgent(n))
+            const rarGroups = ['金','紫','蓝'];
+            const rarLabels = {'金':'🟡 绝密','紫':'🟣 机密','蓝':'🔵 隐密'};
+            rarGroups.forEach((rar,i) => {
+                const agents = Object.keys(agentTree).filter(n=>matchAgent(n)&&(agentsData[n]?.rar||'')=== rar)
                     .sort((a,b) => {
-                        const ra = rarOrder[agentsData[a]?.rar]??9, rb = rarOrder[agentsData[b]?.rar]??9;
-                        return ra!==rb ? ra-rb : a.localeCompare(b,'zh');
+                        const da = agentTree[a].dept, db = agentTree[b].dept;
+                        return da!==db ? deptOrder.indexOf(da)-deptOrder.indexOf(db) : a.localeCompare(b,'zh');
                     });
                 if (!agents.length) return;
                 anyRendered = true;
                 const section = document.createElement('details'); section.className='dept-section';
-                if (i===0||fStatus==='未完成'||fStatus==='已完成') section.open=true;
+                if (i===0||fStatus==='未完成'||fStatus==='已完成'||fStatus==='新羁伴') section.open=true;
                 const sSum = document.createElement('summary');
-                sSum.innerHTML = `<span>${dept}（${agents.length} 人）</span><span class="summary-arrow">▼</span>`;
+                sSum.innerHTML = `<span>${rarLabels[rar]}（${agents.length} 人）</span><span class="summary-arrow">▼</span>`;
                 section.appendChild(sSum);
                 const sBody = document.createElement('div'); sBody.className='dept-body';
                 agents.forEach(name=>sBody.appendChild(buildAgentCard(name,prog)));
@@ -1336,6 +1567,7 @@
         document.getElementById('global-progress-text').innerText=`${done} / ${total}`;
         document.getElementById('global-progress-fill').style.width=total?`${(done/total)*100}%`:'0%';
         [1,3,10,20,50,100,200].forEach((t,i)=>{ const el=document.getElementById(`ms-${i}`); if(el) el.classList.toggle('achieved',done>=t); });
+        checkBackupNudge();
         const msgEl=document.getElementById('global-progress-msg');
         if (msgEl) {
             const pct=total?done/total:0;
@@ -1352,7 +1584,7 @@
     let curAction = '纵火', curWeather = '晴天', curViewMode = 'card';
 
     // ── 资料留存（筛选→密探导航→点击显示配对表格）────────────
-    let refFilter = { attr:'全部', dept:'全部', search:'' };
+    let refFilter = { attr:'全部', rar:'全部', dept:'全部', search:'' };
     let refSelectedAgent = null;
 
     function setRefFilter(type, val, el) {
@@ -1391,6 +1623,7 @@
         const a = agentsData[name];
         if (!a) return false;
         if (refFilter.search && !name.includes(refFilter.search)) return false;
+        if (refFilter.rar !== '全部' && a.rar !== refFilter.rar) return false;
         if (refFilter.dept !== '全部' && a.dept !== refFilter.dept) return false;
         if (refFilter.attr !== '全部' && a.attr !== refFilter.attr) return false;
         return true;
@@ -1421,7 +1654,7 @@
         if (refSelectedAgent && !visible.includes(refSelectedAgent)) refSelectedAgent = null;
         if (!refSelectedAgent) refSelectedAgent = visible[0];
 
-        // Group by rarity for tidy rows: 金 → 紫 → 蓝
+        // Group by rarity: 金 → 紫 → 蓝
         const rarOrder = ['金','紫','蓝'];
         rarOrder.forEach(rar => {
             const group = visible.filter(n => agentsData[n]?.rar === rar);
@@ -1451,6 +1684,7 @@
 
         cnt.innerHTML = pairs.map(pair => {
             const title = pair.members.join(' × ');
+            const newBadge = isNewPair(pair.members) ? `<span class="new-badge">NEW</span>` : '';
 
             let thCells = `<th style="min-width:34px;font-size:0.75rem;color:#999;text-align:left;padding:2px 6px 8px 0;">任务＼天气</th>`;
             WS.forEach(w => {
@@ -1475,7 +1709,7 @@
 
             return `<div class="entry-card" style="margin-bottom:14px;">
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
-                    <span style="font-size:0.95rem;font-weight:bold;color:var(--highlight);">🔗 ${title}</span>
+                    <span style="font-size:0.95rem;font-weight:bold;color:var(--highlight);">🔗 ${title}</span>${newBadge}
                 </div>
                 <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
                     <table style="border-collapse:separate;border-spacing:2px;">
@@ -1523,7 +1757,8 @@
             const typeTag = b.bondType==='-'
                 ? `<span class="btype btype-neg">${T('bond_neg')}</span>`
                 : `<span class="btype btype-pos">${T('bond_pos')}</span>`;
-            const html=`<div class="result-item"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}</div><button class="toggle-btn ${isU?'btn-revert':'btn-unlock'}" onclick="tglM('${k}')">${isU?T('cancel_unlock'):T('unlock')}</button></div>`;
+            const newTag = isNewPair(b.members) ? `<span class="new-badge">NEW</span>` : '';
+            const html=`<div class="result-item"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}${newTag}</div><button class="toggle-btn ${isU?'btn-revert':'btn-unlock'}" onclick="tglM('${k}')">${isU?T('cancel_unlock'):T('unlock')}</button></div>`;
             if(isU){hDone+=html;dCount++;}else{hUnlock+=html;}
         });
         document.getElementById('match-results').innerHTML =
@@ -1565,5 +1800,6 @@
 
     buildData(); updateAccountUI(); renderPokedex();
 </script>
+
 </body>
 </html>
