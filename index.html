@@ -101,7 +101,15 @@
             cursor: pointer; user-select: none; flex: 1; transition: color .18s;
         }
         .progress-title:hover { color: var(--highlight); }
-        .ms-arrow { font-size: 0.65rem; color: var(--primary-soft); margin-left: 3px; transition: .2s; }
+        .ms-arrow {
+            display: inline-flex; align-items: center; gap: 2px;
+            font-size: 0.68rem; color: var(--primary-soft);
+            margin-left: 6px; padding: 2px 7px 2px 8px;
+            background: var(--card2); border: 1px solid var(--border);
+            border-radius: 99px; transition: all .18s;
+            font-weight: 500; letter-spacing: .2px;
+        }
+        .progress-title:hover .ms-arrow { background: var(--highlight-light); color: var(--highlight); border-color: var(--highlight); }
         .progress-count { font-size: 0.95rem; font-weight: 700; color: var(--highlight); }
         .progress-bar {
             width: 100%; height: 6px; background: var(--disabled);
@@ -167,6 +175,8 @@
         .intro-box p { margin: 0 0 6px; }
         .intro-box p:last-child { margin: 0; }
         .intro-box strong { color: var(--primary); }
+        details.intro-box summary::-webkit-details-marker { display: none; }
+        details.intro-box[open] summary span:last-child { display: none; }
 
         /* ── 筛选面板 ── */
         .filter-panel {
@@ -474,6 +484,14 @@
         .btype-neg { color: #b04040; background: #fde8e8; }
 
         /* 资料留存导航 */
+        /* 资料留存子分页 */
+        .sub-tabs { display: flex; gap: 0; border-bottom: 1.5px solid var(--border); margin-bottom: 16px; }
+        .sub-tab { flex: 1; text-align: center; padding: 10px 6px; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: #aaa; border-bottom: 3px solid transparent; margin-bottom: -1.5px; transition: .15s; }
+        .sub-tab.active { color: var(--highlight); border-bottom-color: var(--highlight); }
+        .sub-tab:hover:not(.active) { color: var(--primary); }
+        .sub-view { display: none; }
+        .sub-view.active { display: block; }
+
         .ref-agent-nav-wrap {
             background: var(--card); border: 1px solid var(--border);
             border-radius: var(--r); padding: 11px 14px;
@@ -559,6 +577,17 @@
         .backup-nudge { background: #eef7ee; border: 1.5px solid #5a8a5a; border-radius: 10px; padding: 12px 15px; margin-bottom: 12px; font-size: 0.85rem; color: #2a5a2a; line-height: 1.6; display: none; }
         .backup-nudge strong { color: #1a3a1a; }
         .new-badge { display: inline-block; background: #e05c2a; color: #fff; font-size: 0.62rem; font-weight: bold; padding: 1px 5px; border-radius: 3px; margin-left: 5px; vertical-align: middle; letter-spacing: 0.5px; }
+        /* 管理密探弹窗 */
+        .owned-modal-box { background: var(--card); border-radius: 14px; padding: 20px; width: 92%; max-width: 460px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); }
+        .owned-modal-box h3 { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+        .owned-modal-desc { font-size: 0.82rem; color: var(--primary-soft); margin-bottom: 14px; line-height: 1.5; }
+        .owned-rar-group { margin-bottom: 14px; }
+        .owned-rar-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; color: #a07040; margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
+        .owned-agent-grid { display: flex; flex-wrap: wrap; gap: 7px; }
+        .owned-agent-btn { width: 56px; height: 32px; border: 1.5px solid var(--border); border-radius: 5px; background: var(--button-bg); color: var(--primary); font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: .12s; user-select: none; text-align: center; display: inline-flex; align-items: center; justify-content: center; }
+        .owned-agent-btn.missing { background: #f0f0f0; color: #ccc; border-color: #ddd; text-decoration: line-through; }
+        .owned-modal-footer { display: flex; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); flex-shrink: 0; }
+        .owned-scroll { overflow-y: auto; flex: 1; }
         /* 公告横幅 */
         .announce-banner { background: linear-gradient(135deg, #FAF0E6, #FDF4EC); border: 1.5px solid #d4a96a; border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
         .announce-header { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; cursor: pointer; user-select: none; }
@@ -576,6 +605,149 @@
             -webkit-appearance: none; cursor: pointer; transition: border-color .18s;
         }
         #action-select-list:focus, #weather-select-list:focus { border-color: var(--highlight); }
+
+        /* ── 设置弹窗 ── */
+        .settings-modal { background: var(--card); border-radius: 14px; padding: 22px; width: 100%; max-width: 360px; box-shadow: var(--shadow-lg); }
+        .settings-modal h3 { font-size: 1rem; font-weight: 700; color: var(--primary); margin: 0 0 4px; text-align: center; }
+        .settings-current-acc { font-size: 0.78rem; color: var(--primary-soft); text-align: center; margin-bottom: 16px; opacity: .8; }
+        .settings-section { margin-bottom: 14px; }
+        .settings-section-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; color: var(--primary-soft); margin-bottom: 8px; opacity: .7; }
+        .settings-row { display: flex; gap: 8px; }
+        .settings-btn {
+            flex: 1; padding: 10px 12px; background: var(--card2); color: var(--primary);
+            border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.88rem;
+            font-weight: 500; cursor: pointer; font-family: inherit; transition: all .15s;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+        .settings-btn:hover { background: var(--button-bg); border-color: var(--border-strong); }
+        .settings-btn.danger { color: #c04040; border-color: rgba(192,64,64,.3); }
+        .settings-btn.danger:hover { background: #fde0e0; border-color: #e08080; }
+        .settings-close-row { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+        .settings-close-btn {
+            width: 100%; padding: 10px; background: var(--button-bg); color: var(--primary);
+            border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.9rem;
+            font-weight: 500; cursor: pointer; font-family: inherit; transition: all .15s;
+        }
+        .settings-close-btn:hover { background: var(--border); }
+
+        /* 删除强校验弹窗 */
+        .del-confirm-input {
+            width: 100%; padding: 9px 12px; border: 1.5px solid #e08080; border-radius: 8px;
+            font-size: 0.9rem; background: #fdfafa; color: var(--primary);
+            outline: none; font-family: inherit; margin: 8px 0 14px; box-sizing: border-box;
+            transition: border-color .18s;
+        }
+        .del-confirm-input:focus { border-color: #c04040; background: #fff; }
+        .del-confirm-warn { font-size: 0.85rem; color: #b04040; line-height: 1.6; margin-bottom: 4px; }
+        .del-confirm-hint { font-size: 0.78rem; color: var(--primary-soft); margin-bottom: 4px; line-height: 1.5; }
+
+        /* 设置图标按钮 */
+        .btn-icon-settings { font-size: 1.05rem; opacity: 0.85; padding: 6px 8px; }
+        .btn-icon-settings:hover { opacity: 1; transform: rotate(60deg); }
+
+        /* P0-4 密探管理引导提示卡 */
+        .owned-nudge {
+            background: linear-gradient(135deg, #FFF8F2, #FDF0E8);
+            border: 1.5px solid var(--highlight);
+            border-radius: 10px; padding: 12px 15px; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+            box-shadow: 0 2px 10px rgba(168,101,94,0.1);
+        }
+        .owned-nudge-icon { font-size: 1.4rem; flex-shrink: 0; }
+        .owned-nudge-text { flex: 1; min-width: 180px; font-size: 0.85rem; color: var(--primary); line-height: 1.5; }
+        .owned-nudge-text strong { color: var(--highlight); }
+        .owned-nudge-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .owned-nudge-btn-go {
+            background: var(--highlight); color: #fff; border: none;
+            padding: 7px 14px; border-radius: 7px; font-size: 0.84rem; font-weight: 700;
+            cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap;
+        }
+        .owned-nudge-btn-go:hover { background: #bc7570; }
+        .owned-nudge-btn-skip {
+            background: transparent; color: var(--primary-soft); border: 1.5px solid var(--border);
+            padding: 7px 12px; border-radius: 7px; font-size: 0.82rem;
+            cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap;
+        }
+        .owned-nudge-btn-skip:hover { background: var(--card2); color: var(--primary); }
+
+        /* P1-5 隐藏已完成 toggle */
+        .hide-completed-toggle {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 12px; background: var(--card2); color: var(--primary-soft);
+            border: 1.5px solid var(--border); border-radius: 99px;
+            font-size: 0.78rem; cursor: pointer; user-select: none;
+            font-family: inherit; transition: all .15s; white-space: nowrap;
+        }
+        .hide-completed-toggle:hover { border-color: var(--border-strong); color: var(--primary); }
+        .hide-completed-toggle.on { background: var(--highlight); color: #fff; border-color: var(--highlight); }
+        .hide-completed-toggle .hc-check {
+            width: 12px; height: 12px; border: 1.5px solid currentColor;
+            border-radius: 3px; display: inline-flex; align-items: center; justify-content: center;
+            font-size: 9px; line-height: 1; flex-shrink: 0;
+        }
+        .hide-completed-toggle.on .hc-check::before { content: '✓'; color: #fff; font-weight: 700; }
+
+        /* P1-5 部门一键展开按钮 */
+        .dept-expand-btn {
+            background: transparent; border: 1.5px solid var(--border-strong);
+            color: var(--primary-soft); padding: 3px 11px; border-radius: 99px;
+            font-size: 0.72rem; font-weight: 600; cursor: pointer;
+            font-family: inherit; transition: all .15s; margin-left: 8px;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .dept-expand-btn:hover { background: var(--card); color: var(--highlight); border-color: var(--highlight); }
+
+        /* P1-6 成就解锁庆祝动画 */
+        .achievement-celebrate {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #FFF8E8, #FDE8C8);
+            border: 2.5px solid #d4a050; border-radius: 16px;
+            padding: 22px 32px; z-index: 10001; pointer-events: none;
+            box-shadow: 0 8px 40px rgba(168, 120, 60, 0.4);
+            animation: celebrate-pop 2.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            text-align: center;
+        }
+        .achievement-celebrate .ac-tag { font-size: 0.72rem; letter-spacing: 3px; color: #a07820; font-weight: 700; margin-bottom: 4px; }
+        .achievement-celebrate .ac-name { font-size: 1.25rem; font-weight: 700; color: #8b5a00; margin-bottom: 4px; }
+        .achievement-celebrate .ac-desc { font-size: 0.82rem; color: #a07040; }
+        @keyframes celebrate-pop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            15% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+            25% { transform: translate(-50%, -50%) scale(1); }
+            80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
+        }
+        .confetti-piece {
+            position: fixed; width: 8px; height: 14px; z-index: 10000;
+            pointer-events: none; opacity: 0;
+            animation: confetti-fall 1.8s ease-out forwards;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translate(0, -10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--cx, 0), 110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* P1-8 导入预览弹窗 */
+        .import-preview-list {
+            max-height: 240px; overflow-y: auto; border: 1px solid var(--border);
+            border-radius: 8px; padding: 8px 12px; margin: 10px 0 14px;
+            background: var(--card2); font-size: 0.85rem; line-height: 1.7;
+        }
+        .import-preview-item { color: var(--primary); padding: 2px 0; }
+        .import-preview-item.dup { color: #b07020; }
+        .import-preview-item.new { color: #4a8020; }
+        .import-preview-summary { font-size: 0.83rem; color: var(--primary-soft); margin-bottom: 6px; line-height: 1.6; }
+        .import-mode-row { display: flex; gap: 8px; margin-bottom: 14px; }
+        .import-mode-btn {
+            flex: 1; padding: 9px 8px; border: 1.5px solid var(--border); border-radius: 8px;
+            background: var(--card2); color: var(--primary); font-size: 0.82rem;
+            cursor: pointer; font-family: inherit; transition: all .15s; text-align: center;
+            line-height: 1.4;
+        }
+        .import-mode-btn:hover { border-color: var(--highlight); }
+        .import-mode-btn.selected { background: var(--highlight-light); border-color: var(--highlight); color: var(--highlight); font-weight: 700; }
+        .import-mode-btn .imb-title { font-weight: 700; display: block; margin-bottom: 1px; }
+        .import-mode-btn .imb-desc { font-size: 0.72rem; opacity: .85; }
     </style>
 </head>
 <body>
@@ -588,12 +760,8 @@
             </div>
             <div class="nav-ctrl-row">
                 <select id="account-select" class="account-select" onchange="switchAccount()"></select>
-                <button class="btn-icon" title="改名" onclick="renameAccount()">✏️</button>
-                <button class="btn-icon" title="删除" onclick="deleteAccount()">🗑️</button>
-                <div class="nav-divider"></div>
                 <button class="btn-small" onclick="openAddModal()">＋ 新增</button>
-                <button class="btn-small" onclick="exportData()">导出</button>
-                <button class="btn-small" onclick="document.getElementById('file-upload').click()">导入</button>
+                <button class="btn-icon btn-icon-settings" title="账号设置" onclick="openSettingsModal()">⚙️</button>
             </div>
             <input type="file" id="file-upload" accept=".json" onchange="importData(event)">
         </div>
@@ -602,7 +770,7 @@
         <div class="progress-container">
             <div class="progress-header">
                 <span class="progress-title" onclick="toggleMilestones()">
-                    🏆 成就收集进度 <span class="ms-arrow" id="ms-arrow">▸</span>
+                    🏆 成就收集进度 <span class="ms-arrow" id="ms-arrow">查看徽章 ▸</span>
                 </span>
                 <span class="progress-count" id="global-progress-text">0 / 0</span>
             </div>
@@ -638,12 +806,24 @@
     <div class="backup-nudge" id="backup-nudge">
         <button style="float:right;background:none;border:none;cursor:pointer;font-size:1rem;color:#3a7a3a;opacity:0.7;" onclick="dismissBackupNudge()">✕</button>
         <strong>💾 建议备份你的进度！</strong><br>
-        你已解锁超过 50 组羁绊，建议点击右上角「导出」保存备份，避免因浏览器清除数据而丢失进度。
+        你已解锁超过 50 组羁绊，建议点击右上角 ⚙️ 设置 → 「导出备份」保存档案，避免因浏览器清除数据而丢失进度。
     </div>
 
     <!-- 公告横幅 -->
     <!-- 图鉴页 -->
     <div class="container" id="pokedex-view">
+        <!-- P0-4 密探管理引导（首次使用账号且未设置过时显示） -->
+        <div class="owned-nudge" id="owned-nudge" style="display:none;">
+            <div class="owned-nudge-icon">⚙️</div>
+            <div class="owned-nudge-text">
+                <strong>先标记你拥有的密探吧</strong><br>
+                未拥有的密探的羁绊会变灰隐藏，让图鉴更准确反映你的进度。
+            </div>
+            <div class="owned-nudge-actions">
+                <button class="owned-nudge-btn-skip" onclick="dismissOwnedNudge()">稍后</button>
+                <button class="owned-nudge-btn-go" onclick="dismissOwnedNudge();openOwnedModal()">立即设置 →</button>
+            </div>
+        </div>
         <!-- 公告横幅（只在开图鉴显示，折叠式） -->
         <div class="announce-banner collapsed" id="announce-banner">
             <div class="announce-header" onclick="toggleAnnounce()">
@@ -652,15 +832,21 @@
             </div>
             <div class="announce-body">
                 已同步游戏 <strong>3月30日</strong> 与 <strong>4月16日</strong> 两次版本更新的新增羁绊配对，共新增 <strong>41 位</strong>密探（周瑜、诸葛亮、曹丕等）。<br>
-                新增羁绊在开图鉴和资料留存中标注 <span class="new-badge">NEW</span>，状态筛选选「🆕 新羁伴」可快速查看。
+                新增羁绊在开图鉴和资料留存中标注 <span class="new-badge">NEW</span>，状态筛选选「🆕 新羁绊」可快速查看。
             </div>
         </div>
-        <div class="intro-box">
-            <p>📖 <strong>这个工具是做什么的？</strong><br>
-            游戏中密探配对执行情报时，不同密探一起行动能获得羁绊。这个小工具让你可以记录哪些「密探羁伴」已经完成过，方便追踪进度。</p>
-            <p>🖱️ <strong>怎么用？</strong><br>
-            在「开图鉴」页：展开密探卡片 → 找到对应的密探 → 对照游戏画面，点击「天气图示＋情报」格子打勾 → 格子变暗代表已记录。</p>
-            <p>📝 <strong>发现资料错误？</strong><a href="https://docs.qq.com/sheet/DTk5xdGtRcWRUZURs?tab=BB08J2" target="_blank" rel="noopener" style="color:var(--highlight);text-decoration:none;font-weight:bold;">点此回报 →</a></p>
+        <div class="announce-banner collapsed" id="intro-banner">
+            <div class="announce-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                <span class="announce-title">📖 关于此工具</span>
+                <span class="announce-arrow">▼</span>
+            </div>
+            <div class="announce-body">
+                <p style="margin:0 0 6px;"><strong>这个工具是做什么的？</strong><br>
+                游戏中密探配对执行情报时，不同密探一起行动能获得羁绊。这个小工具让你可以记录哪些「密探羁绊」已经完成过，方便追踪进度。</p>
+                <p style="margin:0 0 6px;"><strong>🖱️ 怎么用？</strong><br>
+                在「开图鉴」页：展开密探卡片 → 找到对应的密探 → 对照游戏画面，点击「天气图示＋情报」格子打勾 → 格子变暗代表已记录。</p>
+                <p style="margin:0;"><strong>📝 发现资料错误？</strong><a href="https://docs.qq.com/sheet/DTk5xdGtRcWRUZURs?tab=BB08J2" target="_blank" rel="noopener" style="color:var(--highlight);text-decoration:none;font-weight:bold;">点此回报 →</a></p>
+            </div>
         </div>
         <div class="filter-panel">
             <div class="filter-row">
@@ -703,11 +889,22 @@
             </div>
             <div class="filter-row">
                 <div class="filter-label">状态</div>
-                <div class="filter-options" id="filter-status">
+                <div class="filter-options" id="filter-status" style="flex:1;">
                     <div class="f-btn active" onclick="setStatusFilter('全部')">全部</div>
                     <div class="f-btn danger" onclick="setStatusFilter('未完成')">⚡ 未完成</div>
                     <div class="f-btn" onclick="setStatusFilter('已完成')">✅ 已完成</div>
-                    <div class="f-btn" onclick="setStatusFilter('新羁伴')">🆕 新羁伴</div>
+                    <div class="f-btn" onclick="setStatusFilter('新羁绊')">🆕 新羁绊</div>
+                </div>
+                <div class="hide-completed-toggle" id="hide-completed-toggle" onclick="toggleHideCompleted()" style="margin-left:6px;">
+                    <span class="hc-check"></span>
+                    <span>隐藏已完成</span>
+                </div>
+            </div>
+            <div class="filter-row" style="border-top:1px solid var(--border);padding-top:10px;margin-top:2px;">
+                <div class="filter-label">密探</div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <button onclick="openOwnedModal()" style="padding:5px 14px;border:1.5px solid var(--highlight);border-radius:5px;background:transparent;color:var(--highlight);font-size:0.85rem;font-weight:600;cursor:pointer;font-family:inherit;">⚙️ 管理拥有的密探</button>
+                    <span id="missing-count-label" style="font-size:0.78rem;color:#aaa;"></span>
                 </div>
             </div>
         </div>
@@ -730,8 +927,8 @@
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
                 <div class="section-label" style="margin:0;" id="dispatch-label">情报</div>
                 <div class="view-toggle">
-                    <button class="vtog-btn active" id="vtog-card" onclick="setViewMode('card',this)">🃏 图示</button>
-                    <button class="vtog-btn" id="vtog-list" onclick="setViewMode('list',this)">≡ 列表</button>
+                    <button class="vtog-btn active" id="vtog-card" onclick="setViewMode('card',this)" title="图示模式">🃏</button>
+                    <button class="vtog-btn" id="vtog-list" onclick="setViewMode('list',this)" title="列表模式">≡</button>
                 </div>
             </div>
             <!-- 图示模式 -->
@@ -777,54 +974,202 @@
 
     <!-- 资料留存页 -->
     <div class="container" id="feedback-view" style="display:none;">
-        <div class="intro-box" style="margin-bottom:15px;">
-            <p>📋 <strong>资料留存</strong> — 使用筛选条件缩小范围，点击密探名字查看其所有配对的羁绊表格。<span style="color:#2a6e2a;font-weight:bold;">绿</span> = 一拍即合，<span style="color:#a03030;font-weight:bold;">红</span> = 貌合神离。<br><span style="color:#888;font-size:0.85rem;">本页面仅供资料核对使用，如有错误请回报让作者修正。</span></p>
+        <!-- 子分页标签 -->
+        <div class="sub-tabs">
+            <div class="sub-tab active" onclick="switchSubTab('changelog', this)">🎉 更新日志</div>
+            <div class="sub-tab" onclick="switchSubTab('howto', this)">📖 使用说明</div>
+            <div class="sub-tab" onclick="switchSubTab('refdata', this)">📋 资料留存</div>
         </div>
-        <!-- 筛选面板（与开图鉴完全相同） -->
-        <div class="filter-panel">
-            <div class="filter-row">
-                <div class="filter-label">搜索</div>
-                <div style="flex:1;">
-                    <input type="search" id="ref-search" placeholder="输入密探名字…" oninput="refSetSearch(this.value)" autocomplete="off">
+
+        <!-- 更新日志 -->
+        <div class="sub-view active" id="sub-changelog">
+            <div class="entry-card" style="margin-bottom:14px;">
+                <div style="font-size:0.88rem;font-weight:bold;color:var(--highlight);margin-bottom:10px;">2026/4/28 更新</div>
+                <div style="font-size:0.85rem;color:var(--primary);line-height:1.9;">
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">🆕 功能更新</div>
+                    <div>• 新增「管理拥有的密探」功能，可标记未拥有的密探隐藏对应羁绊，支持大小鸟分服独立管理</div>
+                    <div>• 开图鉴分组标题新增拥有人数显示（如「已拥有 13 / 14」）</div>
+                    <div>• 状态筛选区新增「隐藏已完成」开关（设置会保存）</div>
+                    <div>• 部门标题新增「展开全部 / 折叠全部」一键按钮</div>
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">🚀 操作省心</div>
+                    <div>• 现在会记住上次停留的分页，下次打开自动回到那里</div>
+                    <div>• 新建账号后自动提示「先标记拥有的密探」，避免图鉴里挂着永远完不成的羁绊</div>
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">🎨 界面优化</div>
+                    <div>• 改名 / 删除 / 导出 / 导入 整合进 ⚙️ 设置弹窗，顶部只保留账号切换与新增</div>
+                    <div>• 删除账号需输入账号名二次确认，避免误触</div>
+                    <div>• 「成就徽章」展开按钮变成胶囊样式，更显眼</div>
+                    <div>• 📋 页新增三个子分页：更新日志 / 使用说明 / 资料留存</div>
+                    <div>• 介绍框与更新公告改为折叠式，默认收起</div>
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">🎉 成就庆祝</div>
+                    <div>• 解锁羁缘成就时新增金色卡片 + 彩色纸屑动画</div>
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">💾 备份更安心</div>
+                    <div>• 修复夸克 / UC 等部分浏览器点导出无反应的问题（改用 Blob + DOM 挂载方案）</div>
+                    <div>• 即使 currentAccount 丢失，只要还有账号数据就允许导出</div>
+                    <div>• 导出失败时弹出文本框，可一键复制 / 长按保存到笔记 App</div>
+                    <div>• 导出文件名自动加日期时间戳，不再覆盖旧备份</div>
+                    <div>• 导入前显示预览，并可选择「合并」或「覆盖」模式</div>
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">📄 资料修正</div>
+                    <div>• 许攸更名为许曼</div>
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">✏️ 文案统一</div>
+                    <div>• 「新羁伴」「密探羁伴」统一为「新羁绊」「密探羁绊」（成就名「羁缘・N」保留）</div>
                 </div>
             </div>
-            <div class="filter-row">
-                <div class="filter-label">属性</div>
-                <div class="filter-options" id="ref-filter-attr">
-                    <div class="f-btn active" onclick="setRefFilter('attr','全部',this)">全部</div>
-                    <div class="f-btn" onclick="setRefFilter('attr','水',this)">水</div>
-                    <div class="f-btn" onclick="setRefFilter('attr','火',this)">火</div>
-                    <div class="f-btn" onclick="setRefFilter('attr','风',this)">风</div>
-                    <div class="f-btn" onclick="setRefFilter('attr','地',this)">地</div>
-                    <div class="f-btn" onclick="setRefFilter('attr','阴',this)">阴</div>
-                    <div class="f-btn" onclick="setRefFilter('attr','阳',this)">阳</div>
-                </div>
-            </div>
-            <div class="filter-row">
-                <div class="filter-label">品质</div>
-                <div class="filter-options" id="ref-filter-rar">
-                    <div class="f-btn active" onclick="setRefFilter('rar','全部',this)" data-val="全部">全部</div>
-                    <div class="f-btn" onclick="setRefFilter('rar','金',this)" data-val="金">🟡 绝密</div>
-                    <div class="f-btn" onclick="setRefFilter('rar','紫',this)" data-val="紫">🟣 机密</div>
-                    <div class="f-btn" onclick="setRefFilter('rar','蓝',this)" data-val="蓝">🔵 隐密</div>
-                </div>
-            </div>
-            <div class="filter-row">
-                <div class="filter-label">部门</div>
-                <div class="filter-options" id="ref-filter-dept">
-                    <div class="f-btn active" onclick="setRefFilter('dept','全部',this)">全部</div>
-                    <div class="f-btn" onclick="setRefFilter('dept','蛾部',this)">蛾部</div>
-                    <div class="f-btn" onclick="setRefFilter('dept','雀部',this)">雀部</div>
-                    <div class="f-btn" onclick="setRefFilter('dept','鸢部',this)">鸢部</div>
-                    <div class="f-btn" onclick="setRefFilter('dept','蜂部',this)">蜂部</div>
-                    <div class="f-btn" onclick="setRefFilter('dept','闲人',this)">闲人</div>
+            <div class="entry-card" style="margin-bottom:14px;">
+                <div style="font-size:0.88rem;font-weight:bold;color:var(--highlight);margin-bottom:10px;">2026/4/27 更新</div>
+                <div style="font-size:0.85rem;color:var(--primary);line-height:1.9;">
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">📄 资料更新</div>
+                    <div>• 新增游戏 3/30 与 4/16 两次更新的羁绊配对</div>
+                    <div>• 新增 41 位密探（周瑜、诸葛亮、曹丕、吕布等）</div>
+                    <div>• 全面核对修正所有密探部门归属（共修正 32 处）</div>
+                    <div>• 修正 伍丹×阿蝉 卧底大雾天气资料错误</div>
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">🆕 功能更新</div>
+                    <div>• 状态筛选新增「新羁绊」选项，快速找到本次新增羁绊</div>
+                    <div>• 密探名条及查配对结果新增 NEW 标记</div>
+                    <div>• 部门筛选回归，与品质筛选并列</div>
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">✨ 体验优化</div>
+                    <div>• 进度解锁达 50 组自动提示备份</div>
+                    <div>• 介绍框新增错误回报链接</div>
                 </div>
             </div>
         </div>
-        <!-- 密探导航 pills（筛选后显示，按部门分行） -->
-        <div id="ref-agent-nav" class="ref-agent-nav-wrap"></div>
-        <!-- 配对表格内容区 -->
-        <div id="ref-content"></div>
+
+        <!-- 使用说明 -->
+        <div class="sub-view" id="sub-howto">
+
+            <!-- 基本使用 -->
+            <div style="margin-bottom:14px;">
+                <div style="font-size:0.78rem;font-weight:700;letter-spacing:1.5px;color:#A8655E;padding-bottom:8px;border-bottom:1.5px solid #EAD9CC;margin-bottom:12px;">📋 基本使用</div>
+                <div style="display:flex;flex-direction:column;gap:0;">
+
+                    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #F2EAE2;">
+                        <div style="flex-shrink:0;width:28px;height:28px;background:#A8655E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;margin-top:1px;">1</div>
+                        <div style="flex:1;">
+                            <div style="font-size:0.88rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">建立账号</div>
+                            <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">点右上角「＋ 新增」建立账号，建议填入游戏角色名。每个账号进度独立，可建多个账号分别记录不同角色。</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #F2EAE2;">
+                        <div style="flex-shrink:0;width:28px;height:28px;background:#A8655E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;margin-top:1px;">2</div>
+                        <div style="flex:1;">
+                            <div style="font-size:0.88rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">管理密探</div>
+                            <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">点筛选区「⚙️ 管理拥有的密探」标记没有的密探，开图鉴和查配对会自动隐藏相关羁绊。大鸟小鸟可建两个账号分开管理。</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #F2EAE2;">
+                        <div style="flex-shrink:0;width:28px;height:28px;background:#A8655E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;margin-top:1px;">3</div>
+                        <div style="flex:1;">
+                            <div style="font-size:0.88rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">开图鉴记录</div>
+                            <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">展开密探卡片，对照游戏点击「天气＋情报」格子。格子变暗 = 已记录，再点一次可取消。可用搜索、属性、部门、品质筛选。</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #F2EAE2;">
+                        <div style="flex-shrink:0;width:28px;height:28px;background:#A8655E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;margin-top:1px;">4</div>
+                        <div style="flex:1;">
+                            <div style="font-size:0.88rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">查配对</div>
+                            <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">选择今天游戏里的情报和天气，工具列出所有可解锁的羁绊。点「解锁」直接记录，无需手动回开图鉴勾选。</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:12px;padding:10px 0;">
+                        <div style="flex-shrink:0;width:28px;height:28px;background:#A8655E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;margin-top:1px;">5</div>
+                        <div style="flex:1;">
+                            <div style="font-size:0.88rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">备份进度</div>
+                            <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">点右上角 ⚙️ 设置 → 「📥 导出备份」保存备份文件。换装置或浏览器时，从同一处「📤 导入备份」还原进度。</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 常见问题 -->
+            <div style="margin-bottom:14px;">
+                <div style="font-size:0.78rem;font-weight:700;letter-spacing:1.5px;color:#A8655E;padding-bottom:8px;border-bottom:1.5px solid #EAD9CC;margin-bottom:12px;">❓ 常见问题</div>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+
+                    <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
+                        <div style="font-size:0.85rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">存档消失了？</div>
+                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">请确认没有用<strong style="color:#A8655E;">无痕模式</strong>，且是用浏览器打开而非在<strong style="color:#A8655E;">微信内</strong>直接开启。微信内建浏览器关掉页面会清空数据。</div>
+                    </div>
+
+                    <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
+                        <div style="font-size:0.85rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">大陆用户访问不顺畅？</div>
+                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">请使用 <strong style="color:#A8655E;">bond.maayuan.top</strong> 这个地址，无需魔法即可访问。</div>
+                    </div>
+
+                    <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
+                        <div style="font-size:0.85rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">换了浏览器 / 装置，进度不见了？</div>
+                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">进度存在浏览器本地，换装置不会自动同步。请在旧装置「导出」备份，再到新装置「导入」还原。</div>
+                    </div>
+
+                    <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
+                        <div style="font-size:0.85rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">大鸟小鸟进度怎么分开记录？</div>
+                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">建立两个账号，分别在「管理拥有的密探」标记各服没有的密探，即可独立追踪两边进度。</div>
+                    </div>
+
+                    <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
+                        <div style="font-size:0.85rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">发现资料有错误？</div>
+                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">点介绍框「关于此工具」里的「点此回报 →」填写回报表，作者会尽快确认修正。</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 提示 -->
+            <div style="padding:10px 14px;background:#fff8e6;border-radius:8px;border:1px solid #e6c87a;font-size:0.82rem;color:#7a5800;line-height:1.7;">
+                💡 建议使用 <strong>Chrome</strong> 或 <strong>夸克</strong> 浏览器，复制网址用浏览器打开，不要在微信内直接开
+            </div>
+
+        </div>
+
+        <!-- 资料留存 -->
+        <div class="sub-view" id="sub-refdata">
+            <div class="intro-box" style="margin-bottom:15px;">
+                <p>此处展示所有已录入的羁绊原始资料，供用户核对正确性。<span style="color:#2a6e2a;font-weight:bold;">绿</span> = 一拍即合，<span style="color:#a03030;font-weight:bold;">红</span> = 貌合神离。<br><span style="color:#888;font-size:0.85rem;">如有错误请至介绍框点击回报链接让作者修正。</span></p>
+            </div>
+            <div class="filter-panel">
+                <div class="filter-row">
+                    <div class="filter-label">搜索</div>
+                    <div style="flex:1;"><input type="search" id="ref-search" placeholder="输入密探名字…" oninput="refSetSearch(this.value)" autocomplete="off"></div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-label">属性</div>
+                    <div class="filter-options" id="ref-filter-attr">
+                        <div class="f-btn active" onclick="setRefFilter('attr','全部',this)">全部</div>
+                        <div class="f-btn" onclick="setRefFilter('attr','水',this)">水</div>
+                        <div class="f-btn" onclick="setRefFilter('attr','火',this)">火</div>
+                        <div class="f-btn" onclick="setRefFilter('attr','风',this)">风</div>
+                        <div class="f-btn" onclick="setRefFilter('attr','地',this)">地</div>
+                        <div class="f-btn" onclick="setRefFilter('attr','阴',this)">阴</div>
+                        <div class="f-btn" onclick="setRefFilter('attr','阳',this)">阳</div>
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-label">品质</div>
+                    <div class="filter-options" id="ref-filter-rar">
+                        <div class="f-btn active" onclick="setRefFilter('rar','全部',this)" data-val="全部">全部</div>
+                        <div class="f-btn" onclick="setRefFilter('rar','金',this)" data-val="金">🟡 绝密</div>
+                        <div class="f-btn" onclick="setRefFilter('rar','紫',this)" data-val="紫">🟣 机密</div>
+                        <div class="f-btn" onclick="setRefFilter('rar','蓝',this)" data-val="蓝">🔵 隐密</div>
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-label">部门</div>
+                    <div class="filter-options" id="ref-filter-dept">
+                        <div class="f-btn active" onclick="setRefFilter('dept','全部',this)">全部</div>
+                        <div class="f-btn" onclick="setRefFilter('dept','蛾部',this)">蛾部</div>
+                        <div class="f-btn" onclick="setRefFilter('dept','雀部',this)">雀部</div>
+                        <div class="f-btn" onclick="setRefFilter('dept','鸢部',this)">鸢部</div>
+                        <div class="f-btn" onclick="setRefFilter('dept','蜂部',this)">蜂部</div>
+                        <div class="f-btn" onclick="setRefFilter('dept','闲人',this)">闲人</div>
+                    </div>
+                </div>
+            </div>
+            <div id="ref-agent-nav" class="ref-agent-nav-wrap"></div>
+            <div id="ref-content"></div>
+        </div>
     </div>
 </div>
 
@@ -842,6 +1187,34 @@
         <div class="modal-btns">
             <button class="modal-btn-cancel" onclick="closeAddModal()">取消</button>
             <button class="modal-btn-ok" onclick="confirmAddAccount()">确定建立</button>
+        </div>
+    </div>
+</div>
+
+<!-- 设置 Modal -->
+<div class="modal-overlay" id="settings-modal" onclick="if(event.target===this)closeSettingsModal()">
+    <div class="settings-modal">
+        <h3>⚙️ 账号设置</h3>
+        <div class="settings-current-acc" id="settings-current-acc">—</div>
+
+        <div class="settings-section">
+            <div class="settings-section-label">数据备份</div>
+            <div class="settings-row">
+                <button class="settings-btn" onclick="exportData()">📥 导出备份</button>
+                <button class="settings-btn" onclick="document.getElementById('file-upload').click()">📤 导入备份</button>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <div class="settings-section-label">当前账号</div>
+            <div class="settings-row">
+                <button class="settings-btn" onclick="closeSettingsModal();renameAccount()">✏️ 改名</button>
+                <button class="settings-btn danger" onclick="closeSettingsModal();deleteAccount()">🗑️ 删除账号</button>
+            </div>
+        </div>
+
+        <div class="settings-close-row">
+            <button class="settings-close-btn" onclick="closeSettingsModal()">关闭</button>
         </div>
     </div>
 </div>
@@ -1217,6 +1590,85 @@
         return newPairKeys.has([...members].sort().join('|||'));
     }
 
+    // ── 管理密探（未拥有）────────────────────────────────────
+    function getMissingAgents() {
+        if (!currentAccount) return new Set();
+        const data = allAccounts[currentAccount];
+        return new Set(data?.__missing__ || []);
+    }
+    function saveMissingAgents(missingSet) {
+        if (!currentAccount) return;
+        if (!allAccounts[currentAccount]) allAccounts[currentAccount] = {};
+        allAccounts[currentAccount].__missing__ = [...missingSet];
+        localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+    }
+    function isAgentMissing(name) { return getMissingAgents().has(name); }
+
+    function updateMissingLabel() {
+        const cnt = getMissingAgents().size;
+        const el = document.getElementById('missing-count-label');
+        if (el) el.textContent = cnt > 0 ? `已标记 ${cnt} 位未拥有` : '';
+    }
+
+    function openOwnedModal() {
+        if (!currentAccount) { showToast('请先建立账号', true); return; }
+        renderOwnedModal();
+        document.getElementById('owned-modal').style.display = 'flex';
+    }
+    function closeOwnedModal() {
+        document.getElementById('owned-modal').style.display = 'none';
+        updateMissingLabel();
+        checkOwnedNudge();
+        renderPokedex();
+    }
+    function selectAllOwned() {
+        saveMissingAgents(new Set());
+        renderOwnedModal();
+        updateMissingLabel();
+        renderPokedex();
+    }
+    function toggleMissing(name) {
+        const s = getMissingAgents();
+        if (s.has(name)) s.delete(name); else s.add(name);
+        saveMissingAgents(s);
+        renderOwnedModal();
+        updateMissingLabel();
+        renderPokedex();
+    }
+
+    function renderOwnedModal() {
+        const cnt = document.getElementById('owned-modal-content');
+        const missing = getMissingAgents();
+        const rarGroups = [
+            { rar:'金', label:'🟡 绝密（金卡）' },
+            { rar:'紫', label:'🟣 机密（紫卡）' },
+            { rar:'蓝', label:'🔵 隐密（蓝卡）' },
+        ];
+        const attrOrder = ['火','风','地','水','阳','阴'];
+        const attrLabel = {'火':'🔴 火','风':'🟢 风','地':'🟠 地','水':'🔵 水','阳':'🌟 阳','阴':'🌑 阴'};
+
+        cnt.innerHTML = rarGroups.map(({ rar, label }) => {
+            const allInRar = Object.keys(agentsData).filter(n => agentsData[n].rar === rar);
+            if (!allInRar.length) return '';
+
+            const attrSections = attrOrder.map(attr => {
+                const agents = allInRar.filter(n => agentsData[n].attr === attr).sort((a,b)=>a.localeCompare(b,'zh'));
+                if (!agents.length) return '';
+                const btns = agents.map(name => {
+                    const isMissing = missing.has(name);
+                    return `<button class="owned-agent-btn${isMissing?' missing':''}" onclick="toggleMissing('${name}')">${name}</button>`;
+                }).join('');
+                return `<div style="margin-bottom:10px;">
+                    <div style="font-size:0.7rem;color:#b09880;font-weight:600;margin-bottom:5px;">${attrLabel[attr]}</div>
+                    <div class="owned-agent-grid">${btns}</div>
+                </div>`;
+            }).join('');
+
+            return `<div class="owned-rar-group"><div class="owned-rar-label">${label}</div>${attrSections}</div>`;
+        }).join('');
+    }
+    // ── end 管理密探 ─────────────────────────────────────────
+
     // ── Safari 检测 ──────────────────────────────────────────
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     if (isSafari && localStorage.getItem('yuan_safari_warn_dismissed') !== '1') {
@@ -1247,7 +1699,8 @@
         const row = document.getElementById('milestone-row');
         const arrow = document.getElementById('ms-arrow');
         row.classList.toggle('collapsed');
-        arrow.textContent = row.classList.contains('collapsed') ? '▸' : '▾';
+        const collapsed = row.classList.contains('collapsed');
+        arrow.textContent = collapsed ? '查看徽章 ▸' : '收起徽章 ▾';
     }
 
     // ── 账号 Modal 系統（放在變量聲明之後以避免作用域問題）────────
@@ -1283,8 +1736,37 @@
         closeAddModal();
         updateAccountUI();
         renderPokedex();
+        // P0-4: 新建账号后自动引导设置「拥有的密探」
+        try {
+            const dismissedKey = 'yuan_owned_nudge_dismissed_' + fullName;
+            // 新账号默认显示提示（除非用户全局选过"不再提示"）
+            if (localStorage.getItem('yuan_owned_nudge_global_off') !== '1') {
+                localStorage.removeItem(dismissedKey);
+                checkOwnedNudge();
+            }
+        } catch(e) {}
     }
     document.getElementById('add-modal').addEventListener('click', function(e){ if(e.target===this) closeAddModal(); });
+
+    // P0-4: 密探管理引导提示卡
+    function checkOwnedNudge() {
+        const el = document.getElementById('owned-nudge');
+        if (!el) return;
+        if (!currentAccount) { el.style.display = 'none'; return; }
+        // 如果当前账号曾经标记过任何「未拥有」，说明用户已经知道这个功能了，不再提示
+        const acc = allAccounts[currentAccount] || {};
+        const hasMarkedMissing = Array.isArray(acc.__missing__) && acc.__missing__.length > 0;
+        const dismissed = localStorage.getItem('yuan_owned_nudge_dismissed_' + currentAccount) === '1';
+        const globalOff = localStorage.getItem('yuan_owned_nudge_global_off') === '1';
+        el.style.display = (!hasMarkedMissing && !dismissed && !globalOff) ? 'flex' : 'none';
+    }
+    function dismissOwnedNudge() {
+        if (currentAccount) {
+            try { localStorage.setItem('yuan_owned_nudge_dismissed_' + currentAccount, '1'); } catch(e) {}
+        }
+        const el = document.getElementById('owned-nudge');
+        if (el) el.style.display = 'none';
+    }
 
     function updateAccountUI() {
         const sel = document.getElementById('account-select');
@@ -1321,18 +1803,88 @@
 
     function deleteAccount() {
         if (!checkAcc()) return;
-        showConfirm(T('del_confirm').replace('{name}',currentAccount), () => {
+        // P0-3: 强校验删除（要求输入账号名）
+        showDeleteConfirmModal(currentAccount, () => {
             delete allAccounts[currentAccount];
             localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
             currentAccount = Object.keys(allAccounts)[0] || null;
             localStorage.setItem('yuan_current_account', currentAccount||'');
             updateAccountUI(); renderPokedex();
+            showToast('账号已删除');
         });
+    }
+
+    // P0-3: 删除二次强校验（要输入账号名才能确认）
+    function showDeleteConfirmModal(accName, onYes) {
+        const id = 'del-confirm-modal';
+        let m = document.getElementById(id);
+        if (!m) {
+            m = document.createElement('div');
+            m.id = id;
+            m.className = 'modal-overlay';
+            m.innerHTML = `<div class="modal-box">
+                <div class="modal-title" style="color:#c04040;">⚠️ 删除账号</div>
+                <div class="del-confirm-warn" id="del-warn-text"></div>
+                <div class="del-confirm-hint">请输入账号名 <strong id="del-target-name" style="color:#c04040;"></strong> 以确认删除：</div>
+                <input class="del-confirm-input" id="del-confirm-input" type="text" placeholder="输入账号名…" autocomplete="off">
+                <div class="modal-btns">
+                    <button class="modal-btn-cancel-sm" id="del-confirm-cancel">取消</button>
+                    <button class="modal-btn-confirm" id="del-confirm-yes" disabled style="opacity:.4;cursor:not-allowed;">确认删除</button>
+                </div>
+            </div>`;
+            document.body.appendChild(m);
+            m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
+        }
+        // 计算这个账号已解锁多少进度，给个直观警告
+        const prog = allAccounts[accName] || {};
+        const doneCount = Object.entries(prog).filter(([k,v]) => k !== '__missing__' && v).length;
+        document.getElementById('del-warn-text').innerHTML = doneCount > 0
+            ? `此操作将永久删除 <strong>${doneCount}</strong> 项已解锁的进度，无法复原。`
+            : '此操作无法复原。';
+        document.getElementById('del-target-name').textContent = accName;
+
+        const inp = document.getElementById('del-confirm-input');
+        const okBtn = document.getElementById('del-confirm-yes');
+        inp.value = '';
+        okBtn.disabled = true;
+        okBtn.style.opacity = '.4';
+        okBtn.style.cursor = 'not-allowed';
+
+        inp.oninput = () => {
+            const ok = inp.value.trim() === accName;
+            okBtn.disabled = !ok;
+            okBtn.style.opacity = ok ? '1' : '.4';
+            okBtn.style.cursor = ok ? 'pointer' : 'not-allowed';
+        };
+
+        m.classList.add('open');
+        setTimeout(() => inp.focus(), 150);
+        document.getElementById('del-confirm-cancel').onclick = () => m.classList.remove('open');
+        document.getElementById('del-confirm-yes').onclick = () => {
+            if (inp.value.trim() !== accName) return;
+            m.classList.remove('open');
+            onYes();
+        };
+    }
+
+    // P0-2: 设置弹窗
+    function openSettingsModal() {
+        if (!currentAccount) {
+            showToast('请先建立账号', true);
+            return;
+        }
+        document.getElementById('settings-current-acc').textContent = currentAccount;
+        document.getElementById('settings-modal').classList.add('open');
+    }
+    function closeSettingsModal() {
+        document.getElementById('settings-modal').classList.remove('open');
     }
 
     function switchAccount() {
         currentAccount = document.getElementById('account-select').value;
         localStorage.setItem('yuan_current_account', currentAccount);
+        updateMissingLabel();
+        checkOwnedNudge();
         renderPokedex();
         if (document.getElementById('dispatch-view').style.display==='block') findMatches();
     }
@@ -1360,8 +1912,42 @@
     }
 
     let curFilter = {rar:'全部', dept:'全部', attr:'全部', status:'全部', search:''};
+    // P1-5: 是否隐藏已完成的密探
+    let hideCompleted = false;
+    try { hideCompleted = localStorage.getItem('yuan_hide_completed') === '1'; } catch(e) {}
     function setSearchFilter(v) { curFilter.search = v.trim(); renderPokedex(); }
     function getSKey(arr, act, w) { return `${[...arr].sort().join('_')}_${act}_${w}`; }
+
+    function toggleHideCompleted() {
+        hideCompleted = !hideCompleted;
+        try { localStorage.setItem('yuan_hide_completed', hideCompleted ? '1' : '0'); } catch(e) {}
+        const el = document.getElementById('hide-completed-toggle');
+        if (el) el.classList.toggle('on', hideCompleted);
+        renderPokedex();
+    }
+
+    // P1-5: 一键展开/折叠当前部门的所有密探卡片
+    function toggleDeptAll(btn) {
+        const section = btn.closest('details.dept-section');
+        if (!section) return;
+        const cards = section.querySelectorAll('.dept-body > details');
+        if (!cards.length) return;
+        // 判断当前状态：如果已展开过半，就全折叠；否则全展开
+        const openCount = Array.from(cards).filter(d => d.open).length;
+        const shouldOpen = openCount < cards.length / 2;
+        cards.forEach(d => { d.open = shouldOpen; });
+        btn.textContent = shouldOpen ? '折叠全部' : '展开全部';
+        // 也确保 dept-section 自己是展开的
+        if (shouldOpen && !section.open) section.open = true;
+    }
+
+    function switchSubTab(t, el) {
+        document.querySelectorAll('.sub-tab').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('.sub-view').forEach(x => x.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById(`sub-${t}`).classList.add('active');
+        if (t === 'refdata') refRender();
+    }
 
     function switchTab(t, el) {
         document.querySelectorAll('.tab, .tab-icon').forEach(x=>x.classList.remove('active'));
@@ -1370,7 +1956,20 @@
         document.getElementById('dispatch-view').style.display = t==='dispatch'?'block':'none';
         document.getElementById('feedback-view').style.display = t==='feedback'?'block':'none';
         if (t==='dispatch') findMatches();
-        if (t==='feedback') refRender();
+        // 进入 feedback 时不自动 refRender，等用户点资料留存子分页再渲染
+        // P0-1: 记住上次的 tab
+        try { localStorage.setItem('yuan_last_tab', t); } catch(e){}
+    }
+
+    // P0-1: 启动时恢复上次的 tab
+    function restoreLastTab() {
+        let t;
+        try { t = localStorage.getItem('yuan_last_tab'); } catch(e) {}
+        if (!t || !['pokedex','dispatch','feedback'].includes(t)) return;
+        if (t === 'pokedex') return; // 默认就是 pokedex，无需切
+        const tabEls = document.querySelectorAll('.tab, .tab-icon');
+        const idx = t==='dispatch' ? 1 : 2;
+        if (tabEls[idx]) switchTab(t, tabEls[idx]);
     }
 
     function setFilter(t, v) {
@@ -1383,7 +1982,7 @@
         curFilter.status = v;
         document.querySelectorAll('#filter-status .f-btn').forEach(x => {
             const l = x.innerText;
-            x.classList.toggle('active', (v==='全部'&&l==='全部')||(v==='未完成'&&l.includes('未完成'))||(v==='已完成'&&l.includes('已完成'))||(v==='新羁伴'&&l.includes('新羁伴')));
+            x.classList.toggle('active', (v==='全部'&&l==='全部')||(v==='未完成'&&l.includes('未完成'))||(v==='已完成'&&l.includes('已完成'))||(v==='新羁绊'&&l.includes('新羁绊')));
         });
         renderPokedex();
     }
@@ -1495,52 +2094,74 @@
             cnt.appendChild(ob); return;
         }
         const {rar:fRar, dept:fDept, attr:fAttr, status:fStatus, search:fSearch} = curFilter;
+        const missing = getMissingAgents();
         const matchAgent = name => {
             const a = agentTree[name];
+            if (missing.has(name)) return false;
             if (fSearch && !name.includes(fSearch)) return false;
             if (fRar!=='全部'&&(agentsData[name]?.rar||'')!==fRar) return false;
             if (fDept!=='全部'&&a.dept!==fDept) return false;
             if (fAttr!=='全部'&&a.attr!==fAttr) return false;
+            // P1-5: 隐藏已完成
+            if (hideCompleted) { const c=getAgentCount(name); if(c===a.totalTasks&&c>0) return false; }
             if (fStatus==='未完成') { const c=getAgentCount(name); if(c===a.totalTasks&&c>0) return false; }
             if (fStatus==='已完成') { const c=getAgentCount(name); if(c!==a.totalTasks||c===0) return false; }
-            if (fStatus==='新羁伴') { if (!a.bonds.some(b=>isNewPair([name,...b.target.split(' × ')]))) return false; }
+            if (fStatus==='新羁绊') { if (!a.bonds.some(b=>isNewPair([name,...b.target.split(' × ')]))) return false; }
             return true;
         };
         const anyFilter = fRar!=='全部'||fDept!=='全部'||fAttr!=='全部'||fStatus!=='全部'||!!fSearch;
-        if (anyFilter) {
-            // Filtered: flat list sorted by dept then name
-            const list = Object.keys(agentTree).filter(matchAgent)
+        // 始终按稀有度分组显示，有筛选时标题显示条件+人数
+        const rarGroups = ['金','紫','蓝'];
+        const rarLabels = {'金':'🟡 绝密','紫':'🟣 机密','蓝':'🔵 隐密'};
+        // 构建筛选条件描述
+        const filterParts = [];
+        if (fDept!=='全部') filterParts.push(fDept);
+        if (fAttr!=='全部') filterParts.push(fAttr);
+        if (fStatus!=='全部') filterParts.push(fStatus);
+        if (fSearch) filterParts.push(`"${fSearch}"`);
+        const filterDesc = filterParts.length ? ' · ' + filterParts.join('+') : '';
+        const allMissing = getMissingAgents();
+        let anyRendered = false;
+        rarGroups.forEach((rar,i) => {
+            // 符合筛选且拥有的
+            const agents = Object.keys(agentTree).filter(n=>matchAgent(n)&&(agentsData[n]?.rar||'')===rar)
                 .sort((a,b) => {
                     const da = agentTree[a].dept, db = agentTree[b].dept;
                     return da!==db ? deptOrder.indexOf(da)-deptOrder.indexOf(db) : a.localeCompare(b,'zh');
                 });
-            if (!list.length) cnt.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">没有符合條件的密探</div>';
-            else list.forEach(name=>cnt.appendChild(buildAgentCard(name,prog)));
-        } else {
-            // Default: group by rarity (金→紫→蓝), within each group sort by dept then name
-            let anyRendered = false;
-            const rarGroups = ['金','紫','蓝'];
-            const rarLabels = {'金':'🟡 绝密','紫':'🟣 机密','蓝':'🔵 隐密'};
-            rarGroups.forEach((rar,i) => {
-                const agents = Object.keys(agentTree).filter(n=>matchAgent(n)&&(agentsData[n]?.rar||'')=== rar)
-                    .sort((a,b) => {
-                        const da = agentTree[a].dept, db = agentTree[b].dept;
-                        return da!==db ? deptOrder.indexOf(da)-deptOrder.indexOf(db) : a.localeCompare(b,'zh');
-                    });
-                if (!agents.length) return;
-                anyRendered = true;
-                const section = document.createElement('details'); section.className='dept-section';
-                if (i===0||fStatus==='未完成'||fStatus==='已完成'||fStatus==='新羁伴') section.open=true;
-                const sSum = document.createElement('summary');
-                sSum.innerHTML = `<span>${rarLabels[rar]}（${agents.length} 人）</span><span class="summary-arrow">▼</span>`;
-                section.appendChild(sSum);
-                const sBody = document.createElement('div'); sBody.className='dept-body';
-                agents.forEach(name=>sBody.appendChild(buildAgentCard(name,prog)));
-                section.appendChild(sBody);
-                cnt.appendChild(section);
-            });
-            if (!anyRendered) cnt.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">没有符合條件的密探</div>';
-        }
+            // 符合其他筛选条件但被标记未拥有的（同稀有度）
+            const missingInFilter = Object.keys(agentTree).filter(n => {
+                if ((agentsData[n]?.rar||'') !== rar) return false;
+                if (!allMissing.has(n)) return false;
+                // 检查除了 missing 之外的其他筛选条件
+                if (fRar!=='全部'&&(agentsData[n]?.rar||'')!==fRar) return false;
+                if (fDept!=='全部'&&agentTree[n].dept!==fDept) return false;
+                if (fAttr!=='全部'&&agentTree[n].attr!==fAttr) return false;
+                if (fSearch&&!n.includes(fSearch)) return false;
+                return true;
+            }).length;
+            if (!agents.length && !missingInFilter) return;
+            anyRendered = true;
+            const total = agents.length + missingInFilter;
+            const missingLabel = missingInFilter > 0
+                ? `<span style="font-size:0.75rem;color:#aaa;margin-left:6px;">已拥有 ${agents.length} / ${total}</span>`
+                : `<span style="font-size:0.75rem;color:#aaa;margin-left:6px;">${agents.length} 人</span>`;
+            const section = document.createElement('details'); section.className='dept-section';
+            if (i===0||anyFilter) section.open=true;
+            const sSum = document.createElement('summary');
+            // P1-5: 部门标题加「展开全部」按钮
+            sSum.innerHTML = `<span>${rarLabels[rar]}${filterDesc}${missingLabel}</span>
+                <span style="display:flex;align-items:center;gap:6px;">
+                    <button class="dept-expand-btn" data-rar="${rar}" onclick="event.preventDefault();event.stopPropagation();toggleDeptAll(this);">展开全部</button>
+                    <span class="summary-arrow">▼</span>
+                </span>`;
+            section.appendChild(sSum);
+            const sBody = document.createElement('div'); sBody.className='dept-body';
+            agents.forEach(name=>sBody.appendChild(buildAgentCard(name,prog)));
+            section.appendChild(sBody);
+            cnt.appendChild(section);
+        });
+        if (!anyRendered) cnt.innerHTML='<div style="text-align:center;padding:30px;color:#aaa;">没有符合条件的密探</div>';
         updateUI();
     }
 
@@ -1566,7 +2187,23 @@
         const done=u.size, total=globalTotalBonds;
         document.getElementById('global-progress-text').innerText=`${done} / ${total}`;
         document.getElementById('global-progress-fill').style.width=total?`${(done/total)*100}%`:'0%';
-        [1,3,10,20,50,100,200].forEach((t,i)=>{ const el=document.getElementById(`ms-${i}`); if(el) el.classList.toggle('achieved',done>=t); });
+
+        // P1-6: 检测成就新解锁，触发庆祝
+        const milestones = [1,3,10,20,50,100,200];
+        const milestoneNames = ['羁缘・一','羁缘・二','羁缘・三','羁缘・四','羁缘・五','羁缘・六','羁缘・七'];
+        milestones.forEach((t,i)=>{
+            const el=document.getElementById(`ms-${i}`);
+            if(!el) return;
+            const wasAchieved = el.classList.contains('achieved');
+            const nowAchieved = done >= t;
+            el.classList.toggle('achieved', nowAchieved);
+            // 仅在「之前没解锁，现在刚刚解锁」且 UI 已经初始化过时才庆祝
+            if (!wasAchieved && nowAchieved && _milestoneInitialized) {
+                celebrateAchievement(milestoneNames[i], `已收集 ${t} 种羁绊`);
+            }
+        });
+        _milestoneInitialized = true;
+
         checkBackupNudge();
         const msgEl=document.getElementById('global-progress-msg');
         if (msgEl) {
@@ -1577,6 +2214,39 @@
                 :pct<0.75?T('msg_75').replace('{left}',total-done)
                 :pct<1?T('msg_99').replace('{left}',total-done)
                 :T('msg_100');
+        }
+    }
+
+    // P1-6: 标记 milestone 是否已经初始化（避免页面首次加载时把已有成就当作"新解锁"）
+    let _milestoneInitialized = false;
+
+    // P1-6: 成就解锁庆祝动画
+    function celebrateAchievement(name, desc) {
+        // 卡片
+        const card = document.createElement('div');
+        card.className = 'achievement-celebrate';
+        card.innerHTML = `
+            <div class="ac-tag">🏆 成就解锁</div>
+            <div class="ac-name">${name}</div>
+            <div class="ac-desc">${desc}</div>`;
+        document.body.appendChild(card);
+        setTimeout(() => card.remove(), 2500);
+
+        // 彩色纸屑
+        const colors = ['#A8655E','#d4a050','#5A8020','#4080c8','#8040b0','#c48078','#e6b84a'];
+        for (let i = 0; i < 30; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            const startX = 30 + Math.random() * 40;  // 30%~70% 屏幕宽度
+            const cx = (Math.random() - 0.5) * 60 + 'vw';  // -30vw ~ +30vw
+            piece.style.left = startX + 'vw';
+            piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.setProperty('--cx', cx);
+            piece.style.animationDelay = (Math.random() * 0.3) + 's';
+            piece.style.animationDuration = (1.4 + Math.random() * 0.8) + 's';
+            piece.style.transform = `rotate(${Math.random()*360}deg)`;
+            document.body.appendChild(piece);
+            setTimeout(() => piece.remove(), 2400);
         }
     }
 
@@ -1738,33 +2408,49 @@
         curAction = act;
         document.querySelectorAll('#action-btns .action-btn').forEach(b=>b.classList.remove('selected'));
         el.classList.add('selected');
+        // 同步列表模式的 select
+        const sel = document.getElementById('action-select-list');
+        if (sel) sel.value = act;
         findMatches();
     }
     function selectWeather(w, el) {
         curWeather = w;
         document.querySelectorAll('.weather-btn').forEach(b=>b.classList.remove('selected'));
         el.classList.add('selected');
+        // 同步列表模式的 select
+        const sel = document.getElementById('weather-select-list');
+        if (sel) sel.value = w;
         findMatches();
     }
+
+    // P0-1: 启动时恢复上次的情报/天气选择 — 已移除（游戏每天随机，不沿用）
 
     function findMatches() {
         if (!currentAccount) { document.getElementById('match-results').innerHTML=`<div style="text-align:center;padding:30px;color:#aaa;">${T('no_acc_hint')}</div>`; return; }
         const act=curAction, w=curWeather;
         const prog=allAccounts[currentAccount];
-        let hUnlock='', hDone='', dCount=0;
+        const missingSet = getMissingAgents();
+        let hUnlock='', hDone='', hMissing='', dCount=0, mCount=0;
         bondsList.filter(b=>b.action===act&&b.validWeathers.includes(w)).forEach(b=>{
+            const hasMissing = b.members.some(m => missingSet.has(m));
             const k=getSKey(b.members,act,w), isU=prog[k];
             const typeTag = b.bondType==='-'
                 ? `<span class="btype btype-neg">${T('bond_neg')}</span>`
                 : `<span class="btype btype-pos">${T('bond_pos')}</span>`;
             const newTag = isNewPair(b.members) ? `<span class="new-badge">NEW</span>` : '';
-            const html=`<div class="result-item"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}${newTag}</div><button class="toggle-btn ${isU?'btn-revert':'btn-unlock'}" onclick="tglM('${k}')">${isU?T('cancel_unlock'):T('unlock')}</button></div>`;
-            if(isU){hDone+=html;dCount++;}else{hUnlock+=html;}
+            if (hasMissing) {
+                mCount++;
+                hMissing += `<div class="result-item" style="opacity:0.35;pointer-events:none;"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}</div><span style="font-size:0.78rem;color:#bbb;">未拥有</span></div>`;
+            } else {
+                const html=`<div class="result-item"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}${newTag}</div><button class="toggle-btn ${isU?'btn-revert':'btn-unlock'}" onclick="tglM('${k}')">${isU?T('cancel_unlock'):T('unlock')}</button></div>`;
+                if(isU){hDone+=html;dCount++;}else{hUnlock+=html;}
+            }
         });
         document.getElementById('match-results').innerHTML =
             (hUnlock?`<div class="result-group-title">${T('can_unlock')}</div><div class="results-grid">${hUnlock}</div>`
                 :`<div style="text-align:center;padding:20px;color:var(--success);font-weight:bold;">${T('all_unlocked')}</div>`)
-            +(hDone?`<div class="result-group-title" style="margin-top:16px;color:#aaa;">📁 ${T('done_group')} (${dCount})</div><div class="results-grid done-items">${hDone}</div>` : '');
+            +(hDone?`<div class="result-group-title" style="margin-top:16px;color:#aaa;">📁 ${T('done_group')} (${dCount})</div><div class="results-grid done-items">${hDone}</div>` : '')
+            +(hMissing?`<div class="result-group-title" style="margin-top:16px;color:#ccc;">🔒 未拥有密探 (${mCount})</div><div class="results-grid">${hMissing}</div>` : '');
     }
 
     function tglM(k) {
@@ -1774,10 +2460,116 @@
     }
 
     function exportData() {
-        if(!checkAcc()) return;
-        const a=document.createElement('a');
-        a.href="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(allAccounts));
-        a.download="鸢报备份.json"; a.click();
+        // 放宽守卫：只要 allAccounts 非空就允许导出
+        // （即使用户清掉了 currentAccount，残留的账号数据仍然有保留价值）
+        if (!allAccounts || Object.keys(allAccounts).length === 0) {
+            showToast('没有数据可导出', true);
+            return;
+        }
+        const d = new Date();
+        const pad = n => String(n).padStart(2, '0');
+        const stamp = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+        const filename = `鸢报备份_${stamp}.json`;
+        const jsonStr = JSON.stringify(allAccounts, null, 2);
+
+        // 主方案：Blob + URL.createObjectURL + appendChild + click
+        // 这是最广兼容的下载方式（夸克 / UC / Safari / Chrome 都支持）
+        let triggered = false;
+        try {
+            if (typeof Blob !== 'undefined' && typeof URL !== 'undefined' && URL.createObjectURL) {
+                const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.rel = 'noopener';
+                a.style.display = 'none';
+                // 关键：必须挂到 DOM，部分国产浏览器（夸克、UC）才会响应 click
+                document.body.appendChild(a);
+                a.click();
+                triggered = true;
+                setTimeout(() => {
+                    try { a.remove(); } catch(e) {}
+                    try { URL.revokeObjectURL(url); } catch(e) {}
+                }, 300);
+                showToast('已导出备份');
+            }
+        } catch (err) {
+            console.warn('[export] Blob 方案失败：', err);
+            triggered = false;
+        }
+
+        // 降级方案：弹文本框让用户手动复制（即使最不友好的浏览器也能保存数据）
+        if (!triggered) {
+            showExportFallback(jsonStr, filename);
+        }
+    }
+
+    // 导出降级方案：浏览器不支持自动下载时使用
+    function showExportFallback(jsonStr, filename) {
+        let m = document.getElementById('export-fallback-modal');
+        if (!m) {
+            m = document.createElement('div');
+            m.id = 'export-fallback-modal';
+            m.className = 'modal-overlay';
+            m.innerHTML = `<div class="modal-box" style="max-width:380px;">
+                <div class="modal-title">📤 手动保存备份</div>
+                <div style="font-size:0.83rem;color:var(--primary-soft);line-height:1.6;margin-bottom:10px;">
+                    您的浏览器不支持自动下载文件，请用以下任一方式保存：
+                </div>
+                <div style="font-size:0.82rem;color:var(--primary);line-height:1.7;margin-bottom:10px;">
+                    <div><strong>方法 1</strong>：点「复制到剪贴板」→ 粘贴到笔记 / 备忘录 App</div>
+                    <div><strong>方法 2</strong>：长按下方文本框 → 全选 → 复制</div>
+                </div>
+                <div style="font-size:0.78rem;color:var(--primary-soft);margin-bottom:6px;">建议保存为文件名：<strong id="export-fallback-filename" style="color:var(--primary);"></strong></div>
+                <textarea id="export-fallback-text" readonly style="width:100%;height:120px;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-family:monospace;font-size:0.72rem;resize:none;box-sizing:border-box;background:var(--card2);color:var(--primary);" onclick="this.select()"></textarea>
+                <div class="modal-btns" style="margin-top:12px;">
+                    <button class="modal-btn-cancel" onclick="closeExportFallback()">关闭</button>
+                    <button class="modal-btn-ok" onclick="copyExportToClipboard()">复制到剪贴板</button>
+                </div>
+            </div>`;
+            document.body.appendChild(m);
+            m.addEventListener('click', e => { if (e.target === m) closeExportFallback(); });
+        }
+        document.getElementById('export-fallback-text').value = jsonStr;
+        document.getElementById('export-fallback-filename').textContent = filename;
+        m.classList.add('open');
+    }
+    function closeExportFallback() {
+        const m = document.getElementById('export-fallback-modal');
+        if (m) m.classList.remove('open');
+    }
+    function copyExportToClipboard() {
+        const ta = document.getElementById('export-fallback-text');
+        if (!ta) return;
+        const text = ta.value;
+        // 优先用现代 Clipboard API（需要 HTTPS / localhost）
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('已复制到剪贴板');
+            }).catch(() => {
+                fallbackSelectCopy(ta);
+            });
+        } else {
+            fallbackSelectCopy(ta);
+        }
+    }
+    function fallbackSelectCopy(ta) {
+        try {
+            ta.removeAttribute('readonly');
+            ta.focus();
+            ta.select();
+            ta.setSelectionRange(0, 999999);
+            const ok = document.execCommand && document.execCommand('copy');
+            ta.setAttribute('readonly', '');
+            if (ok) {
+                showToast('已复制到剪贴板');
+            } else {
+                showToast('请长按文本框手动选择并复制', true);
+            }
+        } catch (e) {
+            showToast('请长按文本框手动选择并复制', true);
+        }
     }
 
     function importData(event) {
@@ -1787,19 +2579,160 @@
             try {
                 const imported=JSON.parse(e.target.result);
                 if(typeof imported!=='object'||imported===null) throw new Error();
-                Object.assign(allAccounts,imported);
-                localStorage.setItem('yuan_all_accounts',JSON.stringify(allAccounts));
-                if(!currentAccount||!allAccounts[currentAccount]) currentAccount=Object.keys(allAccounts)[0];
-                updateAccountUI(); renderPokedex();
-                showToast(T('import_ok'));
+                // P1-8: 显示导入预览，让用户选合并/覆盖
+                showImportPreview(imported);
             } catch { showToast(T('import_fail'), true); }
         };
         reader.readAsText(file);
         event.target.value='';
     }
 
+    // P1-8: 导入预览弹窗
+    function showImportPreview(imported) {
+        const importedKeys = Object.keys(imported);
+        if (importedKeys.length === 0) {
+            showToast('备份文件中没有任何账号', true);
+            return;
+        }
+        const existingKeys = Object.keys(allAccounts);
+        const newAccs = importedKeys.filter(k => !existingKeys.includes(k));
+        const dupAccs = importedKeys.filter(k => existingKeys.includes(k));
+
+        // 计算每个账号有多少进度
+        const countDone = (acc) => Object.entries(acc || {}).filter(([k, v]) => k !== '__missing__' && v).length;
+
+        const id = 'import-preview-modal';
+        let m = document.getElementById(id);
+        if (!m) {
+            m = document.createElement('div');
+            m.id = id;
+            m.className = 'modal-overlay';
+            document.body.appendChild(m);
+            m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
+        }
+
+        // 列表
+        let listHtml = '';
+        newAccs.forEach(k => {
+            const c = countDone(imported[k]);
+            listHtml += `<div class="import-preview-item new">✨ ${k} <span style="color:#888;font-size:0.78rem;">（新增 · ${c} 项进度）</span></div>`;
+        });
+        dupAccs.forEach(k => {
+            const cNew = countDone(imported[k]);
+            const cOld = countDone(allAccounts[k]);
+            listHtml += `<div class="import-preview-item dup">⚠️ ${k} <span style="color:#888;font-size:0.78rem;">（已存在 · 现 ${cOld} 项 → 备份 ${cNew} 项）</span></div>`;
+        });
+
+        const summary = `共 <strong>${importedKeys.length}</strong> 个账号：<strong style="color:#4a8020;">${newAccs.length}</strong> 个新账号` +
+            (dupAccs.length > 0 ? `、<strong style="color:#b07020;">${dupAccs.length}</strong> 个会与现有账号重名` : '');
+
+        const modeChooserHtml = dupAccs.length > 0
+            ? `<div class="settings-section-label" style="margin-bottom:6px;">遇到重名账号时</div>
+               <div class="import-mode-row">
+                   <button class="import-mode-btn selected" id="import-mode-merge" onclick="selectImportMode('merge')">
+                       <span class="imb-title">🔀 合并</span>
+                       <span class="imb-desc">保留现有进度，<br>仅补充缺少的</span>
+                   </button>
+                   <button class="import-mode-btn" id="import-mode-overwrite" onclick="selectImportMode('overwrite')">
+                       <span class="imb-title">⚠️ 覆盖</span>
+                       <span class="imb-desc">用备份的数据<br>完全替换</span>
+                   </button>
+               </div>`
+            : '';
+
+        m.innerHTML = `<div class="modal-box" style="max-width:380px;">
+            <div class="modal-title">📤 导入备份预览</div>
+            <div class="import-preview-summary">${summary}</div>
+            <div class="import-preview-list">${listHtml}</div>
+            ${modeChooserHtml}
+            <div class="modal-btns">
+                <button class="modal-btn-cancel" onclick="closeImportPreview()">取消</button>
+                <button class="modal-btn-ok" onclick="confirmImport()">确认导入</button>
+            </div>
+        </div>`;
+        m.classList.add('open');
+        // 暂存导入数据
+        m._importedData = imported;
+    }
+
+    let _importMode = 'merge'; // 'merge' or 'overwrite'
+    function selectImportMode(mode) {
+        _importMode = mode;
+        const merge = document.getElementById('import-mode-merge');
+        const ovr = document.getElementById('import-mode-overwrite');
+        if (merge) merge.classList.toggle('selected', mode==='merge');
+        if (ovr) ovr.classList.toggle('selected', mode==='overwrite');
+    }
+    function closeImportPreview() {
+        const m = document.getElementById('import-preview-modal');
+        if (m) m.classList.remove('open');
+    }
+    function confirmImport() {
+        const m = document.getElementById('import-preview-modal');
+        if (!m || !m._importedData) return;
+        const imported = m._importedData;
+
+        if (_importMode === 'overwrite') {
+            // 覆盖模式：备份里的账号完全替换现有同名账号；现有但不在备份里的账号保留
+            Object.keys(imported).forEach(k => { allAccounts[k] = imported[k]; });
+        } else {
+            // 合并模式：备份里的进度合并到现有账号（不覆盖已有的 true 值）
+            Object.keys(imported).forEach(k => {
+                if (!allAccounts[k]) {
+                    allAccounts[k] = imported[k];
+                } else {
+                    // 合并字段：true 值优先保留；__missing__ 取并集
+                    const existing = allAccounts[k] || {};
+                    const incoming = imported[k] || {};
+                    const merged = { ...existing };
+                    Object.keys(incoming).forEach(field => {
+                        if (field === '__missing__') {
+                            const a = Array.isArray(existing.__missing__) ? existing.__missing__ : [];
+                            const b = Array.isArray(incoming.__missing__) ? incoming.__missing__ : [];
+                            merged.__missing__ = Array.from(new Set([...a, ...b]));
+                        } else {
+                            // 解锁状态：任一为 true 即为 true（不覆盖现有进度）
+                            merged[field] = !!(existing[field] || incoming[field]);
+                        }
+                    });
+                    allAccounts[k] = merged;
+                }
+            });
+        }
+        localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+        if (!currentAccount || !allAccounts[currentAccount]) currentAccount = Object.keys(allAccounts)[0];
+        localStorage.setItem('yuan_current_account', currentAccount || '');
+        m.classList.remove('open');
+        m._importedData = null;
+        _importMode = 'merge';
+        updateAccountUI();
+        renderPokedex();
+        showToast(T('import_ok'));
+    }
+
     buildData(); updateAccountUI(); renderPokedex();
+    // P1-5: 同步 hide-completed toggle 的初始视觉状态
+    (function initHideCompletedToggle(){
+        const el = document.getElementById('hide-completed-toggle');
+        if (el) el.classList.toggle('on', hideCompleted);
+    })();
+    // P0-1: 恢复上次的 tab
+    restoreLastTab();
+    // P0-4: 检查是否需要显示密探管理引导卡
+    checkOwnedNudge();
 </script>
+    <!-- 管理密探弹窗 -->
+    <div class="modal-overlay" id="owned-modal" style="display:none;" onclick="if(event.target===this)closeOwnedModal()">
+        <div class="owned-modal-box">
+            <h3>⚙️ 管理拥有的密探</h3>
+            <div class="owned-modal-desc">点击名字标记「未拥有」，对应密探的羁绊将变灰隐藏。抽到了再点一次取消。设定跟账号绑定。</div>
+            <div class="owned-scroll" id="owned-modal-content"></div>
+            <div class="owned-modal-footer">
+                <button class="modal-btn-cancel-sm" onclick="closeOwnedModal()">关闭</button>
+                <button class="modal-btn-ok" onclick="selectAllOwned()" style="flex:1;">全部拥有</button>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
