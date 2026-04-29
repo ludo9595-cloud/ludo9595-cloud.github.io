@@ -100,6 +100,80 @@
             opacity: 0.55; text-transform: uppercase;
             white-space: nowrap;
         }
+        .btn-announce {
+            position: relative;
+            background: var(--card2); border: none; cursor: pointer;
+            font-size: var(--fs-xs); line-height: 1;
+            padding: 5px 10px; border-radius: 99px;
+            color: var(--primary-soft); font-weight: var(--fw-medium);
+            font-family: inherit; transition: all .15s;
+            align-self: center;
+            white-space: nowrap;
+        }
+        .btn-announce:hover { background: var(--highlight-light); color: var(--highlight); }
+        .announce-dot {
+            position: absolute; top: -2px; right: -2px;
+            width: 8px; height: 8px;
+            background: #d96a3a; border-radius: 50%;
+            border: 1.5px solid var(--bg);
+            display: none;
+        }
+        .btn-announce.has-unread .announce-dot { display: block; }
+        .btn-announce.has-unread {
+            background: var(--highlight-light);
+            color: var(--highlight);
+        }
+
+        /* 公告 modal */
+        .announce-modal {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(80,50,30,0.45); backdrop-filter: blur(2px);
+            display: none; align-items: center; justify-content: center;
+            padding: var(--s-4);
+        }
+        .announce-modal.open { display: flex; animation: introFadeIn .25s ease-out; }
+        .announce-modal-box {
+            background: var(--card); border-radius: var(--r-lg);
+            max-width: 480px; width: 100%; max-height: 85vh;
+            overflow-y: auto; padding: var(--s-6) var(--s-4) var(--s-4);
+            box-shadow: var(--shadow-lg); position: relative;
+            animation: introScaleIn .3s ease-out;
+        }
+        .announce-modal-close {
+            position: absolute; top: 12px; right: 12px;
+            background: var(--card2); border: none; border-radius: 99px;
+            width: 28px; height: 28px; cursor: pointer;
+            font-size: var(--fs-base); color: var(--primary-soft);
+            display: flex; align-items: center; justify-content: center;
+            transition: all .15s; line-height: 1;
+        }
+        .announce-modal-close:hover { background: var(--highlight); color: #fff; }
+        .announce-modal-box h2 {
+            font-size: 1.2rem; font-weight: var(--fw-bold); color: var(--primary);
+            margin: 0 0 var(--s-3); display: inline-flex; align-items: center; gap: 8px;
+        }
+        .announce-entry {
+            background: var(--card2); border-radius: var(--r-sm);
+            padding: var(--s-3) var(--s-4); margin-bottom: var(--s-3);
+        }
+        .announce-entry-date {
+            font-size: var(--fs-xs); color: var(--primary-soft);
+            font-weight: var(--fw-semibold); letter-spacing: 0.5px;
+            margin-bottom: var(--s-2);
+        }
+        .announce-entry-title {
+            font-size: var(--fs-base); font-weight: var(--fw-semibold);
+            color: var(--primary); margin-bottom: var(--s-2);
+        }
+        .announce-entry-body {
+            font-size: var(--fs-sm); color: var(--primary-soft);
+            line-height: 1.7;
+        }
+        .announce-entry-body strong { color: var(--primary); font-weight: var(--fw-semibold); }
+        .announce-modal-foot {
+            text-align: center; margin: var(--s-3) 0 0;
+            font-size: var(--fs-xs); color: var(--primary-soft); opacity: 0.7;
+        }
         .nav-ctrl-row { display: flex; align-items: center; gap: var(--s-1); flex: 1; justify-content: flex-end; }
 
         .account-select {
@@ -122,9 +196,13 @@
         .btn-icon {
             background: var(--card2); border: none;
             cursor: pointer; font-size: var(--fs-md);
-            padding: 6px 9px; color: var(--primary-soft); opacity: 0.9;
-            transition: all .18s; flex-shrink: 0; line-height: 1; border-radius: var(--r-sm);
+            width: 34px; height: 32px; padding: 0;
+            color: var(--primary-soft); opacity: 0.9;
+            transition: all .18s; flex-shrink: 0; line-height: 1;
+            border-radius: var(--r-sm);
             font-weight: var(--fw-medium);
+            display: inline-flex; align-items: center; justify-content: center;
+            box-sizing: border-box;
         }
         .btn-icon:hover { opacity: 1; color: var(--highlight); background: var(--highlight-light); }
 
@@ -141,7 +219,6 @@
         /* 新增账号按钮 — 醒目的 + 图标 */
         .btn-icon-add {
             font-size: var(--fs-lg); font-weight: var(--fw-bold);
-            padding: 4px 11px; line-height: 1;
             color: var(--highlight);
         }
 
@@ -506,7 +583,7 @@
             gap: var(--s-2); margin-bottom: var(--s-4);
         }
         @media (min-width: 720px) {
-            .action-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+            .action-btns { grid-template-columns: repeat(8, 1fr); }
         }
         .action-btn {
             padding: 6px 10px; border: none;
@@ -726,18 +803,27 @@
             margin-bottom: 16px; display: flex; flex-direction: column; gap: 9px;
             box-shadow: var(--shadow-sm);
         }
-        .rar-group { display: flex; flex-wrap: wrap; gap: 5px; padding-left: 10px; border-left: 3px solid var(--border); align-items: center; }
+        .rar-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--s-2); padding-left: 10px;
+            border-left: 3px solid var(--border); align-items: stretch;
+        }
         .rar-group.rar-group-金 { border-left-color: #c9a227; }
         .rar-group.rar-group-紫 { border-left-color: #8040b0; }
         .rar-group.rar-group-蓝 { border-left-color: #4080c8; }
         .ref-agent-btn {
-            padding: 4px 11px; border: 1.5px solid var(--border); border-radius: 6px;
-            background: var(--card2); color: var(--primary-soft); font-size: var(--fs-sm);
-            font-weight: var(--fw-regular); cursor: pointer; transition: all .15s;
-            white-space: nowrap; min-width: 42px; text-align: center; font-family: inherit;
+            width: 64px; height: 32px; padding: 0 var(--s-2);
+            border: none; border-radius: var(--r-sm);
+            background: var(--card2); color: var(--primary);
+            font-size: var(--fs-sm); font-weight: var(--fw-medium);
+            cursor: pointer; transition: all .12s;
+            white-space: nowrap; text-align: center; font-family: inherit;
+            display: inline-flex; align-items: center; justify-content: center;
+            box-sizing: border-box; flex-shrink: 0;
         }
-        .ref-agent-btn:hover { background: var(--button-bg); border-color: var(--border-strong); color: var(--primary); }
-        .ref-agent-btn.active { background: var(--highlight); color: #fff; border-color: var(--highlight);  }
+        .ref-agent-btn:hover { background: var(--card3); }
+        .ref-agent-btn.active { background: var(--highlight); color: #fff; }
 
         /* 品质颜色 */
         .rar-金 .agent-title-name { color: #a07818; }
@@ -917,12 +1003,92 @@
 
         /* 更多按钮 */
         .btn-icon-more {
-            font-size: 1.15rem; line-height: 1;
-            padding: 4px 11px;
+            font-size: var(--fs-md); line-height: 1;
         }
         .btn-icon-more.active {
             background: var(--highlight); color: #fff;
             opacity: 1;
+        }
+
+        /* 首次使用引导弹窗 */
+        .intro-modal {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(80,50,30,0.45); backdrop-filter: blur(2px);
+            display: flex; align-items: center; justify-content: center;
+            padding: var(--s-4);
+            animation: introFadeIn .25s ease-out;
+        }
+        @keyframes introFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .intro-modal-box {
+            background: var(--card); border-radius: var(--r-lg);
+            max-width: 480px; width: 100%; max-height: 92vh;
+            overflow-y: auto; padding: var(--s-6) var(--s-4) var(--s-4);
+            box-shadow: var(--shadow-lg); position: relative;
+            animation: introScaleIn .3s ease-out;
+        }
+        @keyframes introScaleIn {
+            from { transform: scale(0.92); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .intro-modal-close {
+            position: absolute; top: 12px; right: 12px;
+            background: var(--card2); border: none; border-radius: 99px;
+            width: 28px; height: 28px; cursor: pointer;
+            font-size: var(--fs-base); color: var(--primary-soft);
+            display: flex; align-items: center; justify-content: center;
+            transition: all .15s; line-height: 1;
+        }
+        .intro-modal-close:hover { background: var(--highlight); color: #fff; }
+        .intro-modal-box h2 {
+            font-size: 1.4rem; font-weight: var(--fw-bold); color: var(--primary);
+            margin: 0 0 6px; text-align: center; letter-spacing: .5px;
+        }
+        .intro-modal-sub {
+            text-align: center; color: var(--primary-soft);
+            font-size: var(--fs-sm); margin: 0 0 var(--s-6);
+        }
+        .intro-step {
+            display: flex; gap: var(--s-3); margin-bottom: var(--s-4);
+            background: var(--card2); padding: var(--s-3) var(--s-3);
+            border-radius: var(--r-sm);
+        }
+        .intro-step-num {
+            flex-shrink: 0; width: 28px; height: 28px; border-radius: 99px;
+            background: var(--highlight); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: var(--fw-bold); font-size: var(--fs-sm);
+        }
+        .intro-step-body { flex: 1; min-width: 0; }
+        .intro-step-title {
+            display: block; font-size: var(--fs-base); font-weight: var(--fw-semibold);
+            color: var(--primary); margin-bottom: 4px;
+        }
+        .intro-step-body p {
+            margin: 0; font-size: var(--fs-sm); line-height: 1.6;
+            color: var(--primary-soft);
+        }
+        .intro-step-body p strong { color: var(--primary); font-weight: var(--fw-semibold); }
+        .intro-icon {
+            display: inline-flex; align-items: center;
+            background: var(--card); padding: 1px 6px; border-radius: 4px;
+            font-size: 0.95em; margin: 0 2px;
+            box-shadow: 0 1px 1px rgba(80,50,30,0.04);
+        }
+        .intro-modal-cta {
+            width: 100%; padding: var(--s-3); margin-top: var(--s-3);
+            background: var(--highlight); color: #fff;
+            border: none; border-radius: var(--r);
+            font-size: var(--fs-md); font-weight: var(--fw-semibold);
+            cursor: pointer; font-family: inherit;
+            transition: all .15s;
+        }
+        .intro-modal-cta:hover { background: #bc7570; }
+        .intro-modal-foot {
+            text-align: center; margin: var(--s-3) 0 0;
+            font-size: var(--fs-xs); color: var(--primary-soft); opacity: 0.7;
         }
 
         /* P0-4 密探管理引导提示卡 */
@@ -1042,6 +1208,9 @@
         <div class="top-nav">
             <div class="nav-logo-row">
                 <div class="logo-area">🦅 鸢报羁绊助手</div>
+                <button class="btn-announce" id="btn-announce" onclick="openAnnounceModal()" title="最新公告">
+                    最新公告<span class="announce-dot" id="announce-dot"></span>
+                </button>
             </div>
             <div class="nav-ctrl-row">
                 <select id="account-select" class="account-select" onchange="switchAccount()"></select>
@@ -1101,32 +1270,77 @@
         你已解锁超过 50 组羁绊，建议点击右上角 ⚙️ 设置 → 「导出备份」保存档案，避免因浏览器清除数据而丢失进度。
     </div>
 
-    <!-- 公告横幅（独立于 tab，所有页面可见） -->
-    <div class="announce-banner collapsed" id="announce-banner">
-        <div class="announce-header" onclick="toggleAnnounce()">
-            <span class="announce-title">🎉 羁绊资料更新</span>
-            <span class="announce-arrow">▼</span>
-        </div>
-        <div class="announce-body">
-            已同步游戏 <strong>3月30日</strong> 与 <strong>4月16日</strong> 两次版本更新的新增羁绊配对，共新增 <strong>41 位</strong>密探（周瑜、诸葛亮、曹丕等）。<br>
-            新增羁绊在开图鉴和资料留存中标注 <span class="new-badge">NEW</span>，状态筛选选「🆕 新羁绊」可快速查看。
-        </div>
-    </div>
-    <div class="announce-banner collapsed" id="intro-banner">
-        <div class="announce-header" onclick="this.parentElement.classList.toggle('collapsed')">
-            <span class="announce-title">📖 关于此工具</span>
-            <span class="announce-arrow">▼</span>
-        </div>
-        <div class="announce-body">
-            <p style="margin:0 0 6px;"><strong>这个工具是做什么的？</strong><br>
-            游戏中密探配对执行情报时，不同密探一起行动能获得羁绊。这个小工具让你可以记录哪些「密探羁绊」已经完成过，方便追踪进度。</p>
-            <p style="margin:0 0 6px;"><strong>🖱️ 怎么用？</strong><br>
-            在「开图鉴」页：展开密探卡片 → 找到对应的密探 → 对照游戏画面，点击「天气图示＋情报」格子打勾 → 格子变暗代表已记录。</p>
-            <p style="margin:0;"><strong>📝 发现资料错误？</strong>点击右上角的 <span style="background:var(--card2);border-radius:5px;padding:1px 6px;font-size:0.9em;">💬</span> 即可回报。</p>
+    <!-- 首次使用引导弹窗 -->
+    <div class="intro-modal" id="intro-modal" style="display:none;">
+        <div class="intro-modal-box">
+            <button class="intro-modal-close" onclick="dismissIntroModal()" aria-label="关闭">✕</button>
+            <h2>👋 欢迎使用鸢报羁绊助手</h2>
+            <p class="intro-modal-sub">这是个帮你追踪密探羁绊收集进度的小工具</p>
+
+            <div class="intro-step">
+                <div class="intro-step-num">1</div>
+                <div class="intro-step-body">
+                    <span class="intro-step-title">建立账号</span>
+                    <p>点击右上角 <span class="intro-icon">＋</span>，建议填入游戏角色名。每个账号进度独立，可建多个账号分别记录大小鸟。</p>
+                </div>
+            </div>
+
+            <div class="intro-step">
+                <div class="intro-step-num">2</div>
+                <div class="intro-step-body">
+                    <span class="intro-step-title">标记你拥有的密探</span>
+                    <p>点 <span class="intro-icon">⚙️ 管理拥有的密探</span>，未拥有的密探会变灰隐藏，让图鉴更准确反映你的进度。</p>
+                </div>
+            </div>
+
+            <div class="intro-step">
+                <div class="intro-step-num">3</div>
+                <div class="intro-step-body">
+                    <span class="intro-step-title">「开图鉴」追踪进度</span>
+                    <p>展开密探卡片 → 对照游戏画面，点击「天气＋情报」格子打勾。格子变暗代表已记录。</p>
+                </div>
+            </div>
+
+            <div class="intro-step">
+                <div class="intro-step-num">4</div>
+                <div class="intro-step-body">
+                    <span class="intro-step-title">「查配对」每日决策</span>
+                    <p>选今天的<strong>情报</strong>和<strong>天气</strong>，会列出此条件下可解锁的羁绊。</p>
+                </div>
+            </div>
+
+            <div class="intro-step">
+                <div class="intro-step-num">5</div>
+                <div class="intro-step-body">
+                    <span class="intro-step-title">记得备份</span>
+                    <p>右上角 <span class="intro-icon">⚙️</span> 可以导出备份，避免浏览器清除数据丢失进度。发现资料错误请点 <span class="intro-icon">💬</span> 回报。</p>
+                </div>
+            </div>
+
+            <button class="intro-modal-cta" onclick="dismissIntroModal()">开始使用 →</button>
+            <p class="intro-modal-foot">下次想再看，可在右上角「📋 更多 → 使用说明」找到</p>
         </div>
     </div>
 
-    <!-- 公告横幅 -->
+    <!-- 公告 modal -->
+    <div class="announce-modal" id="announce-modal" onclick="if(event.target===this)closeAnnounceModal()">
+        <div class="announce-modal-box">
+            <button class="announce-modal-close" onclick="closeAnnounceModal()" aria-label="关闭">✕</button>
+            <h2>📢 最新公告</h2>
+
+            <div class="announce-entry">
+                <div class="announce-entry-date">2026/4/28</div>
+                <div class="announce-entry-title">🎉 羁绊资料更新</div>
+                <div class="announce-entry-body">
+                    已同步游戏 <strong>3月30日</strong> 与 <strong>4月16日</strong> 两次版本更新的新增羁绊配对，共新增 <strong>41 位</strong>密探（周瑜、诸葛亮、曹丕等）。<br>
+                    新增羁绊在开图鉴和资料留存中标注 <span class="new-badge">NEW</span>，状态筛选选「🆕 新羁绊」可快速查看。
+                </div>
+            </div>
+
+            <p class="announce-modal-foot">完整更新记录请见「📋 更多 → 更新日志」</p>
+        </div>
+    </div>
+
     <!-- 图鉴页 -->
     <div class="container" id="pokedex-view">
         <!-- P0-4 密探管理引导（首次使用账号且未设置过时显示） -->
@@ -1286,6 +1500,9 @@
             <div class="entry-card" style="margin-bottom:14px;">
                 <div style="font-size:0.88rem;font-weight:bold;color:var(--highlight);margin-bottom:10px;">2026/4/28 更新</div>
                 <div style="font-size:0.85rem;color:var(--primary);line-height:1.9;">
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">📄 资料更新</div>
+                    <div>• 已同步游戏 <strong>3月30日</strong> 与 <strong>4月16日</strong> 两次版本更新的新增羁绊配对，共新增 <strong>41 位</strong>密探（周瑜、诸葛亮、曹丕等）</div>
+                    <div>• 新增羁绊在开图鉴和资料留存中标注 <span class="new-badge">NEW</span>，状态筛选选「🆕 新羁绊」可快速查看</div>
                     <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">🆕 新功能</div>
                     <div>• 新增「管理拥有的密探」：标记未拥有的密探隐藏对应羁绊，支持大小鸟分服独立管理</div>
                     <div>• 进度条新增「我的 / 全部」切换：选「我的」只统计自己拥有的密探之间的羁绊，让卡池小的玩家也能达成 100%</div>
@@ -1295,12 +1512,9 @@
                     <div>• 修复夸克 / UC 等浏览器点导出无反应的问题</div>
                     <div>• 导入前显示预览，并可选择「合并」或「覆盖」模式</div>
                     <div>• 导出文件名自动加日期时间戳</div>
-                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">📄 资料修正</div>
-                    <div>• 庞德属性修正：地 → 水</div>
-                    <div>• 许曼属性修正：地 → 阳</div>
                     <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">📝 其他</div>
-                    <div>• 顶部新增 📝 资料错误回报按钮，全局可见</div>
-                    <div>• 「📋 更多」分页新增使用说明、资料留存子分页</div>
+                    <div>• 顶部新增 💬 资料错误回报按钮，全局可见</div>
+                    <div>• 顶部新增 📋 「更多」入口，包含使用说明、资料留存、更新日志</div>
                     <div>• 整体 UI 视觉优化</div>
                 </div>
             </div>
@@ -1326,48 +1540,65 @@
         <!-- 使用说明 -->
         <div class="sub-view" id="sub-howto">
 
-            <!-- 基本使用 -->
+            <button onclick="openIntroModal()" style="width:100%;padding:12px 16px;margin-bottom:14px;background:linear-gradient(135deg,#FDF0E8,#FFFAF3);border:1.5px solid var(--highlight);border-radius:10px;cursor:pointer;font-family:inherit;text-align:left;display:flex;align-items:center;gap:10px;transition:all .15s;" onmouseover="this.style.boxShadow='0 2px 8px rgba(168,101,94,0.15)'" onmouseout="this.style.boxShadow='none'">
+                <span style="font-size:1.4rem;flex-shrink:0;">👋</span>
+                <div style="flex:1;">
+                    <div style="font-weight:600;color:var(--highlight);font-size:0.92rem;">查看图文引导</div>
+                    <div style="font-size:0.78rem;color:var(--primary-soft);margin-top:2px;">5 步快速上手，跟新手第一次打开看到的一样</div>
+                </div>
+                <span style="color:var(--highlight);font-size:1.1rem;">→</span>
+            </button>
+
+            <!-- 顶部按钮说明 -->
             <div style="margin-bottom:14px;">
-                <div style="font-size:0.78rem;font-weight:700;letter-spacing:1.5px;color:#A8655E;padding-bottom:8px;border-bottom:1.5px solid #EAD9CC;margin-bottom:12px;">📋 基本使用</div>
-                <div style="display:flex;flex-direction:column;gap:0;">
+                <div style="font-size:0.78rem;font-weight:700;letter-spacing:1.5px;color:#A8655E;padding-bottom:8px;border-bottom:1.5px solid #EAD9CC;margin-bottom:12px;">📍 顶部按钮一览</div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
 
-                    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #F2EAE2;">
-                        <div style="flex-shrink:0;width:28px;height:28px;background:#A8655E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;margin-top:1px;">1</div>
+                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;border-bottom:1px solid #F2EAE2;">
+                        <div style="flex-shrink:0;width:34px;height:32px;background:#FAF4EC;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--highlight);font-size:1.1rem;">＋</div>
                         <div style="flex:1;">
-                            <div style="font-size:0.88rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">建立账号</div>
-                            <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">点右上角的 ＋ 按钮建立账号，建议填入游戏角色名。每个账号进度独立，可建多个账号分别记录不同角色。</div>
+                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">新增账号</div>
+                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;">建立一个新账号，可分别记录大小鸟或不同角色</div>
                         </div>
                     </div>
 
-                    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #F2EAE2;">
-                        <div style="flex-shrink:0;width:28px;height:28px;background:#A8655E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;margin-top:1px;">2</div>
+                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;border-bottom:1px solid #F2EAE2;">
+                        <div style="flex-shrink:0;width:34px;height:32px;background:#FAF4EC;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">💬</div>
                         <div style="flex:1;">
-                            <div style="font-size:0.88rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">管理密探</div>
-                            <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">点筛选区「⚙️ 管理拥有的密探」标记没有的密探，开图鉴和查配对会自动隐藏相关羁绊。大鸟小鸟可建两个账号分开管理。</div>
+                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">资料错误回报</div>
+                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;">发现羁绊资料、密探属性等有误，点这里填回报表通知作者</div>
                         </div>
                     </div>
 
-                    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #F2EAE2;">
-                        <div style="flex-shrink:0;width:28px;height:28px;background:#A8655E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;margin-top:1px;">3</div>
+                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;border-bottom:1px solid #F2EAE2;">
+                        <div style="flex-shrink:0;width:34px;height:32px;background:#FAF4EC;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">📋</div>
                         <div style="flex:1;">
-                            <div style="font-size:0.88rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">开图鉴记录</div>
-                            <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">展开密探卡片，对照游戏点击「天气＋情报」格子。格子变暗 = 已记录，再点一次可取消。可用搜索、属性、部门、品质筛选。</div>
+                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">更多</div>
+                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;">查看更新日志、使用说明（你正在看）、资料留存（核对原始资料）</div>
                         </div>
                     </div>
 
-                    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #F2EAE2;">
-                        <div style="flex-shrink:0;width:28px;height:28px;background:#A8655E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;margin-top:1px;">4</div>
+                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;border-bottom:1px solid #F2EAE2;">
+                        <div style="flex-shrink:0;width:34px;height:32px;background:#FAF4EC;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">⚙️</div>
                         <div style="flex:1;">
-                            <div style="font-size:0.88rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">查配对</div>
-                            <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">选择今天游戏里的情报和天气，工具列出所有可解锁的羁绊。点「解锁」直接记录，无需手动回开图鉴勾选。</div>
+                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">账号设置</div>
+                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;">管理当前账号：改名、删除、<strong style="color:#A8655E;">导出备份</strong>、<strong style="color:#A8655E;">导入备份</strong></div>
                         </div>
                     </div>
 
-                    <div style="display:flex;gap:12px;padding:10px 0;">
-                        <div style="flex-shrink:0;width:28px;height:28px;background:#A8655E;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.82rem;font-weight:700;margin-top:1px;">5</div>
+                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;border-bottom:1px solid #F2EAE2;">
+                        <div style="flex-shrink:0;height:28px;padding:0 10px;background:#FAF4EC;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;color:#7A6355;white-space:nowrap;">最新公告</div>
                         <div style="flex:1;">
-                            <div style="font-size:0.88rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">备份进度</div>
-                            <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">点右上角 ⚙️ 设置 → 「📥 导出备份」保存备份文件。换装置或浏览器时，从同一处「📤 导入备份」还原进度。</div>
+                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">最新公告</div>
+                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;">查看重大更新、版本同步等公告。有未读时按钮会变红色 + 红点提示</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;">
+                        <div style="flex-shrink:0;height:28px;padding:0 10px;background:rgba(168,101,94,0.08);border-radius:99px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;color:var(--highlight);white-space:nowrap;">我的</div>
+                        <div style="flex:1;">
+                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">进度范围切换（成就卡片内）</div>
+                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;"><strong style="color:#A8655E;">我的</strong> = 只算自己拥有的密探之间的羁绊；<strong style="color:#A8655E;">全部</strong> = 全游戏 1000+ 羁绊总进度</div>
                         </div>
                     </div>
 
@@ -1469,7 +1700,7 @@
         <div class="modal-title">新建账号</div>
         <div class="modal-subtitle">选择游戏版本</div>
         <div class="modal-version-row">
-            <div class="modal-ver-btn selected" id="ver-btn-1" onclick="selectVer(1)">🐦 如鸢</div>
+            <div class="modal-ver-btn selected" id="ver-btn-1" onclick="selectVer(1)">🐤 如鸢</div>
             <div class="modal-ver-btn" id="ver-btn-2" onclick="selectVer(2)">🦅 代号鸢</div>
         </div>
         <div class="modal-subtitle">角色名字</div>
@@ -2040,6 +2271,46 @@
         } catch(e) {}
     }
     document.getElementById('add-modal').addEventListener('click', function(e){ if(e.target===this) closeAddModal(); });
+
+    // 公告系统
+    // 当 ANNOUNCE_VERSION 比 storage 大时显示红点；用户点开后写入 storage 同步版本
+    const ANNOUNCE_VERSION = 1;  // 每次新增重大公告时 +1
+    function checkBellDot() {
+        let seen = 0;
+        try { seen = parseInt(localStorage.getItem('yuan_announce_seen_v') || '0', 10); } catch(e) {}
+        const btn = document.getElementById('btn-announce');
+        if (!btn) return;
+        btn.classList.toggle('has-unread', seen < ANNOUNCE_VERSION);
+    }
+    function openAnnounceModal() {
+        const m = document.getElementById('announce-modal');
+        if (m) m.classList.add('open');
+        // 标记已读
+        try { localStorage.setItem('yuan_announce_seen_v', String(ANNOUNCE_VERSION)); } catch(e) {}
+        checkBellDot();
+    }
+    function closeAnnounceModal() {
+        const m = document.getElementById('announce-modal');
+        if (m) m.classList.remove('open');
+    }
+
+    // 首次使用引导弹窗
+    function checkIntroModal() {
+        let seen = false;
+        try { seen = localStorage.getItem('yuan_intro_seen') === '1'; } catch(e) {}
+        if (!seen) showIntroModal();
+    }
+    function showIntroModal() {
+        const el = document.getElementById('intro-modal');
+        if (el) el.style.display = 'flex';
+    }
+    function dismissIntroModal() {
+        const el = document.getElementById('intro-modal');
+        if (el) el.style.display = 'none';
+        try { localStorage.setItem('yuan_intro_seen', '1'); } catch(e) {}
+    }
+    // 让用户在「📋 更多 → 使用说明」里能再打开
+    window.openIntroModal = showIntroModal;
 
     // P0-4: 密探管理引导提示卡
     function checkOwnedNudge() {
@@ -3109,6 +3380,10 @@
     restoreMoreFiltersState();
     // P0-4: 检查是否需要显示密探管理引导卡
     checkOwnedNudge();
+    // 首次使用：显示引导弹窗
+    checkIntroModal();
+    // 检查公告铃铛红点
+    checkBellDot();
 </script>
     <!-- 管理密探弹窗 -->
     <div class="modal-overlay" id="owned-modal" style="display:none;" onclick="if(event.target===this)closeOwnedModal()">
