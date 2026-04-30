@@ -790,10 +790,25 @@
 
         /* 资料留存导航 */
         /* 资料留存子分页 */
-        .sub-tabs { display: flex; gap: 0; border-bottom: 1.5px solid var(--border); margin-bottom: 16px; }
-        .sub-tab { flex: 1; text-align: center; padding: 10px 6px; cursor: pointer; font-size: var(--fs-base); font-weight: var(--fw-semibold); color: #aaa; border-bottom: 3px solid transparent; margin-bottom: -1.5px; transition: .15s; }
-        .sub-tab.active { color: var(--highlight); border-bottom-color: var(--highlight); }
-        .sub-tab:hover:not(.active) { color: var(--primary); }
+        /* 子分页（📋 更多 里面）— 改成 pill 胶囊，明显区别于主 tab */
+        .sub-tabs {
+            display: flex; gap: var(--s-2); margin-bottom: var(--s-4);
+            border-bottom: none; flex-wrap: wrap;
+        }
+        .sub-tab {
+            padding: 6px 16px; cursor: pointer;
+            font-size: var(--fs-sm); font-weight: var(--fw-medium);
+            color: var(--primary-soft);
+            background: var(--card2); border: none;
+            border-radius: 99px;
+            transition: all .15s;
+            white-space: nowrap;
+        }
+        .sub-tab.active {
+            background: var(--highlight); color: #fff;
+            font-weight: var(--fw-semibold);
+        }
+        .sub-tab:hover:not(.active) { background: var(--card3); color: var(--primary); }
         .sub-view { display: none; }
         .sub-view.active { display: block; }
 
@@ -1091,6 +1106,54 @@
             font-size: var(--fs-xs); color: var(--primary-soft); opacity: 0.7;
         }
 
+        /* 按钮介绍 modal */
+        .btn-intro-list { display: flex; flex-direction: column; margin-bottom: var(--s-3); }
+        .btn-intro-row {
+            display: flex; gap: var(--s-3); align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(180,160,140,.12);
+        }
+        .btn-intro-icon {
+            flex-shrink: 0; width: 36px; height: 32px;
+            background: var(--card2); border-radius: var(--r-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+        }
+        .btn-intro-icon.highlight { color: var(--highlight); font-size: 1.2rem; font-weight: var(--fw-bold); }
+        .btn-intro-icon.announce-preview {
+            font-size: 0.6rem; font-weight: var(--fw-semibold);
+            background: var(--highlight-light); color: var(--highlight);
+            border-radius: 99px; width: auto; padding: 0 8px; white-space: nowrap;
+        }
+        .btn-intro-icon.scope-preview {
+            font-size: 0.62rem; font-weight: var(--fw-semibold);
+            background: var(--highlight); color: #fff;
+            border-radius: 99px; width: auto; padding: 0 8px; white-space: nowrap;
+        }
+        .btn-intro-body {
+            flex: 1; font-size: var(--fs-xs); color: var(--primary-soft); line-height: 1.55;
+        }
+        .btn-intro-body strong { font-weight: var(--fw-semibold); color: var(--highlight); }
+        .btn-intro-name {
+            display: block; font-size: var(--fs-sm); font-weight: var(--fw-semibold);
+            color: var(--primary); margin-bottom: 2px;
+        }
+        /* 显眼的"再次查看"入口 */
+        .btn-intro-reflink {
+            display: flex; align-items: center; gap: var(--s-3);
+            background: linear-gradient(135deg, #FDF0E8, #FFFAF3);
+            border: 1.5px solid var(--highlight);
+            border-radius: var(--r); padding: var(--s-3) var(--s-4);
+            margin-bottom: var(--s-3); cursor: pointer;
+            transition: all .15s;
+        }
+        .btn-intro-reflink:hover { box-shadow: 0 2px 8px rgba(168,101,94,0.15); }
+        .btn-intro-reflink-icon { font-size: 1.4rem; flex-shrink: 0; }
+        .btn-intro-reflink-title {
+            font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--highlight);
+        }
+        .btn-intro-reflink-sub { font-size: var(--fs-xs); color: var(--primary-soft); margin-top: 2px; }
+
         /* P0-4 密探管理引导提示卡 */
         .owned-nudge {
             background: linear-gradient(135deg, #FFF8F2, #FDF0E8);
@@ -1322,6 +1385,72 @@
         </div>
     </div>
 
+    <!-- 按钮介绍 modal（首次使用第 2 步 / 使用说明入口） -->
+    <div class="intro-modal" id="btn-intro-modal" style="display:none;">
+        <div class="intro-modal-box">
+            <button class="intro-modal-close" onclick="dismissBtnIntroModal()" aria-label="关闭">✕</button>
+            <h2>📍 顶部按钮介绍</h2>
+            <p class="intro-modal-sub">认识每个按钮，用起来更顺手</p>
+
+            <div class="btn-intro-list">
+                <div class="btn-intro-row">
+                    <div class="btn-intro-icon highlight">＋</div>
+                    <div class="btn-intro-body">
+                        <span class="btn-intro-name">新增账号</span>
+                        建立账号，可分别记录大鸟（如鸢）和小鸟（代号鸢）
+                    </div>
+                </div>
+                <div class="btn-intro-row">
+                    <div class="btn-intro-icon">💬</div>
+                    <div class="btn-intro-body">
+                        <span class="btn-intro-name">资料回报</span>
+                        发现羁绊资料或密探属性有误，点这里填回报表通知作者修正
+                    </div>
+                </div>
+                <div class="btn-intro-row">
+                    <div class="btn-intro-icon">📋</div>
+                    <div class="btn-intro-body">
+                        <span class="btn-intro-name">更多</span>
+                        查看更新日志、使用说明、资料留存（核对原始羁绊数据）
+                    </div>
+                </div>
+                <div class="btn-intro-row">
+                    <div class="btn-intro-icon">⚙️</div>
+                    <div class="btn-intro-body">
+                        <span class="btn-intro-name">账号设置</span>
+                        改名、删除账号，以及 <strong>导出 / 导入备份</strong>（换装置必用）
+                    </div>
+                </div>
+                <div class="btn-intro-row">
+                    <div class="btn-intro-icon announce-preview">最新公告</div>
+                    <div class="btn-intro-body">
+                        <span class="btn-intro-name">最新公告</span>
+                        查看重大更新通知。有未读时按钮变粉红色 + 小红点
+                    </div>
+                </div>
+                <div class="btn-intro-row" style="border-bottom:none;">
+                    <div class="btn-intro-icon scope-preview">我的</div>
+                    <div class="btn-intro-body">
+                        <span class="btn-intro-name">我的 / 全部</span>
+                        切换进度范围：「我的」只算自己拥有密探的羁绊，更容易达到 100%
+                    </div>
+                </div>
+            </div>
+
+            <!-- 显眼的"以后在哪里看"提示 -->
+            <div class="btn-intro-reflink" onclick="dismissBtnIntroModal(); switchTab('feedback', document.querySelector('.btn-icon-more')); setTimeout(()=>switchSubTab('howto', document.querySelectorAll('.sub-tab')[1]), 100);">
+                <span class="btn-intro-reflink-icon">📋</span>
+                <div>
+                    <div class="btn-intro-reflink-title">想再看这份说明？</div>
+                    <div class="btn-intro-reflink-sub">右上角 📋 更多 → 使用说明</div>
+                </div>
+                <span style="color:var(--highlight); font-size:1.1rem;">→</span>
+            </div>
+
+            <button class="intro-modal-cta" onclick="dismissBtnIntroModal()">开始使用 →</button>
+        </div>
+    </div>
+
     <!-- 公告 modal -->
     <div class="announce-modal" id="announce-modal" onclick="if(event.target===this)closeAnnounceModal()">
         <div class="announce-modal-box">
@@ -1540,7 +1669,7 @@
         <!-- 使用说明 -->
         <div class="sub-view" id="sub-howto">
 
-            <button onclick="openIntroModal()" style="width:100%;padding:12px 16px;margin-bottom:14px;background:linear-gradient(135deg,#FDF0E8,#FFFAF3);border:1.5px solid var(--highlight);border-radius:10px;cursor:pointer;font-family:inherit;text-align:left;display:flex;align-items:center;gap:10px;transition:all .15s;" onmouseover="this.style.boxShadow='0 2px 8px rgba(168,101,94,0.15)'" onmouseout="this.style.boxShadow='none'">
+            <button onclick="openIntroModal()" style="width:100%;padding:12px 16px;margin-bottom:10px;background:linear-gradient(135deg,#FDF0E8,#FFFAF3);border:1.5px solid var(--highlight);border-radius:10px;cursor:pointer;font-family:inherit;text-align:left;display:flex;align-items:center;gap:10px;transition:all .15s;" onmouseover="this.style.boxShadow='0 2px 8px rgba(168,101,94,0.15)'" onmouseout="this.style.boxShadow='none'">
                 <span style="font-size:1.4rem;flex-shrink:0;">👋</span>
                 <div style="flex:1;">
                     <div style="font-weight:600;color:var(--highlight);font-size:0.92rem;">查看图文引导</div>
@@ -1549,61 +1678,14 @@
                 <span style="color:var(--highlight);font-size:1.1rem;">→</span>
             </button>
 
-            <!-- 顶部按钮说明 -->
-            <div style="margin-bottom:14px;">
-                <div style="font-size:0.78rem;font-weight:700;letter-spacing:1.5px;color:#A8655E;padding-bottom:8px;border-bottom:1.5px solid #EAD9CC;margin-bottom:12px;">📍 顶部按钮一览</div>
-                <div style="display:flex;flex-direction:column;gap:8px;">
-
-                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;border-bottom:1px solid #F2EAE2;">
-                        <div style="flex-shrink:0;width:34px;height:32px;background:#FAF4EC;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--highlight);font-size:1.1rem;">＋</div>
-                        <div style="flex:1;">
-                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">新增账号</div>
-                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;">建立一个新账号，可分别记录大小鸟或不同角色</div>
-                        </div>
-                    </div>
-
-                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;border-bottom:1px solid #F2EAE2;">
-                        <div style="flex-shrink:0;width:34px;height:32px;background:#FAF4EC;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">💬</div>
-                        <div style="flex:1;">
-                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">资料错误回报</div>
-                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;">发现羁绊资料、密探属性等有误，点这里填回报表通知作者</div>
-                        </div>
-                    </div>
-
-                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;border-bottom:1px solid #F2EAE2;">
-                        <div style="flex-shrink:0;width:34px;height:32px;background:#FAF4EC;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">📋</div>
-                        <div style="flex:1;">
-                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">更多</div>
-                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;">查看更新日志、使用说明（你正在看）、资料留存（核对原始资料）</div>
-                        </div>
-                    </div>
-
-                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;border-bottom:1px solid #F2EAE2;">
-                        <div style="flex-shrink:0;width:34px;height:32px;background:#FAF4EC;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">⚙️</div>
-                        <div style="flex:1;">
-                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">账号设置</div>
-                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;">管理当前账号：改名、删除、<strong style="color:#A8655E;">导出备份</strong>、<strong style="color:#A8655E;">导入备份</strong></div>
-                        </div>
-                    </div>
-
-                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;border-bottom:1px solid #F2EAE2;">
-                        <div style="flex-shrink:0;height:28px;padding:0 10px;background:#FAF4EC;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;color:#7A6355;white-space:nowrap;">最新公告</div>
-                        <div style="flex:1;">
-                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">最新公告</div>
-                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;">查看重大更新、版本同步等公告。有未读时按钮会变红色 + 红点提示</div>
-                        </div>
-                    </div>
-
-                    <div style="display:flex;gap:10px;padding:8px 0;align-items:center;">
-                        <div style="flex-shrink:0;height:28px;padding:0 10px;background:rgba(168,101,94,0.08);border-radius:99px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;color:var(--highlight);white-space:nowrap;">我的</div>
-                        <div style="flex:1;">
-                            <div style="font-size:0.85rem;font-weight:600;color:#4A3C35;">进度范围切换（成就卡片内）</div>
-                            <div style="font-size:0.78rem;color:#7A6355;line-height:1.5;"><strong style="color:#A8655E;">我的</strong> = 只算自己拥有的密探之间的羁绊；<strong style="color:#A8655E;">全部</strong> = 全游戏 1000+ 羁绊总进度</div>
-                        </div>
-                    </div>
-
+            <button onclick="openBtnIntroModal()" style="width:100%;padding:12px 16px;margin-bottom:14px;background:linear-gradient(135deg,#F2F8FE,#EDF5FD);border:1.5px solid #8ab4d8;border-radius:10px;cursor:pointer;font-family:inherit;text-align:left;display:flex;align-items:center;gap:10px;transition:all .15s;" onmouseover="this.style.boxShadow='0 2px 8px rgba(100,150,200,0.15)'" onmouseout="this.style.boxShadow='none'">
+                <span style="font-size:1.4rem;flex-shrink:0;">📍</span>
+                <div style="flex:1;">
+                    <div style="font-weight:600;color:#4a7aaa;font-size:0.92rem;">顶部按钮介绍</div>
+                    <div style="font-size:0.78rem;color:var(--primary-soft);margin-top:2px;">每个按钮是干什么的？一页说清楚</div>
                 </div>
-            </div>
+                <span style="color:#4a7aaa;font-size:1.1rem;">→</span>
+            </button>
 
             <!-- 常见问题 -->
             <div style="margin-bottom:14px;">
@@ -2308,8 +2390,23 @@
         const el = document.getElementById('intro-modal');
         if (el) el.style.display = 'none';
         try { localStorage.setItem('yuan_intro_seen', '1'); } catch(e) {}
+        // 串联：关闭欢迎引导后接着显示按钮介绍
+        showBtnIntroModal();
     }
-    // 让用户在「📋 更多 → 使用说明」里能再打开
+
+    // 按钮介绍弹窗
+    function showBtnIntroModal() {
+        const el = document.getElementById('btn-intro-modal');
+        if (el) el.style.display = 'flex';
+    }
+    function dismissBtnIntroModal() {
+        const el = document.getElementById('btn-intro-modal');
+        if (el) el.style.display = 'none';
+        try { localStorage.setItem('yuan_btn_intro_seen', '1'); } catch(e) {}
+    }
+    // 让使用说明页能打开按钮介绍弹窗
+    window.openBtnIntroModal = showBtnIntroModal;
+    // 让使用说明页能打开图文引导弹窗
     window.openIntroModal = showIntroModal;
 
     // P0-4: 密探管理引导提示卡
