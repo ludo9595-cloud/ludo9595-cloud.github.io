@@ -193,6 +193,108 @@
             .account-select { flex: 0 1 auto; max-width: 200px; }
         }
 
+        /* 版本徽章（账号选择器旁，已废弃但保留 class 兼容） */
+        .server-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: var(--fs-xs); font-weight: var(--fw-bold);
+            padding: 4px 10px; border-radius: 999px;
+            line-height: 1.1; flex-shrink: 0;
+            border: 1px solid transparent;
+            letter-spacing: 0.02em;
+        }
+        .server-badge.ry  { background: #FDF1DD; color: #8b5a00; border-color: #E8C97A; }
+        .server-badge.dyy { background: #E0EAFC; color: #2D4A8A; border-color: #A8C0E8; }
+        .server-badge.hidden { display: none; }
+
+        /* logo 旁的服别粗徽章（可点击）— 与 .btn-announce 高度对齐 */
+        .server-pill {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: var(--fs-xs); font-weight: var(--fw-bold);
+            padding: 5px 10px; border-radius: 99px;
+            line-height: 1; flex-shrink: 0;
+            border: none;
+            letter-spacing: 0.02em;
+            cursor: pointer; font-family: inherit;
+            align-self: center;
+            white-space: nowrap;
+            transition: all .15s;
+        }
+        .server-pill.ry  { background: #FDF1DD; color: #8b5a00; }
+        .server-pill.dyy { background: #E0EAFC; color: #2D4A8A; }
+        .server-pill.ry:hover  { background: #FBE5BC; }
+        .server-pill.dyy:hover { background: #CFDFFA; }
+        .server-pill.hidden { display: none; }
+
+        /* 服别说明 modal 里的提示条样式 */
+        .server-info-detail {
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: var(--fs-sm);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .server-info-detail.ry  { background: #FDF8EC; border: 1px solid #EFD9A8; color: #6e4500; }
+        .server-info-detail.dyy { background: #EEF3FC; border: 1px solid #C5D4ED; color: #2d4470; }
+
+        /* 如鸢服未开放密探整张卡片：灰调（跟"未拥有"用同一色调系，区别于"已解锁"的绿调） */
+        details.agent-not-on-server {
+            opacity: 0.6;
+        }
+        details.agent-not-on-server > summary,
+        details.agent-not-on-server[open] > summary {
+            background: #EAE7E2 !important;
+            color: #8a8580 !important;
+        }
+        details.agent-not-on-server .agent-title-name,
+        details.agent-not-on-server .agent-tag,
+        details.agent-not-on-server .comp-tag {
+            color: #8a8580 !important;
+        }
+        details.agent-not-on-server .mini-bar-fill {
+            background: #ABA6A0 !important;
+        }
+        /* 未开放密探后面附加小标记（只在 summary 内显示） */
+        details.agent-not-on-server .agent-title-left::after {
+            content: " · 如鸢未开放";
+            font-size: 0.7rem;
+            color: #9A9590;
+            margin-left: 4px;
+            font-weight: var(--fw-regular);
+            white-space: nowrap;
+        }
+
+        /* 如鸢服未开放羁绊 - 灰透 */
+        .bond-cell.locked-ry, .pokedex-cell.locked-ry, .pokedex-row.locked-ry {
+            opacity: 0.42; filter: grayscale(0.5);
+            pointer-events: none;
+            position: relative;
+        }
+        .weather-grid.locked-ry {
+            opacity: 0.45;
+            filter: grayscale(0.55);
+        }
+        .weather-grid.locked-ry .weather-item {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .bond-not-yet-tag {
+            display: inline-block;
+            font-size: var(--fs-xs);
+            background: #F2EBE0; color: #B4A084;
+            padding: 1px 6px; border-radius: 4px;
+            margin-left: 6px; line-height: 1.3;
+            font-weight: var(--fw-medium);
+            letter-spacing: 0.02em;
+        }
+
+        /* 密探库里如鸢未开放密探 - 不可点（用不同灰色和用户自标的"未拥有"区分） */
+        .owned-agent-btn.not-on-ry {
+            background: #E8E0CF; color: #9A8770;
+            cursor: not-allowed; pointer-events: none;
+            opacity: 0.85;
+            border: 1px dashed #C9B997;
+        }
+
         .btn-icon {
             background: var(--card2); border: none;
             cursor: pointer; font-size: var(--fs-md);
@@ -495,7 +597,24 @@
             user-select: none; transition: background .15s; list-style: none;
         }
         summary::marker, summary::-webkit-details-marker { display: none; }
-        details.agent-completed { opacity: 0.55; filter: grayscale(20%); }
+        /* 已解锁密探：背景不变 + 水兰边框 + 名字低饱和蓝 */
+        details.agent-completed {
+            opacity: 0.6;
+            border-color: #7FB8C4 !important;
+        }
+        details.agent-completed > summary,
+        details.agent-completed[open] > summary {
+            background: transparent !important;
+        }
+        details.agent-completed[open] > summary {
+            border-bottom-color: #B8DCE3 !important;
+        }
+        details.agent-completed .agent-title-name {
+            color: #5C8A98 !important;
+        }
+        details.agent-completed .mini-bar-fill {
+            background: #5C8A98 !important;
+        }
         details[open] summary { border-bottom: 1px solid var(--border); border-radius: var(--r) var(--r) 0 0; background: transparent; }
 
         .agent-title-left { display: flex; align-items: center; font-weight: var(--fw-semibold); font-size: var(--fs-lg); gap: var(--s-2); flex: 1; min-width: 0; flex-wrap: wrap; }
@@ -524,7 +643,7 @@
             font-variant-numeric: tabular-nums;
             letter-spacing: -0.2px;
         }
-        details.agent-completed .comp-tag { color: var(--success); border-color: var(--success); background: rgba(90,128,32,0.08); }
+        details.agent-completed .comp-tag { color: #5C8A98; border-color: #7FB8C4; background: rgba(92,138,152,0.08); }
 
         /* 部门分组 */
         /* 内容区 */
@@ -661,7 +780,12 @@
         .btn-revert:hover { background: var(--card3); }
         .result-group-title { font-weight: var(--fw-semibold); color: var(--success); margin-bottom: var(--s-2); font-size: var(--fs-sm); padding-left: 2px; }
         .done-items { margin-top: var(--s-4); }
-        .done-items .results-grid { opacity: 0.55; }
+        .done-items .results-grid { opacity: 0.6; }
+        .done-items .result-item {
+            background: transparent;
+            border-color: #7FB8C4 !important;
+        }
+        .done-items .member-name { color: #5C8A98; }
 
         /* 引导卡片 */
         .onboarding-card {
@@ -1274,6 +1398,7 @@
                 <button class="btn-announce" id="btn-announce" onclick="openAnnounceModal()" title="最新公告">
                     最新公告<span class="announce-dot" id="announce-dot"></span>
                 </button>
+                <button class="server-pill hidden" id="server-pill" onclick="openServerInfoModal()" title="点击查看服别说明"></button>
             </div>
             <div class="nav-ctrl-row">
                 <select id="account-select" class="account-select" onchange="switchAccount()"></select>
@@ -1344,7 +1469,7 @@
                 <div class="intro-step-num">1</div>
                 <div class="intro-step-body">
                     <span class="intro-step-title">建立账号</span>
-                    <p>点击右上角 <span class="intro-icon">＋</span>，建议填入游戏角色名。每个账号进度独立，可建多个账号分别记录大小鸟。</p>
+                    <p>点击右上角 <span class="intro-icon">＋</span>，建议填入游戏角色名。建账号时选择对应服别（🐤 如鸢 / 🦅 代号鸢），即可分别管理两服的进度。</p>
                 </div>
             </div>
 
@@ -1397,7 +1522,7 @@
                     <div class="btn-intro-icon highlight">＋</div>
                     <div class="btn-intro-body">
                         <span class="btn-intro-name">新增账号</span>
-                        建立账号，可分别记录大鸟（如鸢）和小鸟（代号鸢）
+                        建立账号，分别记录如鸢与代号鸢的进度
                     </div>
                 </div>
                 <div class="btn-intro-row">
@@ -1422,10 +1547,17 @@
                     </div>
                 </div>
                 <div class="btn-intro-row">
-                    <div class="btn-intro-icon announce-preview">最新公告</div>
+                    <div class="btn-intro-icon announce-preview">公告</div>
                     <div class="btn-intro-body">
                         <span class="btn-intro-name">最新公告</span>
                         查看重大更新通知。有未读时按钮变粉红色 + 小红点
+                    </div>
+                </div>
+                <div class="btn-intro-row">
+                    <div class="btn-intro-icon"><span class="server-badge ry" style="font-size:.65rem;padding:2px 6px;">🐤 如鸢</span></div>
+                    <div class="btn-intro-body">
+                        <span class="btn-intro-name">服别徽章</span>
+                        显示当前账号所在服别（🐤 如鸢 / 🦅 代号鸢），右侧数字是已开放羁绊数。点击查看详细说明
                     </div>
                 </div>
                 <div class="btn-intro-row" style="border-bottom:none;">
@@ -1456,6 +1588,16 @@
         <div class="announce-modal-box">
             <button class="announce-modal-close" onclick="closeAnnounceModal()" aria-label="关闭">✕</button>
             <h2>📢 最新公告</h2>
+
+            <div class="announce-entry">
+                <div class="announce-entry-date">2026/5/1</div>
+                <div class="announce-entry-title">🆕 拆分「如鸢 / 代号鸢」资料</div>
+                <div class="announce-entry-body">
+                    工具现在可以分别管理两服的进度了。<br>
+                    建立账号时选「<span class="server-badge ry" style="font-size:.7rem;padding:2px 6px;">🐤 如鸢</span>」或「<span class="server-badge dyy" style="font-size:.7rem;padding:2px 6px;">🦅 代号鸢</span>」即可。<br><br>
+                    点击顶部账号旁的服徽章可查看当前服资料详情。
+                </div>
+            </div>
 
             <div class="announce-entry">
                 <div class="announce-entry-date">2026/4/28</div>
@@ -1622,29 +1764,18 @@
             <div class="sub-tab active" onclick="switchSubTab('changelog', this)">🎉 更新日志</div>
             <div class="sub-tab" onclick="switchSubTab('howto', this)">📖 使用说明</div>
             <div class="sub-tab" onclick="switchSubTab('refdata', this)">📋 资料留存</div>
+            <div class="sub-tab" id="sub-tab-devtool" style="display:none;" onclick="switchSubTab('devtool', this)">🛠️ 跨服差异</div>
         </div>
 
         <!-- 更新日志 -->
         <div class="sub-view active" id="sub-changelog">
             <div class="entry-card" style="margin-bottom:14px;">
-                <div style="font-size:0.88rem;font-weight:bold;color:var(--highlight);margin-bottom:10px;">2026/4/28 更新</div>
+                <div style="font-size:0.88rem;font-weight:bold;color:var(--highlight);margin-bottom:10px;">2026/5/1 更新</div>
                 <div style="font-size:0.85rem;color:var(--primary);line-height:1.9;">
-                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">📄 资料更新</div>
-                    <div>• 已同步游戏 <strong>3月30日</strong> 与 <strong>4月16日</strong> 两次版本更新的新增羁绊配对，共新增 <strong>41 位</strong>密探（周瑜、诸葛亮、曹丕等）</div>
-                    <div>• 新增羁绊在开图鉴和资料留存中标注 <span class="new-badge">NEW</span>，状态筛选选「🆕 新羁绊」可快速查看</div>
-                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">🆕 新功能</div>
-                    <div>• 新增「管理拥有的密探」：标记未拥有的密探隐藏对应羁绊，支持大小鸟分服独立管理</div>
-                    <div>• 进度条新增「我的 / 全部」切换：选「我的」只统计自己拥有的密探之间的羁绊，让卡池小的玩家也能达成 100%</div>
-                    <div>• 状态筛选新增「隐藏已完成」开关</div>
-                    <div>• 解锁羁缘成就时新增庆祝动画 🎉</div>
-                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">💾 备份更安心</div>
-                    <div>• 修复夸克 / UC 等浏览器点导出无反应的问题</div>
-                    <div>• 导入前显示预览，并可选择「合并」或「覆盖」模式</div>
-                    <div>• 导出文件名自动加日期时间戳</div>
-                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">📝 其他</div>
-                    <div>• 顶部新增 💬 资料错误回报按钮，全局可见</div>
-                    <div>• 顶部新增 📋 「更多」入口，包含使用说明、资料留存、更新日志</div>
-                    <div>• 整体 UI 视觉优化</div>
+                    <div style="opacity:.85;margin-bottom:6px;">本次重大更新（如鸢 / 代号鸢资料拆分）详情请见 📢 最新公告。以下为附属小调整：</div>
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">🎨 UI 优化</div>
+                    <div>• 已解锁的密探卡片改为蓝色调，跟未拥有 / 未开放的灰调清楚区分</div>
+                    <div>• 顶部新增可点击的服别徽章，显示当前服羁绊数量</div>
                 </div>
             </div>
             <div class="entry-card" style="margin-bottom:14px;">
@@ -1708,8 +1839,18 @@
                     </div>
 
                     <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
-                        <div style="font-size:0.85rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">大鸟小鸟进度怎么分开记录？</div>
-                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">建立两个账号，分别在「管理拥有的密探」标记各服没有的密探，即可独立追踪两边进度。</div>
+                        <div style="font-size:0.85rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">如鸢与代号鸢进度怎么分开记录？</div>
+                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">建立账号时选择对应服别（🐤 如鸢 / 🦅 代号鸢），工具会自动切换该服的羁绊资料。两服可同时管理，互不影响。</div>
+                    </div>
+
+                    <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
+                        <div style="font-size:0.85rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">为什么有些密探卡片是灰的、点不动？</div>
+                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">如鸢服里如果某密探完全还没开放任何羁绊，他的卡片会自动灰掉、暂时不可点（避免标记后游戏更新时混乱）。开放后会自动恢复。<br>另一种灰色是用户在「管理拥有的密探」里标过「我没有」，可点击该按钮重新启用。</div>
+                    </div>
+
+                    <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
+                        <div style="font-size:0.85rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">为什么我看到的羁绊比朋友少？</div>
+                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">如鸢上线进度比代号鸢慢，目前如鸢服显示 <strong>97 组</strong>羁绊、代号鸢服 <strong>159 组</strong>。点击顶部账号旁的服徽章可看详细数量。</div>
                     </div>
 
                     <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
@@ -1730,7 +1871,12 @@
         <!-- 资料留存 -->
         <div class="sub-view" id="sub-refdata">
             <div class="intro-box" style="margin-bottom:15px;">
-                <p>此处展示所有已录入的羁绊原始资料，供用户核对正确性。<span style="color:#2a6e2a;font-weight:bold;">绿</span> = 一拍即合，<span style="color:#a03030;font-weight:bold;">红</span> = 貌合神离。<br><span style="color:#888;font-size:0.85rem;">如有错误请点击右上角的 <span style="background:var(--card2);border-radius:4px;padding:0 5px;font-size:0.95em;">💬</span> 让作者修正。</span></p>
+                <p>此处展示<strong id="ref-server-label">当前服</strong>已录入的羁绊原始资料，供用户核对正确性。<span style="color:#2a6e2a;font-weight:bold;">绿</span> = 一拍即合，<span style="color:#a03030;font-weight:bold;">红</span> = 貌合神离。<br><span style="color:#888;font-size:0.85rem;">如有错误请点击右上角的 <span style="background:var(--card2);border-radius:4px;padding:0 5px;font-size:0.95em;">💬</span> 让作者修正。切换账号即切换对应服资料。</span></p>
+                <div style="margin-top:10px;padding-top:10px;border-top:1px dashed #d8c8b6;font-size:0.78rem;color:#7A6355;line-height:1.7;">
+                    💝 <strong style="color:#A8655E;">资料来源致谢</strong><br>
+                    🦅 代号鸢羁绊：<a href="https://wiki.biligame.com/yuan/%E5%AF%86%E6%8E%A2%E7%BE%81%E7%BB%8A" target="_blank" rel="noopener" style="color:#A8655E;text-decoration:underline;">代号鸢 Wiki · 密探羁绊</a><br>
+                    🐤 如鸢羁绊：小红书 <strong>@橙子大王</strong>
+                </div>
             </div>
             <div class="filter-panel">
                 <div class="filter-row">
@@ -1772,6 +1918,33 @@
             </div>
             <div id="ref-agent-nav" class="ref-agent-nav-wrap"></div>
             <div id="ref-content"></div>
+        </div>
+
+        <!-- 跨服差异维护工具（仅 URL 加 #dev 时显示） -->
+        <div class="sub-view" id="sub-devtool">
+            <div class="intro-box" style="margin-bottom:15px;">
+                <p>🛠️ <strong>跨服差异维护工具（作者用）</strong><br>
+                勾选每条羁绊在哪一服没上线。改动会先存在浏览器（不影响原始 rawData），改完点「导出 rawData 片段」生成可贴回 index.html 的代码。</p>
+                <p style="font-size:.78rem;color:#888;margin-top:6px;">⚠️ 当前作用：仅当前浏览器内生效。要永久应用，需把导出片段贴回 rawData 后重新发布。</p>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+                <button class="btn-small" onclick="devToolRefresh()">🔄 刷新列表</button>
+                <button class="btn-small" onclick="devToolExport()">📤 导出 rawData 片段</button>
+                <button class="btn-small" onclick="devToolReset()" style="color:#a04040;">🗑️ 清除所有标记</button>
+            </div>
+            <div style="background:var(--card2);padding:10px;border-radius:8px;margin-bottom:12px;font-size:.82rem;color:var(--primary);">
+                筛选：
+                <select id="dev-filter-act" onchange="devToolRefresh()" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);">
+                    <option value="">全部情报</option>
+                    <option value="纵火">纵火</option><option value="传谣">传谣</option>
+                    <option value="下毒">下毒</option><option value="卧底">卧底</option>
+                    <option value="搜集">搜集</option><option value="灭火">灭火</option>
+                    <option value="净水">净水</option><option value="营救">营救</option>
+                </select>
+                &nbsp;<input type="text" id="dev-filter-search" oninput="devToolRefresh()" placeholder="搜密探名…" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);width:130px;">
+                &nbsp;<label style="cursor:pointer;"><input type="checkbox" id="dev-filter-marked" onchange="devToolRefresh()"> 仅看已标记</label>
+            </div>
+            <div id="dev-tool-list" style="font-size:.85rem;"></div>
         </div>
     </div>
 </div>
@@ -1996,7 +2169,7 @@
         "伍丹":{"dept":"蛾部","attr":"地","rar":"蓝"},
         "李真":{"dept":"蜂部","attr":"水","rar":"蓝"},
         "李脱":{"dept":"蜂部","attr":"地","rar":"蓝"},
-        "绣球":{"dept":"蜂部","attr":"水","rar":"蓝"},
+        "绣球":{"dept":"蜂部","attr":"风","rar":"蓝"},
         "蛾使":{"dept":"蛾部","attr":"地","rar":"蓝"},
         "雀使":{"dept":"雀部","attr":"风","rar":"蓝"},
         "飞云":{"dept":"蜂部","attr":"火","rar":"蓝"}
@@ -2060,7 +2233,8 @@
         "飞云,绣球|卧底||+",
         "陆逊,吕蒙,鲁肃|卧底||+",
         "华佗,吕蒙|卧底||-",
-        "阿蝉,伍丹|卧底||+",
+        "阿蝉,伍丹|卧底|晴天,大雾,狂风,小雪,大雪,飓风,雷鸣|+",
+        "阿蝉,伍丹|卧底|雨天|-",
         "张辽,阿蝉|卧底||+",
         "严白虎,小乔|卧底||+",
         "李脱,李真|卧底|大雾|+",
@@ -2103,78 +2277,78 @@
         "张辽,阿蝉|营救|大雾|+",
         "张仲景,郭解,孙尚香|营救|晴天|+",
         // ── 新增羁绊（游戏版本更新）──
-        "张辽,阿蝉,吕布|纵火||+",
-        "张辽,阿蝉,吕布|下毒||+",
-        "张辽,阿蝉,吕布|卧底||-",
-        "庞羲,刘璋|纵火||-",
-        "庞羲,刘璋|传谣||+",
+        "张辽,阿蝉,吕布|纵火||+|no_ry",
+        "张辽,阿蝉,吕布|下毒||+|no_ry",
+        "张辽,阿蝉,吕布|卧底||-|no_ry",
+        "庞羲,刘璋|纵火||-|no_ry",
+        "庞羲,刘璋|传谣||+|no_ry",
         "干吉,张修|纵火|晴天,雨天,大雪|-",
         "干吉,张修|传谣|晴天|-",
-        "士燮,董奉|纵火||+",
-        "士燮,董奉|下毒||-",
-        "士燮,董奉|卧底||-",
-        "祢衡,凌统|纵火||+",
-        "祢衡,凌统|下毒||+",
-        "马超,董白|纵火||+",
-        "马超,董白|营救||-",
-        "周忠,简雍|纵火||+",
-        "周忠,简雍|搜集||-",
-        "张燕,戏学|纵火||+",
-        "张燕,戏学|卧底||+",
-        "钟繇,程昱|纵火||+",
-        "钟繇,程昱|搜集||+",
-        "黄盖,程普|纵火||-",
-        "庞羲,刘璋,法正|纵火||-",
-        "庞羲,刘璋,法正|搜集||+",
+        "士燮,董奉|纵火||+|no_ry",
+        "士燮,董奉|下毒||-|no_ry",
+        "士燮,董奉|卧底||-|no_ry",
+        "祢衡,凌统|纵火||+|no_ry",
+        "祢衡,凌统|下毒||+|no_ry",
+        "马超,董白|纵火||+|no_ry",
+        "马超,董白|营救||-|no_ry",
+        "周忠,简雍|纵火||+|no_ry",
+        "周忠,简雍|搜集||-|no_ry",
+        "张燕,戏学|纵火||+|no_ry",
+        "张燕,戏学|卧底||+|no_ry",
+        "钟繇,程昱|纵火||+|no_ry",
+        "钟繇,程昱|搜集||+|no_ry",
+        "黄盖,程普|纵火||-|no_ry",
+        "庞羲,刘璋,法正|纵火||-|no_ry",
+        "庞羲,刘璋,法正|搜集||+|no_ry",
         "周瑜,小乔|纵火|雨天|-",
         "周瑜,小乔|传谣|雨天|-",
         "周瑜,小乔|搜集||+",
-        "诸葛亮,周瑜|纵火||+",
-        "诸葛亮,周瑜|营救||-",
-        "郭女王,曹丕|纵火||+",
-        "郭女王,曹丕|下毒||-",
-        "甄宓,曹丕|纵火||+",
-        "甄宓,曹丕|搜集||-",
-        "诸葛瑾,诸葛诞|传谣||+",
-        "诸葛瑾,诸葛诞|卧底||+",
-        "酆公珠,酆公玖|传谣||+",
-        "酆公珠,酆公玖|营救||-",
+        "诸葛亮,周瑜|纵火||+|no_ry",
+        "诸葛亮,周瑜|营救||-|no_ry",
+        "郭女王,曹丕|纵火||+|no_ry",
+        "郭女王,曹丕|下毒||-|no_ry",
+        "甄宓,曹丕|纵火||+|no_ry",
+        "甄宓,曹丕|搜集||-|no_ry",
+        "诸葛瑾,诸葛诞|传谣||+|no_ry",
+        "诸葛瑾,诸葛诞|卧底||+|no_ry",
+        "酆公珠,酆公玖|传谣||+|no_ry",
+        "酆公珠,酆公玖|营救||-|no_ry",
         "郭嘉,贾诩,荀彧|传谣||+",
         "郭嘉,贾诩,荀彧|卧底|雨天|-",
-        "徐庶,令狐茂|传谣||-",
-        "徐庶,令狐茂|营救||+",
-        "凌统,朱然,虞翻|传谣||-",
-        "凌统,朱然,虞翻|下毒||-",
-        "凌统,朱然,虞翻|卧底||+",
-        "诸葛瑾,诸葛亮,诸葛诞|下毒||-",
-        "诸葛瑾,诸葛亮,诸葛诞|营救||+",
-        "飞云,张绣|下毒||-",
-        "飞云,张绣|搜集||+",
-        "蒯越,蒯良|下毒||+",
-        "蒯越,蒯良|搜集||-",
-        "张绣,贾诩|下毒||+",
-        "张绣,贾诩|净水||-",
+        "徐庶,令狐茂|传谣||-|no_ry",
+        "徐庶,令狐茂|营救||+|no_ry",
+        "凌统,朱然,虞翻|传谣||-|no_ry",
+        "凌统,朱然,虞翻|下毒||-|no_ry",
+        "凌统,朱然,虞翻|卧底||+|no_ry",
+        "诸葛瑾,诸葛亮,诸葛诞|下毒||-|no_ry",
+        "诸葛瑾,诸葛亮,诸葛诞|营救||+|no_ry",
+        "飞云,张绣|下毒||-|no_ry",
+        "飞云,张绣|搜集||+|no_ry",
+        "蒯越,蒯良|下毒||+|no_ry",
+        "蒯越,蒯良|搜集||-|no_ry",
+        "张绣,贾诩|下毒||+|no_ry",
+        "张绣,贾诩|净水||-|no_ry",
         "葛洪,华佗|下毒||+",
-        "荀彧,荀攸|卧底||+",
-        "荀彧,荀攸|净水||-",
-        "郭女王,甄宓|卧底||-",
-        "郭女王,甄宓|净水||+",
-        "曹丕,曹植|卧底||-",
-        "曹丕,曹植|净水||+",
-        "马超,庞德|卧底||-",
-        "周忠,卢植|卧底||-",
-        "周忠,卢植|搜集||+",
-        "张昭,虞翻|搜集||+",
+        "荀彧,荀攸|卧底||+|no_ry",
+        "荀彧,荀攸|净水||-|no_ry",
+        "郭女王,甄宓|卧底||-|no_ry",
+        "郭女王,甄宓|净水||+|no_ry",
+        "曹丕,曹植|卧底||-|no_ry",
+        "曹丕,曹植|净水||+|no_ry",
+        "马超,庞德|卧底||-|no_ry",
+        "周忠,卢植|卧底||-|no_ry",
+        "周忠,卢植|搜集||+|no_ry",
+        "张昭,虞翻|搜集||+|no_ry",
         "周瑜,鲁肃,陆逊|灭火||+",
-        "钟繇,荀攸|灭火||-",
-        "钟繇,荀攸|营救||-",
-        "蔡琰,王异,刘豹|灭火||+",
-        "董奉,陈登,张邈|灭火||+",
-        "董奉,陈登,张邈|净水||+",
-        "董奉,陈登,张邈|营救||+",
+        "钟繇,荀攸|灭火||-|no_ry",
+        "钟繇,荀攸|营救||-|no_ry",
+        "蔡琰,王异,刘豹|灭火||+|no_ry",
+        "董奉,陈登,张邈|灭火||+|no_ry",
+        "董奉,陈登,张邈|净水||+|no_ry",
+        "董奉,陈登,张邈|营救||+|no_ry",
         "干吉,许曼|营救||+",
-        "庞德,马腾|营救||+",
-        "小乔,周忠|营救||+"
+        "庞德,马腾|营救||+|no_ry",
+        "小乔,周忠|营救||+|no_ry"
     ];
 
     // 新增羁绊配对集合（用于显示 NEW 标记）
@@ -2245,6 +2419,9 @@
     function renderOwnedModal() {
         const cnt = document.getElementById('owned-modal-content');
         const missing = getMissingAgents();
+        const curServer = getCurrentServer();
+        const isRy = curServer === 'ry';
+        const ryAgents = serverStats.ryAgents;  // 在如鸢里有出现的密探集合
         const rarGroups = [
             { rar:'金', label:'🟡 绝密（金卡）' },
             { rar:'紫', label:'🟣 机密（紫卡）' },
@@ -2262,6 +2439,10 @@
                 if (!agents.length) return '';
                 const btns = agents.map(name => {
                     const isMissing = missing.has(name);
+                    const isNotOnRy = isRy && !ryAgents.has(name);
+                    if (isNotOnRy) {
+                        return `<button class="owned-agent-btn not-on-ry" disabled>${name}</button>`;
+                    }
                     return `<button class="owned-agent-btn${isMissing?' missing':''}" onclick="toggleMissing('${name}')">${name}</button>`;
                 }).join('');
                 return `<div style="margin-bottom:10px;">
@@ -2301,6 +2482,128 @@
     let allAccounts = JSON.parse(localStorage.getItem('yuan_all_accounts')) || {};
     let currentAccount = localStorage.getItem('yuan_current_account');
 
+    // ── 账号 key 工具函数 ─────────────────────────────────
+    // 底层 key 格式: "ry::名字" 或 "dyy::名字"
+    // 旧版兼容：纯名字（无 :: 前缀）也接受
+    function makeAccountKey(server, name) {
+        return server + '::' + name;
+    }
+    function parseAccountKey(key) {
+        if (!key) return { server: null, name: null };
+        const i = key.indexOf('::');
+        if (i < 0) return { server: null, name: key };  // 旧式 key
+        return { server: key.substring(0, i), name: key.substring(i + 2) };
+    }
+    function getAccountServer(key) {
+        // 优先看 key 前缀，其次看 __server__ 字段，最后看名字前缀
+        const parsed = parseAccountKey(key);
+        if (parsed.server === 'ry' || parsed.server === 'dyy') return parsed.server;
+        const acc = allAccounts[key] || {};
+        if (acc.__server__ === 'ry' || acc.__server__ === 'dyy') return acc.__server__;
+        if (key && key.startsWith('代号鸢')) return 'dyy';
+        if (key && key.startsWith('如鸢')) return 'ry';
+        return 'dyy';
+    }
+    function getAccountName(key) {
+        // 显示用名字（不含前缀）
+        const parsed = parseAccountKey(key);
+        return parsed.name || key || '';
+    }
+
+    // 把导入数据里的旧格式 key 统一迁移为 server::name
+    function migrateImportedKeys(imported) {
+        const out = {};
+        Object.keys(imported).forEach(k => {
+            const acc = imported[k] || {};
+            // 已是新格式
+            if (k.startsWith('ry::') || k.startsWith('dyy::')) {
+                out[k] = acc;
+                return;
+            }
+            let server = acc.__server__;
+            let pureName = k;
+            if (!server) {
+                if (k.startsWith('如鸢 - ') || k.startsWith('如鸢-')) {
+                    server = 'ry';
+                    pureName = k.replace(/^如鸢\s*-\s*/, '').trim() || k;
+                } else if (k.startsWith('代号鸢 - ') || k.startsWith('代号鸢-')) {
+                    server = 'dyy';
+                    pureName = k.replace(/^代号鸢\s*-\s*/, '').trim() || k;
+                } else {
+                    server = 'dyy';  // 旧默认
+                }
+            } else {
+                if (k.startsWith('如鸢 - ') || k.startsWith('如鸢-')) {
+                    pureName = k.replace(/^如鸢\s*-\s*/, '').trim() || k;
+                } else if (k.startsWith('代号鸢 - ') || k.startsWith('代号鸢-')) {
+                    pureName = k.replace(/^代号鸢\s*-\s*/, '').trim() || k;
+                }
+            }
+            const newKey = makeAccountKey(server, pureName);
+            out[newKey] = { ...acc, __server__: server };
+        });
+        return out;
+    }
+
+    // ── 旧账号迁移：所有账号 key 统一为 server::name 格式 ──
+    (function migrateOldAccounts() {
+        const migrated = {};
+        let needSave = false;
+        let renamedCurrent = null;
+        Object.keys(allAccounts).forEach(name => {
+            const acc = allAccounts[name] || {};
+            // 已经是 server::name 格式 → 不动
+            if (name.startsWith('ry::') || name.startsWith('dyy::')) {
+                migrated[name] = acc;
+                return;
+            }
+            // 推断 server
+            let server = acc.__server__;
+            let pureName = name;
+            if (!server) {
+                if (name.startsWith('如鸢 - ') || name.startsWith('如鸢-')) {
+                    server = 'ry';
+                    pureName = name.replace(/^如鸢\s*-\s*/, '').trim() || name;
+                } else if (name.startsWith('代号鸢 - ') || name.startsWith('代号鸢-')) {
+                    server = 'dyy';
+                    pureName = name.replace(/^代号鸢\s*-\s*/, '').trim() || name;
+                } else {
+                    // 实在判断不出来 → 默认代号鸢（资料完整版）
+                    server = 'dyy';
+                }
+            } else {
+                // 有 __server__，但名字可能仍带前缀
+                if (name.startsWith('如鸢 - ') || name.startsWith('如鸢-')) {
+                    pureName = name.replace(/^如鸢\s*-\s*/, '').trim() || name;
+                } else if (name.startsWith('代号鸢 - ') || name.startsWith('代号鸢-')) {
+                    pureName = name.replace(/^代号鸢\s*-\s*/, '').trim() || name;
+                }
+            }
+            const newKey = makeAccountKey(server, pureName);
+            const newAcc = { ...acc, __server__: server };
+            // 如果撞到已有的 key，加后缀避免覆盖（同一服内同名很罕见，保护用户数据）
+            let finalKey = newKey;
+            let suffix = 2;
+            while (migrated[finalKey]) {
+                finalKey = makeAccountKey(server, pureName + ' (' + suffix + ')');
+                suffix++;
+            }
+            migrated[finalKey] = newAcc;
+            if (finalKey !== name) {
+                needSave = true;
+                if (currentAccount === name) renamedCurrent = finalKey;
+            }
+        });
+        if (needSave) {
+            allAccounts = migrated;
+            localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+            if (renamedCurrent) {
+                currentAccount = renamedCurrent;
+                localStorage.setItem('yuan_current_account', currentAccount);
+            }
+        }
+    })();
+
     function toggleMilestones() {
         const row = document.getElementById('milestone-row');
         const arrow = document.getElementById('ms-arrow');
@@ -2332,20 +2635,20 @@
         if (!nameInput) return;
         var name = nameInput.value.trim();
         if (!name) { nameInput.focus(); return; }
-        var prefix = selectedVer === 2 ? '代号鸢' : '如鸢';
-        var fullName = prefix + ' - ' + name;
-        if (allAccounts[fullName]) { showToast(T('alert_dup'), true); return; }
-        allAccounts[fullName] = {};
+        var serverCode = selectedVer === 2 ? 'dyy' : 'ry';
+        var key = makeAccountKey(serverCode, name);
+        if (allAccounts[key]) { showToast(T('alert_dup'), true); return; }
+        allAccounts[key] = { __server__: serverCode };
         localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
-        currentAccount = fullName;
+        currentAccount = key;
         localStorage.setItem('yuan_current_account', currentAccount);
         closeAddModal();
+        buildData();
         updateAccountUI();
         renderPokedex();
         // P0-4: 新建账号后自动引导设置「拥有的密探」
         try {
-            const dismissedKey = 'yuan_owned_nudge_dismissed_' + fullName;
-            // 新账号默认显示提示（除非用户全局选过"不再提示"）
+            const dismissedKey = 'yuan_owned_nudge_dismissed_' + key;
             if (localStorage.getItem('yuan_owned_nudge_global_off') !== '1') {
                 localStorage.removeItem(dismissedKey);
                 checkOwnedNudge();
@@ -2356,7 +2659,7 @@
 
     // 公告系统
     // 当 ANNOUNCE_VERSION 比 storage 大时显示红点；用户点开后写入 storage 同步版本
-    const ANNOUNCE_VERSION = 1;  // 每次新增重大公告时 +1
+    const ANNOUNCE_VERSION = 2;  // 每次新增重大公告时 +1
     function checkBellDot() {
         let seen = 0;
         try { seen = parseInt(localStorage.getItem('yuan_announce_seen_v') || '0', 10); } catch(e) {}
@@ -2438,9 +2741,98 @@
             if (ob) ob.style.display = 'block';
         } else {
             if (!currentAccount || !allAccounts[currentAccount]) currentAccount = Object.keys(allAccounts)[0];
-            sel.innerHTML = Object.keys(allAccounts).map(n => `<option value="${n}"${n===currentAccount?' selected':''}>${n}</option>`).join('');
+            sel.innerHTML = Object.keys(allAccounts).map(k => {
+                const srv = getAccountServer(k);
+                const nm = getAccountName(k);
+                const label = srv === 'ry' ? `🐤如鸢 - ${nm}` : `🦅代号鸢 - ${nm}`;
+                return `<option value="${k}"${k===currentAccount?' selected':''}>${label}</option>`;
+            }).join('');
             if (ob) ob.style.display = 'none';
         }
+        updateServerBadge();
+    }
+
+    // 当前服别相关的全局缓存（一服两服各多少组羁绊、哪些密探在如鸢里没出现）
+    let serverStats = { ryGroups: 0, dyyGroups: 0, ryAgents: new Set(), dyyAgents: new Set() };
+    function recalcServerStats() {
+        const ryG = new Set(), dyyG = new Set();
+        const ryA = new Set(), dyyA = new Set();
+        rawData.forEach(row => {
+            const parts = row.split('|');
+            const tag = (parts[4] && parts[4].trim()) ? parts[4].trim() : 'both';
+            const members = parts[0].split(',');
+            const k = [...members].sort().join(',') + '|' + parts[1];
+            if (tag !== 'no_ry') {
+                ryG.add(k);
+                members.forEach(m => ryA.add(m));
+            }
+            if (tag !== 'no_dyy') {
+                dyyG.add(k);
+                members.forEach(m => dyyA.add(m));
+            }
+        });
+        serverStats = { ryGroups: ryG.size, dyyGroups: dyyG.size, ryAgents: ryA, dyyAgents: dyyA };
+    }
+
+    function updateServerBadge() {
+        const pill = document.getElementById('server-pill');
+        if (!pill) return;
+        if (!currentAccount) { pill.classList.add('hidden'); return; }
+        const srv = getCurrentServer();
+        pill.classList.remove('hidden');
+        if (srv === 'ry') {
+            pill.className = 'server-pill ry';
+            pill.innerHTML = `🐤 如鸢 · ${serverStats.ryGroups}/${serverStats.dyyGroups}`;
+            pill.title = '如鸢服 · 点击查看说明';
+        } else {
+            pill.className = 'server-pill dyy';
+            pill.innerHTML = `🦅 代号鸢 · ${serverStats.dyyGroups}`;
+            pill.title = '代号鸢服 · 点击查看说明';
+        }
+    }
+
+    // 服别说明 modal
+    function openServerInfoModal() {
+        if (!currentAccount) return;
+        const srv = getCurrentServer();
+        const id = 'server-info-modal';
+        let m = document.getElementById(id);
+        if (!m) {
+            m = document.createElement('div');
+            m.id = id;
+            m.className = 'modal-overlay';
+            document.body.appendChild(m);
+            m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
+        }
+        const ryGroups = serverStats.ryGroups, dyyGroups = serverStats.dyyGroups;
+        const ryNotOn = dyyGroups - ryGroups;
+        if (srv === 'ry') {
+            m.innerHTML = `<div class="modal-box" style="max-width:380px;">
+                <div class="modal-title">🐤 如鸢服资料说明</div>
+                <div class="server-info-detail ry">
+                    当前账号在 <strong>如鸢</strong>。<br><br>
+                    工具显示已开放 <strong>${ryGroups}</strong> 组羁绊；<br>
+                    代号鸢服已有 <strong>${dyyGroups}</strong> 组（其中 <strong>${ryNotOn}</strong> 组如鸢暂未开放）。<br><br>
+                    <span style="opacity:.85;">暂未开放的羁绊会以「<span class="bond-not-yet-tag">如鸢未开放</span>」标注（灰透显示，不可解锁）；如果某个密探在如鸢里完全没有任何羁绊，他在密探库内也会变灰不可选。</span>
+                </div>
+                <div style="font-size:.78rem;color:#999;line-height:1.6;margin-bottom:12px;">如游戏中已有但工具显示「未开放」，可通过 💬 资料错误回报反馈。</div>
+                <div class="modal-btns" style="justify-content:flex-end;">
+                    <button class="modal-btn-ok" onclick="document.getElementById('server-info-modal').classList.remove('open')">知道了</button>
+                </div>
+            </div>`;
+        } else {
+            m.innerHTML = `<div class="modal-box" style="max-width:380px;">
+                <div class="modal-title">🦅 代号鸢服资料说明</div>
+                <div class="server-info-detail dyy">
+                    当前账号在 <strong>代号鸢</strong>。<br><br>
+                    工具显示完整 <strong>${dyyGroups}</strong> 组羁绊。
+                </div>
+                <div class="modal-btns" style="justify-content:flex-end;">
+                    <button class="modal-btn-ok" onclick="document.getElementById('server-info-modal').classList.remove('open')">知道了</button>
+                </div>
+            </div>`;
+        }
+        m.classList.add('open');
     }
 
     function checkAcc() { if (!currentAccount) { showToast(T('alert_no_acc'), true); return false; } return true; }
@@ -2449,15 +2841,20 @@
 
     function renameAccount() {
         if (!checkAcc()) return;
-        showRenameModal(currentAccount, (newName) => {
-            if (!newName || newName.trim() === currentAccount) return;
+        const oldKey = currentAccount;
+        const oldServer = getAccountServer(oldKey);
+        const oldName = getAccountName(oldKey);
+        showRenameModal(oldName, (newName) => {
+            if (!newName || newName.trim() === oldName) return;
             const trimmed = newName.trim();
-            if (allAccounts[trimmed]) { showToast(T('alert_dup'), true); return; }
-            allAccounts[trimmed] = allAccounts[currentAccount];
-            delete allAccounts[currentAccount];
-            currentAccount = trimmed;
+            const newKey = makeAccountKey(oldServer, trimmed);
+            if (newKey !== oldKey && allAccounts[newKey]) { showToast(T('alert_dup'), true); return; }
+            allAccounts[newKey] = allAccounts[oldKey];
+            if (newKey !== oldKey) delete allAccounts[oldKey];
+            currentAccount = newKey;
             localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
             localStorage.setItem('yuan_current_account', currentAccount);
+            buildData();
             updateAccountUI(); renderPokedex();
         });
     }
@@ -2465,18 +2862,20 @@
     function deleteAccount() {
         if (!checkAcc()) return;
         // P0-3: 强校验删除（要求输入账号名）
-        showDeleteConfirmModal(currentAccount, () => {
+        const pureName = getAccountName(currentAccount);
+        showDeleteConfirmModal(pureName, currentAccount, () => {
             delete allAccounts[currentAccount];
             localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
             currentAccount = Object.keys(allAccounts)[0] || null;
             localStorage.setItem('yuan_current_account', currentAccount||'');
+            buildData();
             updateAccountUI(); renderPokedex();
             showToast('账号已删除');
         });
     }
 
     // P0-3: 删除二次强校验（要输入账号名才能确认）
-    function showDeleteConfirmModal(accName, onYes) {
+    function showDeleteConfirmModal(displayName, fullKey, onYes) {
         const id = 'del-confirm-modal';
         let m = document.getElementById(id);
         if (!m) {
@@ -2497,12 +2896,12 @@
             m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); });
         }
         // 计算这个账号已解锁多少进度，给个直观警告
-        const prog = allAccounts[accName] || {};
-        const doneCount = Object.entries(prog).filter(([k,v]) => k !== '__missing__' && v).length;
+        const prog = allAccounts[fullKey] || {};
+        const doneCount = Object.entries(prog).filter(([k,v]) => k !== '__missing__' && k !== '__server__' && v).length;
         document.getElementById('del-warn-text').innerHTML = doneCount > 0
             ? `此操作将永久删除 <strong>${doneCount}</strong> 项已解锁的进度，无法复原。`
             : '此操作无法复原。';
-        document.getElementById('del-target-name').textContent = accName;
+        document.getElementById('del-target-name').textContent = displayName;
 
         const inp = document.getElementById('del-confirm-input');
         const okBtn = document.getElementById('del-confirm-yes');
@@ -2512,7 +2911,7 @@
         okBtn.style.cursor = 'not-allowed';
 
         inp.oninput = () => {
-            const ok = inp.value.trim() === accName;
+            const ok = inp.value.trim() === displayName;
             okBtn.disabled = !ok;
             okBtn.style.opacity = ok ? '1' : '.4';
             okBtn.style.cursor = ok ? 'pointer' : 'not-allowed';
@@ -2522,7 +2921,7 @@
         setTimeout(() => inp.focus(), 150);
         document.getElementById('del-confirm-cancel').onclick = () => m.classList.remove('open');
         document.getElementById('del-confirm-yes').onclick = () => {
-            if (inp.value.trim() !== accName) return;
+            if (inp.value.trim() !== displayName) return;
             m.classList.remove('open');
             onYes();
         };
@@ -2534,7 +2933,10 @@
             showToast('请先建立账号', true);
             return;
         }
-        document.getElementById('settings-current-acc').textContent = currentAccount;
+        const srv = getCurrentServer();
+        const nm = getAccountName(currentAccount);
+        const label = srv === 'ry' ? `🐤如鸢 - ${nm}` : `🦅代号鸢 - ${nm}`;
+        document.getElementById('settings-current-acc').textContent = label;
         document.getElementById('settings-modal').classList.add('open');
     }
     function closeSettingsModal() {
@@ -2544,29 +2946,68 @@
     function switchAccount() {
         currentAccount = document.getElementById('account-select').value;
         localStorage.setItem('yuan_current_account', currentAccount);
+        buildData();  // 重新按当前服筛选
         updateMissingLabel();
         checkOwnedNudge();
+        updateServerBadge();
         renderPokedex();
         if (document.getElementById('dispatch-view').style.display==='block') findMatches();
+        // 如果当前在资料留存子页，重渲染（按新服别）
+        const refSubView = document.getElementById('sub-refdata');
+        if (refSubView && refSubView.classList.contains('active')) refRender();
+    }
+
+    // ── 当前账号所属游戏版本 ─────────────────────────────────
+    // 'ry' = 如鸢（小鸟）, 'dyy' = 代号鸢（大鸟）
+    function getCurrentServer() {
+        if (!currentAccount) return 'ry';
+        return getAccountServer(currentAccount);
+    }
+
+    // 用户自维护的差异覆盖（key = "成员排序|情报"，value = 'no_ry' / 'no_dyy' / 'both'）
+    // 这是给作者校对用的，作者可以在 UI 里勾选标记，再点导出生成 rawData 片段
+    let serverOverrides = {};
+    try {
+        serverOverrides = JSON.parse(localStorage.getItem('yuan_server_overrides') || '{}');
+    } catch(e) { serverOverrides = {}; }
+    function getOverrideKey(members, action) {
+        return [...members].sort().join(',') + '|' + action;
+    }
+    function getServerTag(members, action, defaultTag) {
+        const k = getOverrideKey(members, action);
+        if (serverOverrides[k]) return serverOverrides[k];
+        return defaultTag || 'both';
     }
 
     function buildData() {
         globalTotalBonds = 0; agentTree = {}; bondsList = [];
+        const curServer = getCurrentServer();
         rawData.forEach(row => {
             const parts = row.split('|');
             const members = parts[0].split(',');
             const act = parts[1];
             const validW = (parts[2] && parts[2].trim()) ? parts[2].split(',') : allW;
             const bondType = (parts[3] && parts[3].trim() === '-') ? '-' : '+'; // + 一拍即合 / - 貌合神离
-            bondsList.push({members, action:act, validWeathers:validW, bondType});
-            globalTotalBonds += validW.length;
+            // 第 5 段：服务器标记（'no_ry' = 如鸢没有 / 'no_dyy' = 代号鸢没有 / 留空 = 两服都有）
+            const rawTag = (parts[4] && parts[4].trim()) ? parts[4].trim() : 'both';
+            const serverTag = getServerTag(members, act, rawTag);
+            // 当前服没有这条 → 在如鸢服时，不再过滤掉，而是标记 notOnCurrent，
+            // 让 UI 灰透显示并禁止解锁，同时不计入 globalTotalBonds
+            const notOnCurrent = (curServer === 'ry' && serverTag === 'no_ry') ||
+                                 (curServer === 'dyy' && serverTag === 'no_dyy');
+            bondsList.push({members, action:act, validWeathers:validW, bondType, serverTag, notOnCurrent});
+            if (!notOnCurrent) {
+                globalTotalBonds += validW.length;
+            }
             members.forEach(m => {
                 if (!agentTree[m]) agentTree[m] = {dept:agentsData[m]?.dept||"闲人", attr:agentsData[m]?.attr||"水", bonds:[], totalTasks:0};
                 const ts = members.filter(x=>x!==m).join(' × ');
                 // 同一 target+action+bondType 才算同一组
                 if (!agentTree[m].bonds.find(b=>b.target===ts&&b.action===act&&b.bondType===bondType)) {
-                    agentTree[m].bonds.push({target:ts, action:act, validWeathers:validW, bondType});
-                    agentTree[m].totalTasks += validW.length;
+                    agentTree[m].bonds.push({target:ts, action:act, validWeathers:validW, bondType, notOnCurrent});
+                    if (!notOnCurrent) {
+                        agentTree[m].totalTasks += validW.length;
+                    }
                 }
             });
         });
@@ -2608,6 +3049,7 @@
         el.classList.add('active');
         document.getElementById(`sub-${t}`).classList.add('active');
         if (t === 'refdata') refRender();
+        if (t === 'devtool') devToolRefresh();
     }
 
     function switchTab(t, el) {
@@ -2716,6 +3158,11 @@
         const det = document.createElement('details'); det.id = `agent-${name}`;
         const rar = agentsData[name]?.rar || '';
         if (rar) det.classList.add(`rar-${rar}`);
+        // 当前服里这个密探完全没出现 → 整张卡片灰透
+        const curServer = getCurrentServer();
+        const allBondsNotOn = (curServer === 'ry' && !serverStats.ryAgents.has(name)) ||
+                              (curServer === 'dyy' && !serverStats.dyyAgents.has(name));
+        if (allBondsNotOn) det.classList.add('agent-not-on-server');
         const hasNew = agent.bonds.some(b => isNewPair([name, ...b.target.split(' × ')]));
         const sumEl = document.createElement('summary');
         sumEl.innerHTML = `
@@ -2745,13 +3192,18 @@
                 : `<span class="btype btype-pos">${T('bond_pos')}</span>`;
             const allMembers = [name, ...target.split(' × ')];
             const newBadge = isNewPair(allMembers) ? `<span class="new-badge">NEW</span>` : '';
-            titleDiv.innerHTML = `与 <span class="target-name">${target}</span> ${typeLabel}${newBadge}`;
+            // 该组 bond 是否未开放（只要任一 bond 标了 notOnCurrent 就算）
+            const isNotOnCurrent = bonds.some(b => b.notOnCurrent);
+            const notYetTag = isNotOnCurrent ? `<span class="bond-not-yet-tag">如鸢未开放</span>` : '';
+            titleDiv.innerHTML = `与 <span class="target-name">${target}</span> ${typeLabel}${newBadge}${notYetTag}`;
             const btnAll = document.createElement('button'); btnAll.className = 'btn-check-all';
             btnAll.textContent = T('select_all_cancel');
-            header.appendChild(titleDiv); header.appendChild(btnAll);
+            header.appendChild(titleDiv);
+            if (!isNotOnCurrent) header.appendChild(btnAll);  // 未开放的不显示全选按钮
             body.appendChild(header);
 
-            const grid = document.createElement('div'); grid.className = 'weather-grid';
+            const grid = document.createElement('div');
+            grid.className = isNotOnCurrent ? 'weather-grid locked-ry' : 'weather-grid';
             const cells = [];
             allW.forEach(w => {
                 bonds.forEach(b => {
@@ -2764,6 +3216,7 @@
 
             btnAll.onclick = e => {
                 e.preventDefault(); e.stopPropagation(); if(!checkAcc()) return;
+                if (isNotOnCurrent) return;
                 const doneCount = cells.filter(c=>allAccounts[currentAccount][c.key]).length;
                 const state = doneCount < cells.length;
                 cells.forEach(c=>allAccounts[currentAccount][c.key]=state);
@@ -2781,16 +3234,18 @@
                 const img = document.createElement('img'); img.src = weathers[w];
                 const span = document.createElement('span'); span.textContent = Ta(action);
                 item.appendChild(img); item.appendChild(span);
-                item.onclick = () => {
-                    if(!checkAcc()) return;
-                    allAccounts[currentAccount][key] = !allAccounts[currentAccount][key];
-                    localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
-                    const ns = allAccounts[currentAccount][key];
-                    document.querySelectorAll(`.weather-item[data-key="${key}"]`).forEach(el => {
-                        el.className = `weather-item${ns?' unlocked':''}`;
-                    });
-                    updateUI();
-                };
+                if (!isNotOnCurrent) {
+                    item.onclick = () => {
+                        if(!checkAcc()) return;
+                        allAccounts[currentAccount][key] = !allAccounts[currentAccount][key];
+                        localStorage.setItem('yuan_all_accounts', JSON.stringify(allAccounts));
+                        const ns = allAccounts[currentAccount][key];
+                        document.querySelectorAll(`.weather-item[data-key="${key}"]`).forEach(el => {
+                            el.className = `weather-item${ns?' unlocked':''}`;
+                        });
+                        updateUI();
+                    };
+                }
                 grid.appendChild(item);
             });
             body.appendChild(grid);
@@ -2838,8 +3293,19 @@
         let anyRendered = false;
         rarGroups.forEach((rar,i) => {
             // 符合筛选且拥有的
+            const curServer = getCurrentServer();
+            // 判断密探在当前服是否未开放（在如鸢里没出现 = ry 服 not on）
+            const isAgentNotOnCurrent = (n) => {
+                if (curServer === 'ry') return !serverStats.ryAgents.has(n);
+                if (curServer === 'dyy') return !serverStats.dyyAgents.has(n);
+                return false;
+            };
             const agents = Object.keys(agentTree).filter(n=>matchAgent(n)&&(agentsData[n]?.rar||'')===rar)
                 .sort((a,b) => {
+                    // 1. 未开放的排到下面
+                    const naA = isAgentNotOnCurrent(a), naB = isAgentNotOnCurrent(b);
+                    if (naA !== naB) return naA ? 1 : -1;
+                    // 2. 部门
                     const da = agentTree[a].dept, db = agentTree[b].dept;
                     return da!==db ? deptOrder.indexOf(da)-deptOrder.indexOf(db) : a.localeCompare(b,'zh');
                 });
@@ -2883,7 +3349,12 @@
         const prog = currentAccount ? allAccounts[currentAccount] : {};
         Object.keys(agentTree).forEach(name => {
             let count=0; const agent=agentTree[name];
-            agent.bonds.forEach(b=>b.validWeathers.forEach(w=>{ if(prog[getSKey([name,...b.target.split(' × ')],b.action,w)]) count++; }));
+            agent.bonds.forEach(b => {
+                if (b.notOnCurrent) return;  // 当前服未开放的不计入
+                b.validWeathers.forEach(w => {
+                    if (prog[getSKey([name,...b.target.split(' × ')],b.action,w)]) count++;
+                });
+            });
             const el=document.getElementById(`comp-${name}`);
             const det=document.getElementById(`agent-${name}`);
             const mini=document.getElementById(`minibar-${name}`);
@@ -2891,18 +3362,24 @@
             if (mini) mini.style.width=agent.totalTasks?`${(count/agent.totalTasks)*100}%`:'0%';
             if (det) {
                 const rar = agentsData[name]?.rar;
-                det.className = [(count===agent.totalTasks&&count>0)?'agent-completed':'', rar?`rar-${rar}`:''].filter(Boolean).join(' ');
+                const wasNotOn = det.classList.contains('agent-not-on-server');
+                det.className = [(count===agent.totalTasks&&count>0)?'agent-completed':'', rar?`rar-${rar}`:'', wasNotOn?'agent-not-on-server':''].filter(Boolean).join(' ');
             }
         });
         const u = new Set();
-        bondsList.forEach(b=>b.validWeathers.forEach(w=>{ const k=getSKey(b.members,b.action,w); if(prog[k]) u.add(k); }));
+        bondsList.forEach(b => {
+            if (b.notOnCurrent) return;  // 未开放的不计入
+            b.validWeathers.forEach(w=>{ const k=getSKey(b.members,b.action,w); if(prog[k]) u.add(k); });
+        });
 
         // 计算两个范围的进度：
         //   全部 (scope=all): 所有羁绊（含未拥有密探的羁绊）— 适合追求 100% 完美的玩家
         //   我的 (scope=owned): 仅自己拥有的密探之间的羁绊 — 适合反映当前可达成的进度
+        // 注意：两种 scope 都要排除「当前服未开放的羁绊」（如鸢未开放的 62 条）
         const missingSet = getMissingAgents();
         let doneOwned = 0, totalOwned = 0;
         bondsList.forEach(b => {
+            if (b.notOnCurrent) return;  // 当前服未开放的不计入
             const ownedBond = !b.members.some(m => missingSet.has(m));
             if (!ownedBond) return;
             b.validWeathers.forEach(w => {
@@ -3023,12 +3500,18 @@
     // Build: agentName -> [{pairKey, members, actions{act:{w:+/-}}}]
     function refBuildAgentMap() {
         const pairMap = {}, agentMap = {};
+        const curServer = getCurrentServer();
         rawData.forEach(row => {
             const parts = row.split('|');
             const members = parts[0].split(',');
             const act = parts[1];
             const ws = (parts[2] && parts[2].trim()) ? parts[2].split(',') : allW;
             const type = (parts[3] && parts[3].trim() === '-') ? '-' : '+';
+            // 按当前服过滤：no_ry 在如鸢服跳过，no_dyy 在代号鸢服跳过
+            const rawTag = (parts[4] && parts[4].trim()) ? parts[4].trim() : 'both';
+            const serverTag = getServerTag(members, act, rawTag);
+            if (curServer === 'ry' && serverTag === 'no_ry') return;
+            if (curServer === 'dyy' && serverTag === 'no_dyy') return;
             const sk = [...members].sort().join('|||');
             if (!pairMap[sk]) pairMap[sk] = { members, actions: {} };
             if (!pairMap[sk].actions[act]) pairMap[sk].actions[act] = {};
@@ -3146,7 +3629,15 @@
         }).join('');
     }
 
-    function refRender() { refRebuildNav(); }
+    function refRender() {
+        // 更新顶部服别标签
+        const lbl = document.getElementById('ref-server-label');
+        if (lbl) {
+            const srv = getCurrentServer();
+            lbl.textContent = srv === 'ry' ? '🐤 如鸢服' : '🦅 代号鸢服';
+        }
+        refRebuildNav();
+    }
     // ── end 资料留存 ──────────────────────────────────────────
 
     function setViewMode(mode, el) {
@@ -3185,7 +3676,7 @@
         const act=curAction, w=curWeather;
         const prog=allAccounts[currentAccount];
         const missingSet = getMissingAgents();
-        let hUnlock='', hDone='', hMissing='', dCount=0, mCount=0;
+        let hUnlock='', hDone='', hMissing='', hNotOpen='', dCount=0, mCount=0, nCount=0;
         bondsList.filter(b=>b.action===act&&b.validWeathers.includes(w)).forEach(b=>{
             const hasMissing = b.members.some(m => missingSet.has(m));
             const k=getSKey(b.members,act,w), isU=prog[k];
@@ -3193,9 +3684,15 @@
                 ? `<span class="btype btype-neg">${T('bond_neg')}</span>`
                 : `<span class="btype btype-pos">${T('bond_pos')}</span>`;
             const newTag = isNewPair(b.members) ? `<span class="new-badge">NEW</span>` : '';
+            // 如鸢未开放的羁绊：单独分组、不可解锁（灰调）
+            if (b.notOnCurrent) {
+                nCount++;
+                hNotOpen += `<div class="result-item" style="opacity:0.6;pointer-events:none;"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}</div><span style="font-size:0.78rem;color:#bbb;">未开放</span></div>`;
+                return;
+            }
             if (hasMissing) {
                 mCount++;
-                hMissing += `<div class="result-item" style="opacity:0.35;pointer-events:none;"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}</div><span style="font-size:0.78rem;color:#bbb;">未拥有</span></div>`;
+                hMissing += `<div class="result-item" style="opacity:0.6;pointer-events:none;"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}</div><span style="font-size:0.78rem;color:#bbb;">未拥有</span></div>`;
             } else {
                 const html=`<div class="result-item"><div class="result-info"><img src="${weathers[w]}"><span class="member-name">${b.members.join(' × ')}</span>${typeTag}${newTag}</div><button class="toggle-btn ${isU?'btn-revert':'btn-unlock'}" onclick="tglM('${k}')">${isU?T('cancel_unlock'):T('unlock')}</button></div>`;
                 if(isU){hDone+=html;dCount++;}else{hUnlock+=html;}
@@ -3205,7 +3702,8 @@
             (hUnlock?`<div class="result-group-title">${T('can_unlock')}</div><div class="results-grid">${hUnlock}</div>`
                 :`<div style="text-align:center;padding:20px;color:var(--success);font-weight:bold;">${T('all_unlocked')}</div>`)
             +(hDone?`<div class="result-group-title" style="margin-top:16px;color:#aaa;">📁 ${T('done_group')} (${dCount})</div><div class="results-grid done-items">${hDone}</div>` : '')
-            +(hMissing?`<div class="result-group-title" style="margin-top:16px;color:#ccc;">🔒 未拥有密探 (${mCount})</div><div class="results-grid">${hMissing}</div>` : '');
+            +(hMissing?`<div class="result-group-title" style="margin-top:16px;color:#ccc;">🔒 未拥有密探 (${mCount})</div><div class="results-grid">${hMissing}</div>` : '')
+            +(hNotOpen?`<div class="result-group-title" style="margin-top:16px;color:#B4A084;">🐤 如鸢未开放 (${nCount})</div><div class="results-grid">${hNotOpen}</div>` : '');
     }
 
     function tglM(k) {
@@ -3344,6 +3842,8 @@
 
     // P1-8: 导入预览弹窗
     function showImportPreview(imported) {
+        // 先迁移导入数据里的旧格式 key（如鸢 - XX → ry::XX）
+        imported = migrateImportedKeys(imported);
         const importedKeys = Object.keys(imported);
         if (importedKeys.length === 0) {
             showToast('备份文件中没有任何账号', true);
@@ -3354,7 +3854,13 @@
         const dupAccs = importedKeys.filter(k => existingKeys.includes(k));
 
         // 计算每个账号有多少进度
-        const countDone = (acc) => Object.entries(acc || {}).filter(([k, v]) => k !== '__missing__' && v).length;
+        const countDone = (acc) => Object.entries(acc || {}).filter(([k, v]) => k !== '__missing__' && k !== '__server__' && v).length;
+        // 显示用：徽章 + 名字
+        const dispName = (k) => {
+            const srv = parseAccountKey(k).server || (imported[k] && imported[k].__server__) || 'dyy';
+            const nm = getAccountName(k);
+            return srv === 'ry' ? `🐤如鸢 - ${nm}` : `🦅代号鸢 - ${nm}`;
+        };
 
         const id = 'import-preview-modal';
         let m = document.getElementById(id);
@@ -3370,12 +3876,12 @@
         let listHtml = '';
         newAccs.forEach(k => {
             const c = countDone(imported[k]);
-            listHtml += `<div class="import-preview-item new">✨ ${k} <span style="color:#888;font-size:0.78rem;">（新增 · ${c} 项进度）</span></div>`;
+            listHtml += `<div class="import-preview-item new">✨ ${dispName(k)} <span style="color:#888;font-size:0.78rem;">（新增 · ${c} 项进度）</span></div>`;
         });
         dupAccs.forEach(k => {
             const cNew = countDone(imported[k]);
             const cOld = countDone(allAccounts[k]);
-            listHtml += `<div class="import-preview-item dup">⚠️ ${k} <span style="color:#888;font-size:0.78rem;">（已存在 · 现 ${cOld} 项 → 备份 ${cNew} 项）</span></div>`;
+            listHtml += `<div class="import-preview-item dup">⚠️ ${dispName(k)} <span style="color:#888;font-size:0.78rem;">（已存在 · 现 ${cOld} 项 → 备份 ${cNew} 项）</span></div>`;
         });
 
         const summary = `共 <strong>${importedKeys.length}</strong> 个账号：<strong style="color:#4a8020;">${newAccs.length}</strong> 个新账号` +
@@ -3436,7 +3942,7 @@
                 if (!allAccounts[k]) {
                     allAccounts[k] = imported[k];
                 } else {
-                    // 合并字段：true 值优先保留；__missing__ 取并集
+                    // 合并字段：true 值优先保留；__missing__ 取并集；__server__ 保留现有值
                     const existing = allAccounts[k] || {};
                     const incoming = imported[k] || {};
                     const merged = { ...existing };
@@ -3445,6 +3951,9 @@
                             const a = Array.isArray(existing.__missing__) ? existing.__missing__ : [];
                             const b = Array.isArray(incoming.__missing__) ? incoming.__missing__ : [];
                             merged.__missing__ = Array.from(new Set([...a, ...b]));
+                        } else if (field === '__server__') {
+                            // 服务器字段：现有有值就保留，否则用导入的
+                            if (!merged.__server__) merged.__server__ = incoming.__server__;
                         } else {
                             // 解锁状态：任一为 true 即为 true（不覆盖现有进度）
                             merged[field] = !!(existing[field] || incoming[field]);
@@ -3460,12 +3969,143 @@
         m.classList.remove('open');
         m._importedData = null;
         _importMode = 'merge';
+        buildData();  // 导入后重新按当前账号的服过滤
         updateAccountUI();
         renderPokedex();
         showToast(T('import_ok'));
     }
 
+    recalcServerStats();
     buildData(); updateAccountUI(); renderPokedex();
+
+    // ── 开发者工具：跨服差异维护 ──────────────────────────────
+    // 仅当 URL 包含 #dev / ?dev=1 时显示子分页
+    function isDevMode() {
+        try {
+            return location.hash.indexOf('dev') >= 0 || /[?&]dev=1\b/.test(location.search);
+        } catch(e) { return false; }
+    }
+    if (isDevMode()) {
+        const tab = document.getElementById('sub-tab-devtool');
+        if (tab) tab.style.display = '';
+    }
+    function devToolRefresh() {
+        const list = document.getElementById('dev-tool-list');
+        if (!list) return;
+        const filterAct = document.getElementById('dev-filter-act').value;
+        const filterSearch = document.getElementById('dev-filter-search').value.trim();
+        const onlyMarked = document.getElementById('dev-filter-marked').checked;
+        const rows = [];
+        rawData.forEach((row, idx) => {
+            const parts = row.split('|');
+            const members = parts[0].split(',');
+            const act = parts[1];
+            const validW = (parts[2] && parts[2].trim()) ? parts[2] : '全部天气';
+            const bondType = (parts[3] && parts[3].trim() === '-') ? '貌合神离' : '一拍即合';
+            const rawTag = (parts[4] && parts[4].trim()) ? parts[4].trim() : 'both';
+            const k = getOverrideKey(members, act);
+            const curTag = serverOverrides[k] || rawTag;
+            if (filterAct && act !== filterAct) return;
+            if (filterSearch && !members.some(m => m.includes(filterSearch))) return;
+            if (onlyMarked && curTag === 'both' && !serverOverrides[k]) return;
+            rows.push({idx, members, act, validW, bondType, rawTag, curTag, key:k});
+        });
+        if (rows.length === 0) {
+            list.innerHTML = '<div style="text-align:center;color:#999;padding:20px;">没有匹配条目</div>';
+            return;
+        }
+        list.innerHTML = rows.map(r => {
+            const tagClass = r.curTag === 'no_ry' ? 'badge-no-ry' : (r.curTag === 'no_dyy' ? 'badge-no-dyy' : 'badge-both');
+            const tagText = r.curTag === 'no_ry' ? '🚫 如鸢没有' : (r.curTag === 'no_dyy' ? '🚫 代号鸢没有' : '✓ 两服都有');
+            const isOverride = serverOverrides[r.key] !== undefined;
+            return `<div class="dev-row" style="padding:10px;background:var(--card);border:1px solid ${isOverride?'#d4a020':'var(--border)'};border-radius:8px;margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                    <div>
+                        <strong>${r.members.join(' × ')}</strong>
+                        <span style="color:#888;margin:0 6px;">|</span>
+                        <span style="color:${r.bondType==='一拍即合'?'#2a6e2a':'#a03030'};">${r.act} (${r.bondType})</span>
+                        <span style="color:#888;font-size:.78rem;margin-left:6px;">${r.validW}</span>
+                        ${isOverride?'<span style="background:#fff3cd;color:#856404;padding:1px 6px;border-radius:4px;font-size:.7rem;margin-left:6px;">已修改</span>':''}
+                    </div>
+                    <div style="display:flex;gap:4px;">
+                        <button class="dev-tag-btn ${r.curTag==='both'?'active':''}" onclick="devToolSetTag('${r.key}','both')" style="padding:3px 8px;font-size:.75rem;border-radius:5px;border:1px solid ${r.curTag==='both'?'#2a8a2a':'#ccc'};background:${r.curTag==='both'?'#dff5df':'#fff'};cursor:pointer;">两服都有</button>
+                        <button class="dev-tag-btn ${r.curTag==='no_ry'?'active':''}" onclick="devToolSetTag('${r.key}','no_ry')" style="padding:3px 8px;font-size:.75rem;border-radius:5px;border:1px solid ${r.curTag==='no_ry'?'#a04040':'#ccc'};background:${r.curTag==='no_ry'?'#fde0e0':'#fff'};cursor:pointer;">如鸢没</button>
+                        <button class="dev-tag-btn ${r.curTag==='no_dyy'?'active':''}" onclick="devToolSetTag('${r.key}','no_dyy')" style="padding:3px 8px;font-size:.75rem;border-radius:5px;border:1px solid ${r.curTag==='no_dyy'?'#3050a0':'#ccc'};background:${r.curTag==='no_dyy'?'#dde6f9':'#fff'};cursor:pointer;">代号鸢没</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+    function devToolSetTag(key, tag) {
+        if (tag === 'both') {
+            // 如果原始 rawData 没标记，就删除 override；否则需要设为 both 来覆盖
+            const matching = rawData.find(row => {
+                const parts = row.split('|');
+                return getOverrideKey(parts[0].split(','), parts[1]) === key;
+            });
+            const rawTag = matching ? (matching.split('|')[4] || 'both').trim() || 'both' : 'both';
+            if (rawTag === 'both') delete serverOverrides[key];
+            else serverOverrides[key] = 'both';
+        } else {
+            serverOverrides[key] = tag;
+        }
+        try { localStorage.setItem('yuan_server_overrides', JSON.stringify(serverOverrides)); } catch(e){}
+        buildData();
+        renderPokedex();
+        devToolRefresh();
+    }
+    function devToolReset() {
+        if (!confirm('确定清除所有跨服差异标记？')) return;
+        serverOverrides = {};
+        try { localStorage.setItem('yuan_server_overrides', '{}'); } catch(e){}
+        buildData();
+        renderPokedex();
+        devToolRefresh();
+    }
+    function devToolExport() {
+        // 生成 rawData 修改片段
+        const lines = [];
+        const linesNoRy = [];
+        const linesNoDyy = [];
+        rawData.forEach(row => {
+            const parts = row.split('|');
+            const members = parts[0].split(',');
+            const act = parts[1];
+            const k = getOverrideKey(members, act);
+            const rawTag = (parts[4] && parts[4].trim()) ? parts[4].trim() : 'both';
+            const curTag = serverOverrides[k] !== undefined ? serverOverrides[k] : rawTag;
+            if (curTag === rawTag) return; // 没改
+            // 重建该行字符串
+            const newParts = [parts[0], parts[1], parts[2]||'', parts[3]||''];
+            if (curTag !== 'both') newParts.push(curTag);
+            const newLine = newParts.join('|').replace(/\|+$/, m => m.length>=4?'|||':m);
+            const target = curTag === 'no_ry' ? linesNoRy : (curTag === 'no_dyy' ? linesNoDyy : lines);
+            target.push(`"${newLine}",  // 原:${rawTag} → 改:${curTag}`);
+        });
+        let out = '// === 跨服差异修改片段 ===\n';
+        out += '// 把下面这些行替换 rawData 里的对应原行\n\n';
+        if (linesNoRy.length) out += '// — 如鸢没有的条目 —\n' + linesNoRy.join('\n') + '\n\n';
+        if (linesNoDyy.length) out += '// — 代号鸢没有的条目 —\n' + linesNoDyy.join('\n') + '\n\n';
+        if (lines.length) out += '// — 改回两服都有 —\n' + lines.join('\n') + '\n';
+        if (linesNoRy.length + linesNoDyy.length + lines.length === 0) {
+            out += '// （无修改）\n';
+        }
+        // 显示在新窗口里方便复制
+        const w = window.open('', '_blank');
+        if (w) {
+            w.document.write('<pre style="font-family:monospace;font-size:13px;padding:20px;white-space:pre-wrap;word-wrap:break-word;">' +
+                out.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre>');
+            w.document.title = 'rawData 修改片段';
+        } else {
+            // 弹窗被拦截，复制到剪贴板
+            try {
+                navigator.clipboard.writeText(out);
+                alert('已复制到剪贴板！');
+            } catch(e) {
+                prompt('复制下面文本：', out);
+            }
+        }
+    }
     // P1-5: 同步 hide-completed toggle 的初始视觉状态
     (function initHideCompletedToggle(){
         const el = document.getElementById('hide-completed-toggle');
