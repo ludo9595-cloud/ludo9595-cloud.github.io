@@ -860,7 +860,7 @@
             width: 100%; padding: 12px; background: var(--highlight); color: #fff;
             border: none; border-radius: 9px; font-size: var(--fs-md); font-weight: var(--fw-bold);
             cursor: pointer; font-family: inherit; transition: all .18s;
-            
+
         }
         .entry-btn-hi:hover { background: #bc7570;  }
         .entry-btn-hi:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
@@ -897,7 +897,7 @@
             width: 100%; padding: 12px; background: #5A8020; color: #fff;
             border: none; border-radius: 9px; font-size: var(--fs-md); font-weight: var(--fw-bold);
             cursor: pointer; font-family: inherit; transition: all .18s;
-            
+
         }
         .entry-btn-save:hover { background: #4a7018; }
         .et-chip { display: inline-flex; align-items: center; gap: 3px; padding: 3px 9px; border-radius: 99px; font-size: var(--fs-sm); font-weight: var(--fw-bold); }
@@ -1002,7 +1002,7 @@
             flex: 1; padding: 10px; background: var(--highlight); color: #fff;
             border: none; border-radius: 8px; font-size: var(--fs-base); font-weight: var(--fw-bold);
             cursor: pointer; font-family: inherit; transition: all .18s;
-            
+
         }
         .modal-btn-ok:hover { background: #bc7570; }
         .modal-btn-confirm {
@@ -1585,6 +1585,16 @@
             <h2>📢 最新公告</h2>
 
             <div class="announce-entry">
+                <div class="announce-entry-date">2026/7/12</div>
+                <div class="announce-entry-title">🎉 羁绊资料更新</div>
+                <div class="announce-entry-body">
+                    同步游戏 <strong>6月11日</strong> 版本更新的新增羁绊配队，共新增 <strong>17 组</strong>羁绊，并新增 <strong>陈纪、陈应</strong> 两位密探。<br>
+                    新增配对包含：安期×孙尚香、凌统×甘宁、陈群×陈纪、陈登×陈应、董奉×陈应、葛洪×司马徽、孔融×陈纪、张郃×陈应。<br><br>
+                    如鸢羁绊总数从 <strong>128 组</strong> 更新至 <strong>142 组</strong>，代号鸢羁绊总数从 <strong>159 组</strong> 更新至 <strong>176 组</strong>。新增羁绊均已标注 <span class="new-badge">NEW</span>，可在状态筛选「🆕 新羁绊」快速查看。
+                </div>
+            </div>
+
+            <div class="announce-entry">
                 <div class="announce-entry-date">2026/5/19</div>
                 <div class="announce-entry-title">🎉 如鸢羁伴资料大更新 + Bug 修复</div>
                 <div class="announce-entry-body">
@@ -1778,6 +1788,18 @@
         <!-- 更新日志 -->
         <div class="sub-view active" id="sub-changelog">
             <div class="entry-card" style="margin-bottom:14px;">
+                <div style="font-size:0.88rem;font-weight:bold;color:var(--highlight);margin-bottom:10px;">2026/7/12 更新</div>
+                <div style="font-size:0.85rem;color:var(--primary);line-height:1.9;">
+                    <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">📄 羁绊资料更新</div>
+                    <div>• 同步游戏 6/11 版本新增的 17 组羁绊资料</div>
+                    <div>• 如鸢羁绊总数：128 组 → 142 组</div>
+                    <div>• 代号鸢羁绊总数：159 组 → 176 组</div>
+                    <div>• 新增陈纪、陈应两位密探</div>
+                    <div>• 新增配对：安期×孙尚香、凌统×甘宁、陈群×陈纪、陈登×陈应、董奉×陈应、葛洪×司马徽、孔融×陈纪、张郃×陈应</div>
+                    <div>• 同步更新庞羲×刘璋、钟繇×程昱、黄盖×程普、钟繇×荀攸在如鸢服的开放状态</div>
+                </div>
+            </div>
+            <div class="entry-card" style="margin-bottom:14px;">
                 <div style="font-size:0.88rem;font-weight:bold;color:var(--highlight);margin-bottom:10px;">2026/5/19 更新</div>
                 <div style="font-size:0.85rem;color:var(--primary);line-height:1.9;">
                     <div style="font-weight:700;color:#8b5a00;margin:8px 0 4px;">📄 如鸢羁伴资料更新</div>
@@ -1871,7 +1893,7 @@
 
                     <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
                         <div style="font-size:0.85rem;font-weight:700;color:#4A3C35;margin-bottom:3px;">为什么我看到的羁绊比朋友少？</div>
-                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">如鸢上线进度比代号鸢慢，目前如鸢服显示 <strong>128 组</strong>羁绊、代号鸢服 <strong>159 组</strong>。点击顶部账号旁的服徽章可看详细数量。</div>
+                        <div style="font-size:0.82rem;color:#7A6355;line-height:1.6;">如鸢上线进度比代号鸢慢，目前如鸢服显示 <strong>142 组</strong>羁绊、代号鸢服 <strong>176 组</strong>。点击顶部账号旁的服徽章可看详细数量。</div>
                     </div>
 
                     <div style="background:#FAF4EC;border-radius:8px;padding:10px 12px;">
@@ -2177,6 +2199,8 @@
         "马超":{"dept":"蛾部","attr":"地","rar":"金"},
         "鲁肃":{"dept":"雀部","attr":"水","rar":"金"},
         "黄盖":{"dept":"蛾部","attr":"阴","rar":"金"},
+        "陈纪":{"dept":"雀部","attr":"水","rar":"金"},
+        "陈应":{"dept":"鸢部","attr":"风","rar":"金"},
         // 机密・紫卡
         "严白虎":{"dept":"鸢部","attr":"阴","rar":"紫"},
         "小乔":{"dept":"雀部","attr":"水","rar":"紫"},
@@ -2301,8 +2325,8 @@
         "张辽,阿蝉,吕布|纵火||+|no_ry",
         "张辽,阿蝉,吕布|下毒||+|no_ry",
         "张辽,阿蝉,吕布|卧底||-|no_ry",
-        "庞羲,刘璋|纵火||-|no_ry",
-        "庞羲,刘璋|传谣||+|no_ry",
+        "庞羲,刘璋|纵火||-",
+        "庞羲,刘璋|传谣||+",
         "干吉,张修|纵火|晴天,雨天,大雪|-",
         "干吉,张修|传谣|晴天|-",
         "士燮,董奉|纵火||+",
@@ -2316,9 +2340,9 @@
         "周忠,简雍|搜集||-|no_ry",
         "张燕,戏学|纵火||+",
         "张燕,戏学|卧底||+",
-        "钟繇,程昱|纵火||+|no_ry",
-        "钟繇,程昱|搜集||+|no_ry",
-        "黄盖,程普|纵火||-|no_ry",
+        "钟繇,程昱|纵火||+",
+        "钟繇,程昱|搜集||+",
+        "黄盖,程普|纵火||-",
         "庞羲,刘璋,法正|纵火||-|no_ry",
         "庞羲,刘璋,法正|搜集||+|no_ry",
         "周瑜,小乔|纵火|雨天|-",
@@ -2361,15 +2385,33 @@
         "周忠,卢植|搜集||+|no_ry",
         "张昭,虞翻|搜集||+",
         "周瑜,鲁肃,陆逊|灭火||+",
-        "钟繇,荀攸|灭火||-|no_ry",
-        "钟繇,荀攸|营救||-|no_ry",
+        "钟繇,荀攸|灭火||-",
+        "钟繇,荀攸|营救||-",
         "蔡琰,王异,刘豹|灭火||+",
         "董奉,陈登,张邈|灭火||+",
         "董奉,陈登,张邈|净水||+",
         "董奉,陈登,张邈|营救||+",
         "干吉,许曼|营救||+",
         "庞德,马腾|营救||+|no_ry",
-        "小乔,周忠|营救||+|no_ry"
+        "小乔,周忠|营救||+|no_ry",
+        // ── 2026/6/11 新增羁绊 ──
+        "安期,孙尚香|纵火||+",
+        "凌统,甘宁|纵火||-",
+        "陈群,陈纪|纵火||+|no_ry",
+        "陈登,陈应|纵火||-|no_ry",
+        "董奉,陈应|纵火||+|no_ry",
+        "葛洪,司马徽|下毒||-",
+        "陈登,陈应|下毒||-|no_ry",
+        "董奉,陈应|下毒||+|no_ry",
+        "孔融,陈纪|下毒||-|no_ry",
+        "安期,孙尚香|卧底||-",
+        "张郃,陈应|卧底||-|no_ry",
+        "凌统,甘宁|卧底||+",
+        "葛洪,司马徽|营救||+",
+        "凌统,甘宁|营救||-",
+        "张郃,陈应|营救||-|no_ry",
+        "陈群,陈纪|营救||+|no_ry",
+        "孔融,陈纪|营救||-|no_ry",
     ];
 
     // 新增羁绊配对集合（用于显示 NEW 标记）
@@ -2387,7 +2429,10 @@
         "士燮,董奉","张绣,贾诩","飞云,张绣","荀彧,荀攸",
         "诸葛瑾,诸葛诞","诸葛亮,周瑜","徐庶,令狐茂",
         "凌统,朱然,虞翻","诸葛瑾,诸葛亮,诸葛诞",
-        "蔡琰,王异,刘豹","董奉,陈登,张邈"
+        "蔡琰,王异,刘豹","董奉,陈登,张邈",
+        // 2026/6/11 新增羁绊
+        "安期,孙尚香","凌统,甘宁","陈群,陈纪","陈登,陈应","董奉,陈应",
+        "葛洪,司马徽","孔融,陈纪","张郃,陈应"
     ].map(s => s.split(',').sort().join('|||')));
 
     function isNewPair(members) {
@@ -2686,7 +2731,7 @@
 
     // 公告系统
     // 当 ANNOUNCE_VERSION 比 storage 大时显示红点；用户点开后写入 storage 同步版本
-    const ANNOUNCE_VERSION = 2;  // 每次新增重大公告时 +1
+    const ANNOUNCE_VERSION = 3;  // 每次新增重大公告时 +1
     function checkBellDot() {
         let seen = 0;
         try { seen = parseInt(localStorage.getItem('yuan_announce_seen_v') || '0', 10); } catch(e) {}
